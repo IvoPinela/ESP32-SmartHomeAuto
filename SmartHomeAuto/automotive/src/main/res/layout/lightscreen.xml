@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/lightsControlTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lights_control_title"
+        android:textSize="@dimen/text_size_title"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/margin_bottom_large"/>
+
+    <TextView
+        android:id="@+id/lightStatusTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/light_status_text"
+        android:textSize="@dimen/text_size_status"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/lightsControlTitle"
+        android:layout_marginBottom="@dimen/margin_bottom_large"/>
+
+    <Button
+        android:id="@+id/buttonToggleLight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/toggle_light_button"
+        android:textSize="@dimen/text_size_button"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/lightStatusTextView"
+        android:layout_marginBottom="@dimen/margin_bottom_medium"/>
+
+    <Button
+        android:id="@+id/buttonBackToMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/back_to_menu_button"
+        android:textSize="@dimen/text_size_button"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/buttonToggleLight"
+        android:layout_marginTop="@dimen/margin_bottom_medium"/>
+</RelativeLayout>

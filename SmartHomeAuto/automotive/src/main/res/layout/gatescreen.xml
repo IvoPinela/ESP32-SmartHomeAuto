@@ -31,7 +31,6 @@
         android:textSize="@dimen/text_size_button"
         android:layout_centerHorizontal="true"/>
 
-    <!-- Botão para voltar ao menu -->
     <Button
         android:id="@+id/buttonBackToMenuGate"
         android:layout_width="wrap_content"

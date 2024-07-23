@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/menuTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/menu_title"
+        android:textSize="@dimen/text_size_title"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/margin_bottom_large"/>
+
+    <Button
+        android:id="@+id/buttonLights"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button_lights"
+        android:textSize="@dimen/text_size_button"
+        android:layout_below="@id/menuTitle"
+        android:layout_marginBottom="@dimen/margin_bottom_small"/>
+
+    <Button
+        android:id="@+id/buttonGate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button_gate"
+        android:textSize="@dimen/text_size_button"
+        android:layout_below="@id/buttonLights"/>
+</RelativeLayout>

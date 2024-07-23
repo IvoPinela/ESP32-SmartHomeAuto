@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Tamanhos de texto -->
+    <dimen name="text_size_title" tools:ignore="MissingDefaultResource">24sp</dimen>
+    <dimen name="text_size_status" tools:ignore="MissingDefaultResource">40sp</dimen>
+    <dimen name="text_size_button" tools:ignore="MissingDefaultResource">30sp</dimen>
+
+    <!-- Margens -->
+    <dimen name="margin_bottom_large" tools:ignore="MissingDefaultResource">30dp</dimen>
+    <dimen name="margin_bottom_medium" tools:ignore="MissingDefaultResource">20dp</dimen>
+    <dimen name="margin_bottom_small" tools:ignore="MissingDefaultResource">10dp</dimen>
+</resources>

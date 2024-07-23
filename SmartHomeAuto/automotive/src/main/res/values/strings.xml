@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">SmartHomeAuto</string>
+    <string name="menu_title">Smart Home Control</string>
+    <string name="button_lights">Control Lights</string>
+    <string name="button_gate">Control Gate</string>
+    <string name="lights_control_title">Lights Control</string>
+    <string name="light_status_text">Light Status: OFF</string>
+    <string name="toggle_light_button">Toggle Light</string>
+    <string name="back_to_menu_button">Back to Menu</string>
+    <string name="gate_control_title">Gate Control</string>
+    <string name="gate_status_text">Gate Status: Closed</string>
+    <string name="toggle_gate_button">Toggle Gate</string>
+
 </resources>

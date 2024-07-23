@@ -47,30 +47,30 @@ emyPxgcYxn/eR44/KJ4EBs+lVDR3veyJm+kXQ99b21/+jh5Xos1AnX5iItreGCc=
 -----END CERTIFICATE-----
 )EOF";
 
-// Defining the LED pin
-const int ledPin = 2; // Change to the pin where the LED is connected
+// Defining the LED pin and button pin
+const int ledPin = 12; // Change to the pin where the LED is connected
+const int buttonPin = 14; // Change to the pin where the button is connected
+
+int buttonState = 0;
+int lastButtonState = 0;
+int ledState = LOW;
+unsigned long lastDebounceTime = 0;
+const int debounceDelay = 50; // Delay for debouncing the button
 
 WiFiClientSecure espClient;
 PubSubClient client(espClient);
 
 void setup() {
-  Serial.begin(115200);
   pinMode(ledPin, OUTPUT);
   digitalWrite(ledPin, LOW);
-
-  Serial.print("\nConnecting to ");
-  Serial.println(ssid);
+  pinMode(buttonPin, INPUT);
 
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
-    Serial.print(".");
   }
-
-  Serial.println("\nWiFi connected\nIP address: ");
-  Serial.println(WiFi.localIP());
 
   // Configure the CA certificate
   espClient.setCACert(root_ca);
@@ -85,34 +85,52 @@ void loop() {
     reconnect();
   }
   client.loop();
+
+  int reading = digitalRead(buttonPin);
+
+  if (reading != lastButtonState) {
+    lastDebounceTime = millis();
+  }
+
+  if ((millis() - lastDebounceTime) > debounceDelay) {
+    if (reading != buttonState) {
+      buttonState = reading;
+
+      if (buttonState == HIGH) {
+        // Button is pressed, toggle the LED state
+        ledState = !ledState;
+        digitalWrite(ledPin, ledState);
+
+        // Publish the new LED state
+        if (ledState == HIGH) {
+          client.publish("home/light", "ON");
+        } else {
+          client.publish("home/light", "OFF");
+        }
+      }
+    }
+  }
+  lastButtonState = reading;
 }
 
-// Function to reconnect to the MQTT broker
 void reconnect() {
   while (!client.connected()) {
-    Serial.print("Attempting MQTT connection...");
     String clientId = "ESP32Client-";
     clientId += String(random(0xffff), HEX);
 
     if (client.connect(clientId.c_str(), mqtt_user, mqtt_password)) {
-      Serial.println("connected");
       client.subscribe("home/light"); // Subscribe to the topic to control the LED
     } else {
-      Serial.print("failed, rc=");
-      Serial.print(client.state());
-      Serial.println(" try again in 5 seconds");
       delay(5000);
     }
   }
 }
 
-// Callback function for received messages
 void callback(char* topic, byte* payload, unsigned int length) {
   String incomingMessage = "";
   for (unsigned int i = 0; i < length; i++) {
     incomingMessage += (char)payload[i];
   }
-  Serial.println("Message arrived [" + String(topic) + "] " + incomingMessage);
 
   if (String(topic) == "home/light") {
     if (incomingMessage == "ON") {

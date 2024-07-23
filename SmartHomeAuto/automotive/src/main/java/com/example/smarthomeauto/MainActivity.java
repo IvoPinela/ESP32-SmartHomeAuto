@@ -12,8 +12,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private static final String BROKER_URL = "ssl://05e815044648452d9966e9b6701cb998.s1.eu.hivemq.cloud:8883";
-    private static final String USERNAME = "TestUser";
-    private static final String PASSWORD = "TestPassword";
+    private static final String USERNAME = "PublishTest";
+    private static final String PASSWORD = "Publish123";
 
     private static final String TOPIC = "home/light"; // Topic for controlling the light
 

@@ -20,8 +20,9 @@
         android:layout_height="wrap_content"
         android:text="@string/gate_status_text"
         android:textSize="@dimen/text_size_status"
+        android:layout_below="@id/gateControlTitle"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/margin_bottom_large"/>
+        android:layout_marginTop="@dimen/margin_bottom_large"/>
 
     <Button
         android:id="@+id/buttonToggleGate"
@@ -29,7 +30,9 @@
         android:layout_height="wrap_content"
         android:text="@string/toggle_gate_button"
         android:textSize="@dimen/text_size_button"
-        android:layout_centerHorizontal="true"/>
+        android:layout_below="@id/gateStatusTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_bottom_medium"/>
 
     <Button
         android:id="@+id/buttonBackToMenuGate"

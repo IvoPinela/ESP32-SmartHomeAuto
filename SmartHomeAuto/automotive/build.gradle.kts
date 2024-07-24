@@ -39,6 +39,8 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.room.common)
+    implementation(libs.androidx.room.runtime)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -46,4 +48,5 @@ dependencies {
     implementation (libs.org.eclipse.paho.client.mqttv3)
     implementation (libs.org.eclipse.paho.client.mqttv3.v125)
     implementation (libs.org.eclipse.paho.android.service)
+    annotationProcessor(libs.androidx.room.compiler)
 }

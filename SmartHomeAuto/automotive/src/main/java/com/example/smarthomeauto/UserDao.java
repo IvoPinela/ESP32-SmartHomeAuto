@@ -11,4 +11,11 @@ public interface UserDao {
 
     @Insert
     void insert(User user);
+
+    @Query("SELECT COUNT(*) FROM users WHERE username = :username")
+    int countUsersByUsername(String username);
+
+    @Query("SELECT * FROM users WHERE username = :username AND password = :password")
+    User getUserByCredentials(String username, String password);
+
 }

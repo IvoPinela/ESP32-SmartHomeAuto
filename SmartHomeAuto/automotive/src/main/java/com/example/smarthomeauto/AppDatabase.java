@@ -5,10 +5,9 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import android.content.Context;
 
-@Database(entities = {User.class, UserDevice.class, Device.class}, version = 1)
+@Database(entities = {User.class, Device.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract UserDao userDao();
-    public abstract UserDeviceDao userDeviceDao();
     public abstract DeviceDao deviceDao();
 
     private static volatile AppDatabase INSTANCE;
@@ -26,4 +25,5 @@ public abstract class AppDatabase extends RoomDatabase {
         return INSTANCE;
     }
 }
+
 

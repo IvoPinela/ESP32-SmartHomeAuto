@@ -7,12 +7,12 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class UserActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.initialscreen); // Menu Layout
+        setContentView(R.layout.userscreen); // Menu Layout
 
         Button buttonLights = findViewById(R.id.buttonLights);
         Button buttonGate = findViewById(R.id.buttonGate);
@@ -20,14 +20,14 @@ public class MainActivity extends AppCompatActivity {
         buttonLights.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, LightsControlActivity.class));
+                startActivity(new Intent(UserActivity.this, LightsControlActivity.class));
             }
         });
 
         buttonGate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, GateControlActivity.class));
+                startActivity(new Intent(UserActivity.this, GateControlActivity.class));
             }
         });
     }

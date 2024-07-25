@@ -16,6 +16,7 @@ public class UserActivity extends AppCompatActivity {
 
         Button buttonLights = findViewById(R.id.buttonLights);
         Button buttonGate = findViewById(R.id.buttonGate);
+        Button buttonLogOff = findViewById(R.id.buttonLogOff2);
 
         buttonLights.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -28,6 +29,16 @@ public class UserActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(UserActivity.this, GateControlActivity.class));
+            }
+        });
+
+        buttonLogOff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Log off and return to login screen
+                Intent intent = new Intent(UserActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish(); // Close the UserActivity
             }
         });
     }

@@ -30,4 +30,14 @@
         android:text="@string/button_gate"
         android:textSize="@dimen/text_size_button"
         android:layout_below="@id/buttonLights"/>
+
+    <Button
+        android:id="@+id/buttonLogOff2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Log Off"
+        android:layout_below="@id/buttonGate"
+        android:layout_marginTop="16dp"
+        android:layout_centerHorizontal="true"/>
+
 </RelativeLayout>

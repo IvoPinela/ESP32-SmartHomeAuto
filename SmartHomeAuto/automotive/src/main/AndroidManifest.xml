@@ -29,6 +29,8 @@
         <activity android:name=".GateControlActivity" />
         <activity android:name=".UserActivity" />
         <activity android:name=".AdminActivity" />
+        <activity android:name=".SignUpActivity"/>
+
 
     </application>
 

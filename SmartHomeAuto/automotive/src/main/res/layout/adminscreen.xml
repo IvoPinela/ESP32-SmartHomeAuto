@@ -11,6 +11,25 @@
         android:text="Admin Screen"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"/>
+
+    <Button
+        android:id="@+id/buttonAddAdmin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add New Admin"
+        android:layout_below="@id/adminTitle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp"/>
+
+    <Button
+        android:id="@+id/buttonLogOff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Log Off"
+        android:layout_below="@id/buttonAddAdmin"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"/>
 
 </RelativeLayout>

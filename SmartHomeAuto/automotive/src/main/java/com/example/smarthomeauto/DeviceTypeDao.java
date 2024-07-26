@@ -27,4 +27,12 @@ public interface DeviceTypeDao {
 
     @Query("SELECT * FROM device_types WHERE name LIKE :typeName")
     List<DeviceType> getDeviceTypesByName(String typeName);
+
+
+    @Query("SELECT COUNT(*) FROM device_types WHERE name = :name")
+    int countDeviceTypesByName(String name);
+
+    @Query("SELECT name FROM device_types WHERE id = :deviceTypeId")
+    String getDeviceTypeNameById(int deviceTypeId);
+
 }

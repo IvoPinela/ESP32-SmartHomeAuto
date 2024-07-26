@@ -4,6 +4,8 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity(
         tableName = "devices",
         foreignKeys = @ForeignKey(
@@ -13,7 +15,7 @@ import androidx.room.PrimaryKey;
                 onDelete = ForeignKey.CASCADE
         )
 )
-public class Device {
+public class Device implements Serializable {
     @PrimaryKey(autoGenerate = true)
     public int id;
 

@@ -10,12 +10,15 @@ public class DeviceType {
 
     public String name; // e.g., "light", "gate"
 
-    // Construtor padrão
     public DeviceType() {
     }
 
-    // Construtor completo
     public DeviceType(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

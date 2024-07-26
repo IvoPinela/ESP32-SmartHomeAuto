@@ -30,4 +30,14 @@ public interface DeviceDao {
 
     @Query("SELECT * FROM devices WHERE deviceTypeId = :deviceTypeId")
     List<Device> getDevicesByType(int deviceTypeId);
+
+
+    @Query(
+            "SELECT d.* " +
+                    "FROM devices d " +
+                    "INNER JOIN device_types dt ON d.deviceTypeId = dt.id " +
+                    "WHERE (:deviceName IS NULL OR d.name LIKE '%' || :deviceName || '%') " +
+                    "AND (:deviceTypeId IS NULL OR d.deviceTypeId = :deviceTypeId)"
+    )
+    List<Device> searchDevices(String deviceName, Integer deviceTypeId);
 }

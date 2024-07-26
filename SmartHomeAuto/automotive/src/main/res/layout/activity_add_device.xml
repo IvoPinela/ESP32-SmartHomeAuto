@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/formTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add New Device"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="24dp"/>
+
+    <TextView
+        android:id="@+id/labelDeviceName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Device Name:"
+        android:textSize="16sp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/formTitle"
+        android:layout_marginTop="16dp"/>
+
+    <EditText
+        android:id="@+id/editTextDeviceName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/labelDeviceName"
+        android:layout_marginTop="8dp"
+        android:hint="Enter device name"
+        android:minHeight="48dp"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/labelMqttTopic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MQTT Topic:"
+        android:textSize="16sp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/editTextDeviceName"
+        android:layout_marginTop="16dp"/>
+
+    <EditText
+        android:id="@+id/editTextMqttTopic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/labelMqttTopic"
+        android:layout_marginTop="8dp"
+        android:hint="Enter MQTT topic"
+        android:minHeight="48dp"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/labelMqttServer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MQTT Server:"
+        android:textSize="16sp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/editTextMqttTopic"
+        android:layout_marginTop="16dp"/>
+
+    <EditText
+        android:id="@+id/editTextMqttServer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/labelMqttServer"
+        android:layout_marginTop="8dp"
+        android:hint="Enter MQTT server"
+        android:minHeight="48dp"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/labelMqttUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MQTT User:"
+        android:textSize="16sp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/editTextMqttServer"
+        android:layout_marginTop="16dp"/>
+
+    <EditText
+        android:id="@+id/editTextMqttUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/labelMqttUser"
+        android:layout_marginTop="8dp"
+        android:hint="Enter MQTT user"
+        android:minHeight="48dp"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/labelMqttPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MQTT Password:"
+        android:textSize="16sp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/editTextMqttUser"
+        android:layout_marginTop="16dp"/>
+
+    <EditText
+        android:id="@+id/editTextMqttPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/labelMqttPassword"
+        android:layout_marginTop="8dp"
+        android:hint="Enter MQTT password"
+        android:inputType="textPassword"
+        android:minHeight="48dp"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/labelMqttPort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MQTT Port:"
+        android:textSize="16sp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/editTextMqttPassword"
+        android:layout_marginTop="16dp"/>
+
+    <EditText
+        android:id="@+id/editTextMqttPort"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/labelMqttPort"
+        android:layout_marginTop="8dp"
+        android:hint="Enter MQTT port"
+        android:inputType="number"
+        android:minHeight="48dp"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/labelDeviceType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Device Type:"
+        android:textSize="16sp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/editTextMqttPort"
+        android:layout_marginTop="16dp"/>
+
+    <Spinner
+        android:id="@+id/spinnerDeviceType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/labelDeviceType"
+        android:layout_marginTop="8dp"
+        android:minHeight="48dp"/>
+
+    <Button
+        android:id="@+id/buttonSaveDevice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save Device"
+        android:textSize="18sp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="24dp"/>
+
+    <Button
+        android:id="@+id/buttonBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:textSize="18sp"
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@id/buttonSaveDevice"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="24dp"/>
+</RelativeLayout>

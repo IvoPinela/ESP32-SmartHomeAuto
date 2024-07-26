@@ -45,9 +45,9 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    implementation (libs.org.eclipse.paho.client.mqttv3)
-    implementation (libs.org.eclipse.paho.client.mqttv3.v125)
-    implementation (libs.org.eclipse.paho.android.service)
+    implementation ("org.eclipse.paho:org.eclipse.paho.android.service:1.1.1")
+    implementation ("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.0")
+    implementation ("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
     annotationProcessor(libs.androidx.room.compiler)
     implementation ("org.mindrot:jbcrypt:0.4")
     implementation ("com.google.android.material:material:1.12.0")

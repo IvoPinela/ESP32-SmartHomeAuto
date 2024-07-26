@@ -21,7 +21,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                     AppDatabase.class, "db_SmartHomeAuto")
-                            .addMigrations(MIGRATION_1_2) // Adicione a migração aqui
+                            .addMigrations(MIGRATION_1_2)
                             .build();
                 }
             }

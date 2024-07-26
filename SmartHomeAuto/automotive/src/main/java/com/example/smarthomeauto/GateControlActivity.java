@@ -1,6 +1,7 @@
 package com.example.smarthomeauto;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,20 +19,16 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
     private MqttHandler mqttHandler;
     private TextView gateStatusTextView;
     private boolean isGateOpen = false;
+    private boolean isConnected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.gatescreen); // Gate Control Layout
+        setContentView(R.layout.gatescreen);
 
         // Initialize MQTT handler with this activity as the listener
         mqttHandler = new MqttHandler(this);
-
-        // Connect to the MQTT broker
         mqttHandler.connect(BROKER_URL, USERNAME, PASSWORD);
-
-        // Subscribe to the topic
-        mqttHandler.subscribe(TOPIC);
 
         // Initialize UI components
         gateStatusTextView = findViewById(R.id.gateStatusTextView);
@@ -42,11 +39,15 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
         buttonToggleGate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Toggle gate state and publish message
-                isGateOpen = !isGateOpen;
-                publishMessage(isGateOpen ? "OPEN" : "CLOSED");
-                // Update TextView with gate status
-                gateStatusTextView.setText("Gate Status: " + (isGateOpen ? "OPEN" : "CLOSED"));
+                if (isConnected) {
+                    // Toggle gate state and publish message
+                    isGateOpen = !isGateOpen;
+                    publishMessage(isGateOpen ? "OPEN" : "CLOSED");
+                    // Update TextView with gate status
+                    gateStatusTextView.setText("Gate Status: " + (isGateOpen ? "OPEN" : "CLOSED"));
+                } else {
+                    Log.e(TAG, "Cannot toggle gate. MQTT client is not connected.");
+                }
             }
         });
 
@@ -54,7 +55,6 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
         buttonBackToMenuGate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Go back to main menu
                 finish();
             }
         });
@@ -63,7 +63,6 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Disconnect MQTT handler
         mqttHandler.disconnect();
     }
 
@@ -74,17 +73,26 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
 
     @Override
     public void onMessageReceived(String topic, String message) {
-        // Handle received message
         Log.i(TAG, "Message received on topic " + topic + ": " + message);
         if (TOPIC.equals(topic)) {
             isGateOpen = "OPEN".equals(message);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    // Update TextView with gate status
                     gateStatusTextView.setText("Gate Status: " + (isGateOpen ? "OPEN" : "CLOSED"));
                 }
             });
+        }
+    }
+
+    @Override
+    public void onConnectionStatusChanged(boolean isConnected) {
+        this.isConnected = isConnected;
+        if (isConnected) {
+            // Subscribe to the topic once connected
+            mqttHandler.subscribe(TOPIC);
+        } else {
+            Log.e(TAG, "MQTT client is not connected.");
         }
     }
 }

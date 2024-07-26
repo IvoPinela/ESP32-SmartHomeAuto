@@ -1,70 +1,74 @@
 package com.example.smarthomeauto;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 public class LightsControlActivity extends AppCompatActivity implements MqttHandler.MessageListener {
 
     private static final String TAG = "LightsControlActivity";
     private static final String BROKER_URL = "ssl://05e815044648452d9966e9b6701cb998.s1.eu.hivemq.cloud:8883";
-    private static final String USERNAME = "PublishTest";
-    private static final String PASSWORD = "Publish123";
+    private static final String USERNAME = "Test1234";
+    private static final String PASSWORD = "Test1234";
     private static final String TOPIC = "home/light";
 
     private MqttHandler mqttHandler;
     private TextView lightStatusTextView;
     private boolean isLightOn = false;
+    private boolean isConnected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lightscreen); // Lights Control Layout
+        setContentView(R.layout.lightscreen);
 
-        // Initialize MQTT handler with this activity as the listener
         mqttHandler = new MqttHandler(this);
-
-        // Connect to the MQTT broker
         mqttHandler.connect(BROKER_URL, USERNAME, PASSWORD);
 
-        // Subscribe to the topic
-        mqttHandler.subscribe(TOPIC);
-
-        // Initialize UI components
         lightStatusTextView = findViewById(R.id.lightStatusTextView);
         Button buttonToggleLight = findViewById(R.id.buttonToggleLight);
         Button buttonBackToMenu = findViewById(R.id.buttonBackToMenu);
 
-        // Set click listener for toggle light button
         buttonToggleLight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Toggle light state and publish message
-                isLightOn = !isLightOn;
-                publishMessage(isLightOn ? "ON" : "OFF");
-                // Update TextView with light status
-                lightStatusTextView.setText("Light Status: " + (isLightOn ? "ON" : "OFF"));
+                if (isConnected) {
+                    isLightOn = !isLightOn;
+                    publishMessage(isLightOn ? "ON" : "OFF");
+                    lightStatusTextView.setText("Light Status: " + (isLightOn ? "ON" : "OFF"));
+                } else {
+                    Log.e(TAG, "Cannot toggle light. MQTT client is not connected.");
+                }
             }
         });
 
-        // Set click listener for back button
         buttonBackToMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Go back to main menu
                 finish();
             }
         });
+
+        // Attempt to subscribe once connected
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (isConnected) {
+                    mqttHandler.subscribe(TOPIC);
+                } else {
+                    Log.e(TAG, "Failed to subscribe: MQTT client is not connected");
+                }
+            }
+        }, 2000);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Disconnect MQTT handler
         mqttHandler.disconnect();
     }
 
@@ -75,17 +79,32 @@ public class LightsControlActivity extends AppCompatActivity implements MqttHand
 
     @Override
     public void onMessageReceived(String topic, String message) {
-        // Handle received message
         Log.i(TAG, "Message received on topic " + topic + ": " + message);
         if (TOPIC.equals(topic)) {
             isLightOn = "ON".equals(message);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    // Update TextView with light status
                     lightStatusTextView.setText("Light Status: " + (isLightOn ? "ON" : "OFF"));
                 }
             });
+        } else if ("MQTT_CONNECTION_STATUS".equals(topic)) {
+            isConnected = "Connected".equals(message);
+            if (isConnected) {
+                // Subscribe to the topic once connected
+                mqttHandler.subscribe(TOPIC);
+            }
+        }
+    }
+
+    @Override
+    public void onConnectionStatusChanged(boolean isConnected) {
+        this.isConnected = isConnected;
+        if (isConnected) {
+            // Attempt to subscribe when connection is established
+            mqttHandler.subscribe(TOPIC);
+        } else {
+            Log.e(TAG, "MQTT client is not connected.");
         }
     }
 }

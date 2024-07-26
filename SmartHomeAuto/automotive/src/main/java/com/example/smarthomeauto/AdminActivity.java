@@ -15,6 +15,7 @@ public class AdminActivity extends AppCompatActivity {
         setContentView(R.layout.adminscreen);
 
         Button buttonAddAdmin = findViewById(R.id.buttonAddAdmin);
+        Button buttonShowDevices = findViewById(R.id.buttonShowDevices);
         Button buttonLogOff = findViewById(R.id.buttonLogOff);
 
         buttonAddAdmin.setOnClickListener(new View.OnClickListener() {
@@ -34,6 +35,14 @@ public class AdminActivity extends AppCompatActivity {
                 Intent intent = new Intent(AdminActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finish(); // Close the AdminActivity
+            }
+        });
+        buttonShowDevices.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start DeviceListActivity
+                Intent intent = new Intent(AdminActivity.this, DeviceListActivity.class);
+                startActivity(intent);
             }
         });
     }

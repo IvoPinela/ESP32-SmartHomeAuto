@@ -7,11 +7,12 @@ import android.content.Context;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {User.class, Device.class, DeviceType.class}, version = 2, exportSchema = false)
+@Database(entities = {User.class, Device.class, DeviceType.class,UserDevice.class}, version = 3, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract UserDao userDao();
     public abstract DeviceDao deviceDao();
     public abstract DeviceTypeDao deviceTypeDao();
+    public abstract UserDeviceDao userDeviceDao();
 
     private static volatile AppDatabase INSTANCE;
 
@@ -21,7 +22,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                     AppDatabase.class, "db_SmartHomeAuto")
-                            .addMigrations(MIGRATION_1_2)
+                            .addMigrations(MIGRATION_1_2,MIGRATION_2_3)
                             .build();
                 }
             }
@@ -52,5 +53,16 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
+    public static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS `user_devices` (" +
+                    "`userId` INTEGER NOT NULL, " +
+                    "`deviceId` INTEGER NOT NULL, " +
+                    "PRIMARY KEY(`userId`, `deviceId`), " +
+                    "FOREIGN KEY(`userId`) REFERENCES `users`(`id`) ON DELETE CASCADE, " +
+                    "FOREIGN KEY(`deviceId`) REFERENCES `devices`(`id`) ON DELETE CASCADE)");
+        }
+    };
 
 }

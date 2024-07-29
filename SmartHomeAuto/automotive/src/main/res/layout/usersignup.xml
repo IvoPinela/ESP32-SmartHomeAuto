@@ -2,42 +2,91 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@android:color/black">
 
-    <EditText
-        android:id="@+id/editTextSignupUsername"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Username"
-        android:inputType="text"
-        android:minHeight="48dp" />
-
-    <EditText
-        android:id="@+id/editTextSignupPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/editTextSignupUsername"
-        android:layout_marginTop="16dp"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:minHeight="48dp" />
-
-    <Button
-        android:id="@+id/buttonSignUp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="72dp"
         android:text="Sign Up"
-        android:layout_below="@id/editTextSignupPassword"
-        android:layout_marginTop="16dp"/>
+        android:textColor="@android:color/white"
+        android:textSize="60sp"
+        android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/buttonBackToLogin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Back to Login"
-        android:layout_below="@id/buttonSignUp"
-        android:layout_marginTop="16dp"/>
+    <FrameLayout
+        android:layout_width="1396dp"
+        android:layout_height="333dp"
+        android:layout_below="@id/title"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="47dp">
 
+        <FrameLayout
+            android:layout_width="1237dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@drawable/soft_blue_gradient"
+            android:padding="24dp">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true">
+
+                <EditText
+                    android:id="@+id/editTextSignupUsername"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:hint="Username"
+                    android:inputType="text"
+                    android:minHeight="60dp"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/editTextSignupPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/editTextSignupUsername"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="12dp"
+                    android:hint="Password"
+                    android:inputType="textPassword"
+                    android:minHeight="60dp"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/buttonSignUp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/editTextSignupPassword"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/white"
+                    android:minHeight="60dp"
+                    android:text="Sign Up"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/buttonBackToLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/buttonSignUp"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/white"
+                    android:minHeight="60dp"
+                    android:text="Back to Login"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp" />
+
+            </RelativeLayout>
+
+        </FrameLayout>
+
+    </FrameLayout>
 
 </RelativeLayout>

@@ -2,39 +2,93 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@android:color/black">
 
-    <EditText
-        android:id="@+id/editTextUsername"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Username"
-        android:inputType="text"
-        android:minHeight="48dp" />
-
-    <EditText
-        android:id="@+id/editTextPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/editTextUsername"
-        android:layout_marginTop="16dp"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:minHeight="48dp" />
-
-    <Button
-        android:id="@+id/buttonLogin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="43dp"
+        android:layout_marginTop="72dp"
+        android:layout_marginEnd="117dp"
         android:text="Login"
-        android:layout_below="@id/editTextPassword"
-        android:layout_marginTop="16dp"/>
+        android:textColor="@android:color/white"
+        android:textSize="60sp"
+        android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/buttonSignUp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Sign Up"
-        android:layout_below="@id/buttonLogin"
-        android:layout_marginTop="16dp"/>
+    <FrameLayout
+        android:layout_width="1400dp"
+        android:layout_height="364dp"
+        android:layout_below="@id/title"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="40dp">
+
+        <FrameLayout
+            android:layout_width="1217dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/soft_blue_gradient"
+            android:padding="24dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true">
+
+                <EditText
+                    android:id="@+id/editTextUsername"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:hint="Username"
+                    android:inputType="text"
+                    android:minHeight="60dp"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/editTextPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/editTextUsername"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="12dp"
+                    android:hint="Password"
+                    android:inputType="textPassword"
+                    android:minHeight="60dp"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/buttonLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/editTextPassword"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/white"
+                    android:minHeight="60dp"
+                    android:text="Login"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/buttonSignUp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/buttonLogin"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/white"
+                    android:minHeight="60dp"
+                    android:text="Sign Up"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp" />
+
+            </RelativeLayout>
+
+        </FrameLayout>
+
+    </FrameLayout>
+
 </RelativeLayout>

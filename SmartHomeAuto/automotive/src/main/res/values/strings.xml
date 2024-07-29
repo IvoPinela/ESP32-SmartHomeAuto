@@ -10,5 +10,6 @@
     <string name="gate_control_title">Gate Control</string>
     <string name="gate_status_text">Gate Status: Closed</string>
     <string name="toggle_gate_button">Toggle Gate</string>
+    <string name="log_off">Log Off</string>
 
 </resources>

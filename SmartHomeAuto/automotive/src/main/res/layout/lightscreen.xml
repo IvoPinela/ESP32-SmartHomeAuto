@@ -2,45 +2,85 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@android:color/black">
 
+    <!-- Ícone de Luz de Fundo -->
+    <ImageView
+        android:id="@+id/lightIconBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/baseline_lightbulb_outline_240"
+        android:scaleType="centerInside"
+        android:alpha="0.2" />
+
+    <!-- Título -->
     <TextView
         android:id="@+id/lightsControlTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/lights_control_title"
-        android:textSize="@dimen/text_size_title"
+        android:textSize="60sp"
         android:textStyle="bold"
+        android:textColor="@color/white"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/margin_bottom_large"/>
+        android:layout_marginBottom="20dp"
+        android:elevation="4dp"/>
 
-    <TextView
-        android:id="@+id/lightStatusTextView"
-        android:layout_width="wrap_content"
+    <!-- Container para Status e Switch -->
+    <LinearLayout
+        android:id="@+id/statusContainer"
+        android:layout_width="936dp"
         android:layout_height="wrap_content"
-        android:text="@string/light_status_text"
-        android:textSize="@dimen/text_size_status"
-        android:layout_centerHorizontal="true"
         android:layout_below="@id/lightsControlTitle"
-        android:layout_marginBottom="@dimen/margin_bottom_large"/>
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="284dp"
+        android:layout_marginTop="29dp"
+        android:layout_marginEnd="316dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/container_background"
+        android:elevation="6dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="20dp">
 
-    <Button
-        android:id="@+id/buttonToggleLight"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/toggle_light_button"
-        android:textSize="@dimen/text_size_button"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/lightStatusTextView"
-        android:layout_marginBottom="@dimen/margin_bottom_medium"/>
+        <!-- Status -->
+        <TextView
+            android:id="@+id/lightStatusTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/light_status_text"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
 
+        <!-- Interruptor de Luz -->
+        <Switch
+            android:id="@+id/switchLightControl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:thumbTint="@color/white" />
+    </LinearLayout>
+
+    <!-- Botão de Voltar ao Menu -->
     <Button
         android:id="@+id/buttonBackToMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/back_to_menu_button"
-        android:textSize="@dimen/text_size_button"
+        android:layout_below="@id/statusContainer"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/buttonToggleLight"
-        android:layout_marginTop="@dimen/margin_bottom_medium"/>
+        android:layout_marginTop="20dp"
+        android:background="@color/white"
+        android:text="@string/back_to_menu_button"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
 </RelativeLayout>

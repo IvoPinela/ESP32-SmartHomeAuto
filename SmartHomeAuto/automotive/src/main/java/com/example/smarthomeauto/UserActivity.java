@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,9 +15,9 @@ public class UserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.userscreen); // Menu Layout
 
-        Button buttonLights = findViewById(R.id.buttonLights);
-        Button buttonGate = findViewById(R.id.buttonGate);
-        Button buttonLogOff = findViewById(R.id.buttonLogOff2);
+        ImageButton buttonLights = findViewById(R.id.buttonLights);
+        ImageButton buttonGate = findViewById(R.id.buttonGate);
+        ImageButton buttonLogOff = findViewById(R.id.buttonLogOff);
 
         buttonLights.setOnClickListener(new View.OnClickListener() {
             @Override

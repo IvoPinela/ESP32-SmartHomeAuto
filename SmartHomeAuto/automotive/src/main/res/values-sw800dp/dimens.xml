@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <dimen name="text_size_title" tools:ignore="MissingDefaultResource">24sp</dimen>
+    <dimen name="text_size_title" tools:ignore="MissingDefaultResource">50sp</dimen>
     <dimen name="text_size_status" tools:ignore="MissingDefaultResource">40sp</dimen>
     <dimen name="text_size_button" tools:ignore="MissingDefaultResource">30sp</dimen>
 

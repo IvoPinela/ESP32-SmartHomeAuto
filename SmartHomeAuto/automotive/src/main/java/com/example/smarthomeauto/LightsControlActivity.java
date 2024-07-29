@@ -1,6 +1,11 @@
 package com.example.smarthomeauto;
 
 import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,16 +16,13 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Button;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.app.NotificationCompat;
-import com.google.android.material.snackbar.Snackbar; // Adicione essa importação
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
+import androidx.core.content.ContextCompat;
+
+import com.google.android.material.snackbar.Snackbar;
 
 public class LightsControlActivity extends AppCompatActivity implements MqttHandler.MessageListener {
 
@@ -28,8 +30,10 @@ public class LightsControlActivity extends AppCompatActivity implements MqttHand
     private static final String BROKER_URL = "ssl://05e815044648452d9966e9b6701cb998.s1.eu.hivemq.cloud:8883";
     private static final String USERNAME = "Test1234";
     private static final String PASSWORD = "Test1234";
-    private static final String TOPIC = "home/light";
-    private static final String CHANNEL_ID = "light_status_channel";
+    private static final String LIGHT_TOPIC = "home/light";
+    private static final String GATE_TOPIC = "home/gate";
+    private static final String LIGHT_CHANNEL_ID = "light_status_channel";
+    private static final String GATE_CHANNEL_ID = "gate_status_channel";
 
     private MqttHandler mqttHandler;
     private TextView lightStatusTextView;
@@ -42,8 +46,8 @@ public class LightsControlActivity extends AppCompatActivity implements MqttHand
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lightscreen);
 
-        createNotificationChannel();
-        requestNotificationPermission(); // Solicitar permissão para Android 13+
+        createNotificationChannels();
+        requestNotificationPermission();
 
         mqttHandler = new MqttHandler(this);
         mqttHandler.connect(BROKER_URL, USERNAME, PASSWORD);
@@ -57,14 +61,14 @@ public class LightsControlActivity extends AppCompatActivity implements MqttHand
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isConnected) {
                     isLightOn = isChecked;
-                    publishMessage(isLightOn ? "ON" : "OFF");
+                    publishMessage(LIGHT_TOPIC, isLightOn ? "ON" : "OFF");
                     lightStatusTextView.setText("Light Status: " + (isLightOn ? "ON" : "OFF"));
-                    sendNotification("Light is " + (isLightOn ? "ON" : "OFF"));
-                    showSnackbar("Light is " + (isLightOn ? "ON" : "OFF")); // Mostrar Snackbar
+                    sendNotification(LIGHT_CHANNEL_ID, "Light is " + (isLightOn ? "ON" : "OFF"));
+                    showSnackbar("Light is " + (isLightOn ? "ON" : "OFF"));
                 } else {
                     Log.e(TAG, "Cannot toggle light. MQTT client is not connected.");
-                    sendNotification("MQTT client is not connected.");
-                    showSnackbar("MQTT client is not connected."); // Mostrar Snackbar
+                    sendNotification(LIGHT_CHANNEL_ID, "Cannot toggle light. MQTT client is not connected.");
+                    showSnackbar("Cannot toggle light. MQTT client is not connected.");
                 }
             }
         });
@@ -80,7 +84,8 @@ public class LightsControlActivity extends AppCompatActivity implements MqttHand
             @Override
             public void run() {
                 if (isConnected) {
-                    mqttHandler.subscribe(TOPIC);
+                    mqttHandler.subscribe(LIGHT_TOPIC);
+                    mqttHandler.subscribe(GATE_TOPIC);
                 } else {
                     Log.e(TAG, "Failed to subscribe: MQTT client is not connected");
                 }
@@ -94,29 +99,42 @@ public class LightsControlActivity extends AppCompatActivity implements MqttHand
         mqttHandler.disconnect();
     }
 
-    private void publishMessage(String message) {
-        Log.i(TAG, "Publishing message: " + message);
-        mqttHandler.publish(TOPIC, message);
+    private void publishMessage(String topic, String message) {
+        Log.i(TAG, "Publishing message to " + topic + ": " + message);
+        mqttHandler.publish(topic, message);
     }
 
     @Override
     public void onMessageReceived(String topic, String message) {
         Log.i(TAG, "Message received on topic " + topic + ": " + message);
-        if (TOPIC.equals(topic)) {
+        if (LIGHT_TOPIC.equals(topic)) {
             isLightOn = "ON".equals(message);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     switchLightControl.setChecked(isLightOn);
                     lightStatusTextView.setText("Light Status: " + (isLightOn ? "ON" : "OFF"));
-                    sendNotification("Light is " + (isLightOn ? "ON" : "OFF"));
-                    showSnackbar("Light is " + (isLightOn ? "ON" : "OFF")); // Mostrar Snackbar
+                    sendNotification(LIGHT_CHANNEL_ID, "Light status updated: " + (isLightOn ? "ON" : "OFF"));
+                    showSnackbar("Light status updated: " + (isLightOn ? "ON" : "OFF"));
+                }
+            });
+        } else if (GATE_TOPIC.equals(topic)) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    sendNotification(GATE_CHANNEL_ID, "Gate status: " + message);
+                    showSnackbar("Gate status: " + message);
                 }
             });
         } else if ("MQTT_CONNECTION_STATUS".equals(topic)) {
             isConnected = "Connected".equals(message);
             if (isConnected) {
-                mqttHandler.subscribe(TOPIC);
+                mqttHandler.subscribe(LIGHT_TOPIC);
+                mqttHandler.subscribe(GATE_TOPIC);
+            } else {
+                Log.e(TAG, "MQTT connection lost.");
+                sendNotification(LIGHT_CHANNEL_ID, "MQTT connection lost.");
+                showSnackbar("MQTT connection lost.");
             }
         }
     }
@@ -125,40 +143,51 @@ public class LightsControlActivity extends AppCompatActivity implements MqttHand
     public void onConnectionStatusChanged(boolean isConnected) {
         this.isConnected = isConnected;
         if (isConnected) {
-            mqttHandler.subscribe(TOPIC);
+            mqttHandler.subscribe(LIGHT_TOPIC);
+            mqttHandler.subscribe(GATE_TOPIC);
         } else {
             Log.e(TAG, "MQTT client is not connected.");
-            sendNotification("MQTT client is not connected.");
-            showSnackbar("MQTT client is not connected."); // Mostrar Snackbar
+            sendNotification(LIGHT_CHANNEL_ID, "MQTT client is not connected.");
+            showSnackbar("MQTT client is not connected.");
         }
     }
 
-    private void createNotificationChannel() {
+    private void createNotificationChannels() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Light Status";
-            String description = "Channel for light status notifications";
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
+            // Light Status Channel
+            CharSequence lightName = "Light Status";
+            String lightDescription = "Channel for light status notifications";
+            int lightImportance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel lightChannel = new NotificationChannel(LIGHT_CHANNEL_ID, lightName, lightImportance);
+            lightChannel.setDescription(lightDescription);
+
+            // Gate Status Channel
+            CharSequence gateName = "Gate Status";
+            String gateDescription = "Channel for gate status notifications";
+            int gateImportance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel gateChannel = new NotificationChannel(GATE_CHANNEL_ID, gateName, gateImportance);
+            gateChannel.setDescription(gateDescription);
 
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             if (notificationManager != null) {
-                notificationManager.createNotificationChannel(channel);
+                notificationManager.createNotificationChannel(lightChannel);
+                notificationManager.createNotificationChannel(gateChannel);
+                Log.i(TAG, "Notification channels created.");
+            } else {
+                Log.e(TAG, "Failed to create notification channels.");
             }
         }
     }
 
     private void requestNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
-                    != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
             }
         }
     }
 
-    private void sendNotification(String message) {
+    private void sendNotification(String channelId, String message) {
         Log.d(TAG, "Preparing to send notification with message: " + message);
 
         Intent intent = new Intent(this, LightsControlActivity.class);
@@ -169,9 +198,9 @@ public class LightsControlActivity extends AppCompatActivity implements MqttHand
             pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         }
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
                 .setSmallIcon(R.drawable.baseline_notifications_24)
-                .setContentTitle("Light Status")
+                .setContentTitle("Status Update")
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent)
@@ -179,7 +208,8 @@ public class LightsControlActivity extends AppCompatActivity implements MqttHand
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (notificationManager != null) {
-            notificationManager.notify(1, builder.build());
+            int notificationId = channelId.equals(LIGHT_CHANNEL_ID) ? 1 : 2;
+            notificationManager.notify(notificationId, builder.build());
             Log.d(TAG, "Notification sent.");
         } else {
             Log.e(TAG, "NotificationManager is null.");

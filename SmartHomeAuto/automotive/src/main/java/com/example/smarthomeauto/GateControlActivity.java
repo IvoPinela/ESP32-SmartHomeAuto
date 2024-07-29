@@ -1,24 +1,25 @@
 package com.example.smarthomeauto;
 
 import android.Manifest;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.app.NotificationCompat;
-import com.google.android.material.snackbar.Snackbar; // Importa a biblioteca do Snackbar
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
+
+import com.google.android.material.snackbar.Snackbar;
 
 public class GateControlActivity extends AppCompatActivity implements MqttHandler.MessageListener {
 
@@ -61,12 +62,14 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
                 // Update TextView with gate status
                 gateStatusTextView.setText("Gate Status: " + (isGateOpen ? "OPEN" : "CLOSED"));
                 // Show Snackbar and send notification
-                showSnackbar("Gate is now " + (isGateOpen ? "OPEN" : "CLOSED"));
-                sendNotification("Gate is now " + (isGateOpen ? "OPEN" : "CLOSED"));
+                String statusMessage = "Gate is now " + (isGateOpen ? "OPEN" : "CLOSED");
+                showSnackbar(statusMessage);
+                sendNotification(statusMessage);
             } else {
                 Log.e(TAG, "Cannot toggle gate. MQTT client is not connected.");
-                showSnackbar("MQTT client is not connected.");
-                sendNotification("MQTT client is not connected.");
+                String errorMessage = "MQTT client is not connected.";
+                showSnackbar(errorMessage);
+                sendNotification(errorMessage);
             }
         });
 
@@ -81,7 +84,7 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
     }
 
     private void publishMessage(String message) {
-        Log.i(TAG, "Publishing message: " + message);
+        Log.i(TAG, "Publishing message to topic " + TOPIC + ": " + message);
         mqttHandler.publish(TOPIC, message);
     }
 
@@ -91,9 +94,10 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
         if (TOPIC.equals(topic)) {
             isGateOpen = "OPEN".equals(message);
             runOnUiThread(() -> {
+                String statusMessage = "Gate status updated to " + (isGateOpen ? "OPEN" : "CLOSED");
                 gateStatusTextView.setText("Gate Status: " + (isGateOpen ? "OPEN" : "CLOSED"));
-                showSnackbar("Gate status updated to " + (isGateOpen ? "OPEN" : "CLOSED"));
-                sendNotification("Gate status updated to " + (isGateOpen ? "OPEN" : "CLOSED"));
+                showSnackbar(statusMessage);
+                sendNotification(statusMessage);
             });
         }
     }
@@ -105,8 +109,9 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
             mqttHandler.subscribe(TOPIC);
         } else {
             Log.e(TAG, "MQTT client is not connected.");
-            showSnackbar("MQTT client is not connected.");
-            sendNotification("MQTT client is not connected.");
+            String errorMessage = "MQTT client is not connected.";
+            showSnackbar(errorMessage);
+            sendNotification(errorMessage);
         }
     }
 
@@ -121,6 +126,9 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             if (notificationManager != null) {
                 notificationManager.createNotificationChannel(channel);
+                Log.i(TAG, "Notification channel created.");
+            } else {
+                Log.e(TAG, "Failed to create notification channel.");
             }
         }
     }

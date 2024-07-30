@@ -31,4 +31,13 @@ public interface BrokerDao {
 
     @Query("SELECT * FROM broker WHERE PORT = :port")
     List<Broker> getBrokersByPort(int port);
+
+    @Query("SELECT * FROM broker WHERE ClusterURL LIKE '%' || :query || '%'")
+    List<Broker> searchBrokers(String query);
+
+    @Query("SELECT * FROM broker WHERE ClusterURL = :clusterURL AND PORT = :port")
+    Broker getBrokerByUrlAndPort(String clusterURL, int port);
+
+    @Query("SELECT * FROM broker WHERE ClusterURL = :clusterURL AND PORT = :port AND PK_BrokerID != :id")
+    Broker getBrokerByUrlAndPortExcludingId(String clusterURL, int port, int id);
 }

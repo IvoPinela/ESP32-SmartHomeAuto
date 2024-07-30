@@ -3,8 +3,10 @@ package com.example.smarthomeauto;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity(tableName = "broker")
-public class Broker {
+public class Broker implements Serializable {
     @PrimaryKey(autoGenerate = true)
     public int PK_BrokerID;
 

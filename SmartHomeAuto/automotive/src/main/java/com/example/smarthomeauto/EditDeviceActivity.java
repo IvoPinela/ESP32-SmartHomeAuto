@@ -189,25 +189,32 @@ public class EditDeviceActivity extends Activity {
             int deviceTypeId = selectedDeviceType.id;
             int creatorUserId = selectedCreatorUser.id; // Get creator user ID
 
-            if (device != null) {
-                device.name = name;
-                device.mqttTopic = topic;
-                device.mqttUser = user;
-                device.mqttPassword = password;
-                device.deviceTypeId = deviceTypeId;
-                device.creatorUserId = creatorUserId; // Update creator user ID
-
-                // Update device in the database
-                deviceDao.update(device);
+            Device existingDevice = deviceDao.getDeviceByNameAndUserExceptId(name, creatorUserId, device != null ? device.id : -1);
+            if (existingDevice != null) {
+                runOnUiThread(() -> {
+                    showAlert("A device with the same name and creator user already exists!");
+                });
             } else {
-                device = new Device(name, topic, user, password, deviceTypeId, creatorUserId);
-                deviceDao.insert(device);
-            }
+                if (device != null) {
+                    device.name = name;
+                    device.mqttTopic = topic;
+                    device.mqttUser = user;
+                    device.mqttPassword = password;
+                    device.deviceTypeId = deviceTypeId;
+                    device.creatorUserId = creatorUserId; // Update creator user ID
 
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra("device", device);
-            setResult(RESULT_OK, resultIntent);
-            finish();
+                    // Update device in the database
+                    deviceDao.update(device);
+                } else {
+                    device = new Device(name, topic, user, password, deviceTypeId, creatorUserId);
+                    deviceDao.insert(device);
+                }
+
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("device", device);
+                setResult(RESULT_OK, resultIntent);
+                finish();
+            }
         }).start();
     }
 

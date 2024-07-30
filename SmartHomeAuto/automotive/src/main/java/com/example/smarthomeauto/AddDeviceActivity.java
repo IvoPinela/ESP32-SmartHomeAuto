@@ -97,7 +97,6 @@ public class AddDeviceActivity extends AppCompatActivity {
         }).start();
     }
 
-
     private void saveDevice() {
 
         boolean hasError = false;
@@ -105,7 +104,6 @@ public class AddDeviceActivity extends AppCompatActivity {
         String topic = editTextMqttTopic.getText().toString().trim();
         String user = editTextMqttUser.getText().toString().trim();
         String password = editTextMqttPassword.getText().toString().trim();
-
 
         // Validate fields
         if (name.isEmpty()) {
@@ -145,15 +143,23 @@ public class AddDeviceActivity extends AppCompatActivity {
             return;
         }
 
-        Device newDevice = new Device(name, topic, user, password, deviceTypeId, creatorUserId);
-
         new Thread(() -> {
-            deviceDao.insert(newDevice);
-            runOnUiThread(() -> {
-                showAlert("Device saved!");
-                setResult(RESULT_OK);
-                finish();
-            });
+            // Check for duplicate devices with the same name and creator user
+            Device existingDevice = deviceDao.getDeviceByNameAndUser(name, creatorUserId);
+            if (existingDevice != null) {
+                runOnUiThread(() -> {
+                    showAlert("A device with the same name and creator user already exists!");
+                });
+            } else {
+                // Insert new device
+                Device newDevice = new Device(name, topic, user, password, deviceTypeId, creatorUserId);
+                deviceDao.insert(newDevice);
+                runOnUiThread(() -> {
+                    showAlert("Device saved!");
+                    setResult(RESULT_OK);
+                    finish();
+                });
+            }
         }).start();
     }
 

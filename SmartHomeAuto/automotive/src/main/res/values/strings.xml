@@ -16,5 +16,17 @@
     <string name="enter_device_name">Enter device name</string>
     <string name="mqtt_topic">MQTT Topic:</string>
     <string name="enter_mqtt_topic">Enter MQTT topic</string>
+    <string name="cluster_url">Cluster URL</string>
+    <string name="port">Port:</string>
+    <string name="add_new_broker">Add New Broker</string>
+    <string name="cluster_url2">Cluster URL:</string>
+    <string name="enter_cluster_url">Enter cluster URL</string>
+    <string name="enter_port">Enter port</string>
+    <string name="username">Username:</string>
+    <string name="enter_username">Enter username</string>
+    <string name="password">Password:</string>
+    <string name="enter_password">Enter password</string>
+    <string name="save_broker">Save Broker</string>
+    <string name="back">Back</string>
 
 </resources>

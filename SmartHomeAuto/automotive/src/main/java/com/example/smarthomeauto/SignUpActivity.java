@@ -71,6 +71,11 @@ public class SignUpActivity extends AppCompatActivity {
                         newUser.password = HashUtils.hashPassword(password); // Hash the password
                         newUser.role = userRole; // Set the role based on intent
 
+                        newUser.mqttUser = null;
+                        newUser.mqttPassword = null;
+                        newUser.managerUserId = null;
+                        newUser.brokerID = null;
+
                         db.userDao().insert(newUser);
                         Log.d("signup", userRole + " user created successfully");
 

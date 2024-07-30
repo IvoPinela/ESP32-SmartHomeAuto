@@ -22,6 +22,12 @@ public interface DeviceDao {
     @Query("SELECT * FROM devices")
     List<Device> getAllDevices();
 
+    @Query("SELECT * FROM devices WHERE name = :deviceName AND creatorUserId = :creatorUserId")
+    Device getDeviceByNameAndUser(String deviceName, int creatorUserId);
+
+    @Query("SELECT * FROM devices WHERE name = :deviceName AND creatorUserId = :creatorUserId AND id != :deviceId")
+    Device getDeviceByNameAndUserExceptId(String deviceName, int creatorUserId, int deviceId);
+
     @Query("SELECT * FROM devices WHERE id = :deviceId")
     Device getDeviceById(int deviceId);
 
@@ -53,4 +59,6 @@ public interface DeviceDao {
                     "AND (:deviceTypeId IS NULL OR d.deviceTypeId = :deviceTypeId)"
     )
     List<Device> searchDevices(String deviceName, Integer deviceTypeId);
+
+
 }

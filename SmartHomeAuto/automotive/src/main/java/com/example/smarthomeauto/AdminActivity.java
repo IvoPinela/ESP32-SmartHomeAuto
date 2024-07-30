@@ -17,6 +17,7 @@ public class AdminActivity extends AppCompatActivity {
         Button buttonAddAdmin = findViewById(R.id.buttonAddAdmin);
         Button buttonShowDevices = findViewById(R.id.buttonShowDevices);
         Button buttonLogOff = findViewById(R.id.buttonLogOff);
+        Button buttonShowBrokers = findViewById(R.id.buttonShowBrokers);
 
         buttonAddAdmin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,6 +43,14 @@ public class AdminActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Start DeviceListActivity
                 Intent intent = new Intent(AdminActivity.this, DeviceListActivity.class);
+                startActivity(intent);
+            }
+        });
+        buttonShowBrokers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start BrokerListActivity
+                Intent intent = new Intent(AdminActivity.this, BrokerListActivity.class);
                 startActivity(intent);
             }
         });

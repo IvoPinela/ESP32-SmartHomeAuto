@@ -35,6 +35,9 @@
         <activity android:name=".DeviceListActivity"/>
         <activity android:name=".AddDeviceActivity"/>
         <activity android:name=".EditDeviceActivity"/>
+        <activity android:name=".BrokerListActivity"/>
+        <activity android:name=".AddBrokerActivity"/>
+        <activity android:name=".EditBrokerActivity"/>
 
 
 

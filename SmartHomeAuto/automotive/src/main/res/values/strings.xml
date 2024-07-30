@@ -11,5 +11,10 @@
     <string name="gate_status_text">Gate Status: Closed</string>
     <string name="toggle_gate_button">Toggle Gate</string>
     <string name="log_off">Log Off</string>
+    <string name="add_new_device">Add New Device</string>
+    <string name="device_name">Device Name:</string>
+    <string name="enter_device_name">Enter device name</string>
+    <string name="mqtt_topic">MQTT Topic:</string>
+    <string name="enter_mqtt_topic">Enter MQTT topic</string>
 
 </resources>

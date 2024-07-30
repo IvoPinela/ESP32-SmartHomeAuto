@@ -31,7 +31,20 @@ public interface DeviceDao {
     @Query("SELECT * FROM devices WHERE deviceTypeId = :deviceTypeId")
     List<Device> getDevicesByType(int deviceTypeId);
 
+    @Query("SELECT * FROM devices WHERE creatorUserId IN (SELECT id FROM users WHERE username LIKE '%' || :creatorName || '%') AND deviceTypeId = :deviceTypeId")
+    List<Device> searchDevicesByCreatorNameAndType(String creatorName, Integer deviceTypeId);
 
+    @Query("SELECT * FROM devices WHERE creatorUserId IN (SELECT id FROM users WHERE username LIKE '%' || :creatorName || '%')")
+    List<Device> getDevicesByCreatorName(String creatorName);
+
+    @Query("SELECT d.* " +
+            "FROM devices d " +
+            "INNER JOIN users u ON d.creatorUserId = u.id " +
+            "INNER JOIN device_types dt ON d.deviceTypeId = dt.id " +
+            "WHERE (:deviceName IS NULL OR d.name LIKE '%' || :deviceName || '%') " +
+            "AND (:deviceTypeId IS NULL OR d.deviceTypeId = :deviceTypeId) " +
+            "AND (:creatorName IS NULL OR u.username LIKE '%' || :creatorName || '%')")
+    List<Device> searchDevices2(String deviceName, Integer deviceTypeId, String creatorName);
     @Query(
             "SELECT d.* " +
                     "FROM devices d " +

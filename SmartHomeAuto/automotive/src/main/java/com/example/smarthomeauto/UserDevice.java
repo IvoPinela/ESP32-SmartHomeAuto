@@ -7,16 +7,18 @@ import androidx.room.ForeignKey;
         tableName = "user_devices",
         primaryKeys = {"userId", "deviceId"},
         foreignKeys = {
-                @ForeignKey(entity = User.class, parentColumns = "id", childColumns = "userId", onDelete = ForeignKey.CASCADE),
-                @ForeignKey(entity = Device.class, parentColumns = "id", childColumns = "deviceId", onDelete = ForeignKey.CASCADE)
+                @ForeignKey(entity = User.class, parentColumns = "id", childColumns = "userId"),
+                @ForeignKey(entity = Device.class, parentColumns = "id", childColumns = "deviceId")
         }
 )
 public class UserDevice {
     public int userId;
     public int deviceId;
+    public String permissions; // e.g., "read", "write", "control"
 
-    public UserDevice(int userId, int deviceId) {
+    public UserDevice(int userId, int deviceId, String permissions) {
         this.userId = userId;
         this.deviceId = deviceId;
+        this.permissions = permissions;
     }
 }

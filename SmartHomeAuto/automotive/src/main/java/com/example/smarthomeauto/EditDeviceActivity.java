@@ -1,35 +1,39 @@
 package com.example.smarthomeauto;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.room.Room;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EditDeviceActivity extends Activity {
 
     private EditText editTextDeviceName;
     private EditText editTextMqttTopic;
-    private EditText editTextMqttServer;
     private EditText editTextMqttUser;
     private EditText editTextMqttPassword;
-    private EditText editTextMqttPort;
     private Spinner spinnerDeviceType;
+    private Spinner spinnerCreatorUser; // Spinner for Creator User
     private Button buttonSaveDevice;
     private Button buttonBack; // Declare o botão "Back"
     private Device device;
     private List<DeviceType> deviceTypeList;
+    private List<User> userList; // List of users for the Creator User spinner
     private DeviceDao deviceDao;
     private DeviceTypeDao deviceTypeDao;
+    private UserDao userDao; // DAO for User
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,17 +42,17 @@ public class EditDeviceActivity extends Activity {
         TextView formTitle = findViewById(R.id.formTitle);
         editTextDeviceName = findViewById(R.id.editTextDeviceName);
         editTextMqttTopic = findViewById(R.id.editTextMqttTopic);
-        editTextMqttServer = findViewById(R.id.editTextMqttServer);
         editTextMqttUser = findViewById(R.id.editTextMqttUser);
         editTextMqttPassword = findViewById(R.id.editTextMqttPassword);
-        editTextMqttPort = findViewById(R.id.editTextMqttPort);
         spinnerDeviceType = findViewById(R.id.spinnerDeviceType);
+        spinnerCreatorUser = findViewById(R.id.spinnerCreatorUser); // Initialize the Creator User spinner
         buttonSaveDevice = findViewById(R.id.buttonSaveDevice);
-        buttonBack = findViewById(R.id.buttonBack); // Inicialize o botão "Back" aqui
+        buttonBack = findViewById(R.id.buttonBack); // Initialize the Back button
 
         AppDatabase database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "db_SmartHomeAuto").build();
         deviceDao = database.deviceDao();
         deviceTypeDao = database.deviceTypeDao();
+        userDao = database.userDao(); // Initialize User DAO
 
         Intent intent = getIntent();
         if (intent.hasExtra("device")) {
@@ -56,40 +60,55 @@ public class EditDeviceActivity extends Activity {
             formTitle.setText("Edit Device");
             editTextDeviceName.setText(device.name);
             editTextMqttTopic.setText(device.mqttTopic);
-            editTextMqttServer.setText(device.mqttServer);
             editTextMqttUser.setText(device.mqttUser);
             editTextMqttPassword.setText(device.mqttPassword);
-            editTextMqttPort.setText(String.valueOf(device.mqttPort));
         } else {
             formTitle.setText("Add New Device");
         }
 
-        // Carregue os tipos de dispositivos
         loadDeviceTypes();
+        loadUsers();
 
-        // Configurar o botão de salvar
         buttonSaveDevice.setOnClickListener(v -> saveDevice());
 
-        // Configurar o botão de voltar
         buttonBack.setOnClickListener(v -> {
-            // Cria um Intent para iniciar a DeviceListActivity
             Intent intent2 = new Intent(EditDeviceActivity.this, DeviceListActivity.class);
             startActivity(intent2);
-            finish(); // Finaliza a EditDeviceActivity para removê-la da pilha de atividades
+            finish();
         });
     }
 
     private void loadDeviceTypes() {
         new Thread(() -> {
-            deviceTypeList = deviceTypeDao.getAllDeviceTypes(); // Recupera todos os tipos de dispositivos
+            deviceTypeList = deviceTypeDao.getAllDeviceTypes();
             runOnUiThread(() -> {
                 ArrayAdapter<DeviceType> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, deviceTypeList);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinnerDeviceType.setAdapter(adapter);
 
-                // Selecionar o tipo de dispositivo correto, se estiver editando
                 if (device != null) {
                     setSpinnerSelection(device.deviceTypeId);
+                }
+            });
+        }).start();
+    }
+
+    private void loadUsers() {
+        new Thread(() -> {
+            userList = userDao.getAllUsers(); // Load all users
+            runOnUiThread(() -> {
+                List<User> filteredUsers = new ArrayList<>();
+                for (User user : userList) {
+                    if ("user".equals(user.role)) {
+                        filteredUsers.add(user);
+                    }
+                }
+                ArrayAdapter<User> adapter = new ArrayAdapter<>(EditDeviceActivity.this, android.R.layout.simple_spinner_item, filteredUsers);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerCreatorUser.setAdapter(adapter);
+
+                if (device != null) {
+                    setSpinnerCreatorUserSelection(device.creatorUserId);
                 }
             });
         }).start();
@@ -105,59 +124,98 @@ public class EditDeviceActivity extends Activity {
         }
     }
 
+    private void setSpinnerCreatorUserSelection(int creatorUserId) {
+        for (int i = 0; i < spinnerCreatorUser.getCount(); i++) {
+            User user = (User) spinnerCreatorUser.getItemAtPosition(i);
+            if (user.id == creatorUserId) {
+                spinnerCreatorUser.setSelection(i);
+                break;
+            }
+        }
+    }
+
     private void saveDevice() {
         String name = editTextDeviceName.getText().toString().trim();
         String topic = editTextMqttTopic.getText().toString().trim();
-        String server = editTextMqttServer.getText().toString().trim();
         String user = editTextMqttUser.getText().toString().trim();
         String password = editTextMqttPassword.getText().toString().trim();
-        String portString = editTextMqttPort.getText().toString().trim();
         DeviceType selectedDeviceType = (DeviceType) spinnerDeviceType.getSelectedItem();
+        User selectedCreatorUser = (User) spinnerCreatorUser.getSelectedItem(); // Get selected creator user
 
-        // Verifique se o campo de porta é um número válido
-        int port;
-        try {
-            port = Integer.parseInt(portString);
-        } catch (NumberFormatException e) {
-            editTextMqttPort.setError("Invalid port number");
-            return;
+        // Flag to track if there are validation errors
+        boolean hasError = false;
+
+        // Clear previous errors
+        editTextDeviceName.setError(null);
+        editTextMqttTopic.setError(null);
+        editTextMqttUser.setError(null);
+        editTextMqttPassword.setError(null);
+
+        // Validate fields
+        if (name.isEmpty()) {
+            editTextDeviceName.setError("Device name is required");
+            hasError = true;
+        }
+        if (topic.isEmpty()) {
+            editTextMqttTopic.setError("MQTT topic is required");
+            hasError = true;
+        }
+        if (user.isEmpty()) {
+            editTextMqttUser.setError("MQTT user is required");
+            hasError = true;
+        }
+        if (password.isEmpty()) {
+            editTextMqttPassword.setError("MQTT password is required");
+            hasError = true;
         }
 
-        int deviceTypeId = selectedDeviceType.id;
+        // Ensure a Device Type and Creator User are selected
+        if (selectedDeviceType == null) {
+            // Handle case where Device Type is not selected
+            showAlert("Please select a device type");
+            hasError = true;
+        }
+        if (selectedCreatorUser == null) {
+            // Handle case where Creator User is not selected
+            showAlert("Please select a creator user");
+            hasError = true;
+        }
 
-        if (name.isEmpty() || topic.isEmpty() || server.isEmpty() || user.isEmpty() || password.isEmpty()) {
-            // Exibe uma mensagem de erro
-            if (name.isEmpty()) editTextDeviceName.setError("Device name is required");
-            if (topic.isEmpty()) editTextMqttTopic.setError("MQTT topic is required");
-            if (server.isEmpty()) editTextMqttServer.setError("MQTT server is required");
-            if (user.isEmpty()) editTextMqttUser.setError("MQTT user is required");
-            if (password.isEmpty()) editTextMqttPassword.setError("MQTT password is required");
+        if (hasError) {
             return;
         }
 
         new Thread(() -> {
+            int deviceTypeId = selectedDeviceType.id;
+            int creatorUserId = selectedCreatorUser.id; // Get creator user ID
+
             if (device != null) {
                 device.name = name;
                 device.mqttTopic = topic;
-                device.mqttServer = server;
                 device.mqttUser = user;
                 device.mqttPassword = password;
-                device.mqttPort = port;
                 device.deviceTypeId = deviceTypeId;
+                device.creatorUserId = creatorUserId; // Update creator user ID
 
-                // Atualiza o dispositivo na base de dados
+                // Update device in the database
                 deviceDao.update(device);
             } else {
-                device = new Device(name, topic, server, user, password, port, deviceTypeId);
-                // Insere um novo dispositivo na base de dados
+                device = new Device(name, topic, user, password, deviceTypeId, creatorUserId);
                 deviceDao.insert(device);
             }
 
-            // Cria um Intent para retornar o dispositivo atualizado para a Activity anterior
             Intent resultIntent = new Intent();
             resultIntent.putExtra("device", device);
             setResult(RESULT_OK, resultIntent);
             finish();
         }).start();
+    }
+
+    private void showAlert(String message) {
+        new AlertDialog.Builder(EditDeviceActivity.this)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss())
+                .create()
+                .show();
     }
 }

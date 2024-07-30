@@ -17,11 +17,14 @@ public class DeviceAdapter extends ArrayAdapter<Device> {
 
     private int selectedPosition = -1;
     private DeviceTypeDao deviceTypeDao;
+    private UserDao userDao;
 
     public DeviceAdapter(Context context, List<Device> devices) {
         super(context, 0, devices);
-        // Inicialize o DeviceTypeDao
-        deviceTypeDao = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "db_SmartHomeAuto").build().deviceTypeDao();
+
+        AppDatabase database = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "db_SmartHomeAuto").build();
+        deviceTypeDao = database.deviceTypeDao();
+        userDao = database.userDao();
     }
 
     @Override
@@ -32,26 +35,22 @@ public class DeviceAdapter extends ArrayAdapter<Device> {
 
         Device device = getItem(position);
 
+
         TextView textViewName = convertView.findViewById(R.id.textViewName);
-
         TextView textViewTopic = convertView.findViewById(R.id.textViewTopic);
-
-        TextView textViewServer = convertView.findViewById(R.id.textViewServer);
-
-        TextView textViewPort = convertView.findViewById(R.id.textViewPort);
-
         TextView textViewDeviceType = convertView.findViewById(R.id.textViewDeviceType);
+        TextView textViewUser = convertView.findViewById(R.id.textViewUser);
+        TextView textViewMqttUser = convertView.findViewById(R.id.textViewMqttUser);
+        TextView textViewMqttPassword = convertView.findViewById(R.id.textViewMqttPassword);
 
 
-        // Popula os TextViews com as informações do dispositivo
         if (device != null) {
-            textViewName.setText("Name:"+device.name);
+            textViewName.setText("Name: " + device.name);
             textViewTopic.setText("MQTT Topic: " + device.mqttTopic);
-            textViewServer.setText("MQTT Server: " + device.mqttServer);
-            textViewPort.setText("Port: " + device.mqttPort);
+            textViewMqttUser.setText("MQTT User: " + device.mqttUser);
+            textViewMqttPassword.setText("MQTT Password: " + device.mqttPassword);
 
 
-            // Obtenha a descrição do tipo de dispositivo
             new Thread(() -> {
                 String deviceTypeName = deviceTypeDao.getDeviceTypeNameById(device.deviceTypeId);
                 if (deviceTypeName == null) {
@@ -62,9 +61,18 @@ public class DeviceAdapter extends ArrayAdapter<Device> {
                     textViewDeviceType.setText("Device Type: " + finalDeviceTypeName);
                 });
             }).start();
+
+
+            new Thread(() -> {
+                User creatorUser = userDao.getUserById(device.creatorUserId);
+                final String creatorUserName = (creatorUser != null) ? creatorUser.username : "Unknown";
+                ((Activity) getContext()).runOnUiThread(() -> {
+                    textViewUser.setText("Creator User: " + creatorUserName);
+                });
+            }).start();
         }
 
-        // Define a cor de fundo com base na seleção
+
         if (position == selectedPosition) {
             convertView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorSelectedItem));
         } else {
@@ -84,4 +92,5 @@ public class DeviceAdapter extends ArrayAdapter<Device> {
         addAll(newDevices);
         notifyDataSetChanged();
     }
+
 }

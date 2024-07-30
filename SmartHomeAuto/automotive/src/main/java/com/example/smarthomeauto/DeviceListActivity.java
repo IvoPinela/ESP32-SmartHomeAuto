@@ -13,7 +13,6 @@ import android.widget.Spinner;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.room.Room;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -33,7 +32,8 @@ public class DeviceListActivity extends AppCompatActivity {
     private List<DeviceType> deviceTypeList;
     private Device selectedDevice;
     private Spinner spinnerDeviceType;
-    private SearchView searchView;
+    private SearchView searchViewName;
+    private SearchView searchViewUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +45,8 @@ public class DeviceListActivity extends AppCompatActivity {
         ImageButton buttonDelete = findViewById(R.id.buttonDelete);
         ImageButton buttonEditDevice = findViewById(R.id.buttonEdit);
         spinnerDeviceType = findViewById(R.id.spinnerDeviceType);
-        searchView = findViewById(R.id.searchView);
+        searchViewName = findViewById(R.id.searchViewName);
+        searchViewUser = findViewById(R.id.searchViewUser);
         listViewDevices = findViewById(R.id.listViewDevices);
 
         deviceDao = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "db_SmartHomeAuto").build().deviceDao();
@@ -83,7 +84,7 @@ public class DeviceListActivity extends AppCompatActivity {
         });
 
         setupSpinner();
-        setupSearchView();
+        setupSearchViews();
         loadDevices();
     }
 
@@ -91,7 +92,7 @@ public class DeviceListActivity extends AppCompatActivity {
         new Thread(() -> {
             deviceTypeList = deviceTypeDao.getAllDeviceTypes();
             runOnUiThread(() -> {
-                DeviceType allTypes = new DeviceType("All");
+                DeviceType allTypes = new DeviceType("All", "All");
                 allTypes.id = -1;
                 deviceTypeList.add(0, allTypes);
 
@@ -116,8 +117,22 @@ public class DeviceListActivity extends AppCompatActivity {
         }).start();
     }
 
-    private void setupSearchView() {
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+    private void setupSearchViews() {
+        searchViewName.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                filterDevices();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterDevices();
+                return true;
+            }
+        });
+
+        searchViewUser.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 filterDevices();
@@ -143,21 +158,13 @@ public class DeviceListActivity extends AppCompatActivity {
     }
 
     private void filterDevices() {
-        String query = searchView.getQuery().toString().trim();
+        String queryName = searchViewName.getQuery().toString().trim();
+        String queryUser = searchViewUser.getQuery().toString().trim();
         DeviceType selectedType = (DeviceType) spinnerDeviceType.getSelectedItem();
         Integer deviceTypeId = (selectedType != null && selectedType.id != -1) ? selectedType.id : null;
 
         new Thread(() -> {
-            List<Device> filteredDevices;
-            if (query.isEmpty() && deviceTypeId == null) {
-                filteredDevices = deviceDao.getAllDevices();
-            } else if (query.isEmpty()) {
-                filteredDevices = deviceDao.getDevicesByType(deviceTypeId);
-            } else if (deviceTypeId == null) {
-                filteredDevices = deviceDao.getDevicesByName(query);
-            } else {
-                filteredDevices = deviceDao.searchDevices(query, deviceTypeId);
-            }
+            List<Device> filteredDevices = deviceDao.searchDevices2(queryName, deviceTypeId, queryUser);
             runOnUiThread(() -> {
                 deviceAdapter.clear();
                 deviceAdapter.addAll(filteredDevices);

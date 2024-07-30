@@ -8,12 +8,10 @@ import java.io.Serializable;
 
 @Entity(
         tableName = "devices",
-        foreignKeys = @ForeignKey(
-                entity = DeviceType.class,
-                parentColumns = "id",
-                childColumns = "deviceTypeId",
-                onDelete = ForeignKey.CASCADE
-        )
+        foreignKeys = {
+                @ForeignKey(entity = DeviceType.class, parentColumns = "id", childColumns = "deviceTypeId", onDelete = ForeignKey.CASCADE),
+                @ForeignKey(entity = User.class, parentColumns = "id", childColumns = "creatorUserId", onDelete = ForeignKey.CASCADE)
+        }
 )
 public class Device implements Serializable {
     @PrimaryKey(autoGenerate = true)
@@ -21,27 +19,22 @@ public class Device implements Serializable {
 
     public String name;
     public String mqttTopic;
-    public String mqttServer;
     public String mqttUser;
     public String mqttPassword;
-    public int mqttPort;
-
-
     public int deviceTypeId;
-
+    public int creatorUserId;
 
     public Device() {
     }
 
-
-    public Device(String name, String mqttTopic, String mqttServer, String mqttUser,
-                  String mqttPassword, int mqttPort, int deviceTypeId) {
+    public Device(String name, String mqttTopic,  String mqttUser, String mqttPassword, int deviceTypeId, int creatorUserId) {
         this.name = name;
         this.mqttTopic = mqttTopic;
-        this.mqttServer = mqttServer;
+
         this.mqttUser = mqttUser;
         this.mqttPassword = mqttPassword;
-        this.mqttPort = mqttPort;
+
         this.deviceTypeId = deviceTypeId;
+        this.creatorUserId = creatorUserId;
     }
 }

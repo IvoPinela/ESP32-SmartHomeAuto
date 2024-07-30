@@ -55,33 +55,13 @@
         android:textSize="16sp"/>
 
     <TextView
-        android:id="@+id/labelMqttServer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="MQTT Server:"
-        android:textSize="16sp"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/editTextMqttTopic"
-        android:layout_marginTop="16dp"/>
-
-    <EditText
-        android:id="@+id/editTextMqttServer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/labelMqttServer"
-        android:layout_marginTop="8dp"
-        android:hint="Enter MQTT server"
-        android:minHeight="48dp"
-        android:textSize="16sp"/>
-
-    <TextView
         android:id="@+id/labelMqttUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="MQTT User:"
         android:textSize="16sp"
         android:layout_alignParentStart="true"
-        android:layout_below="@id/editTextMqttServer"
+        android:layout_below="@id/editTextMqttTopic"
         android:layout_marginTop="16dp"/>
 
     <EditText
@@ -116,34 +96,13 @@
         android:textSize="16sp"/>
 
     <TextView
-        android:id="@+id/labelMqttPort"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="MQTT Port:"
-        android:textSize="16sp"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/editTextMqttPassword"
-        android:layout_marginTop="16dp"/>
-
-    <EditText
-        android:id="@+id/editTextMqttPort"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/labelMqttPort"
-        android:layout_marginTop="8dp"
-        android:hint="Enter MQTT port"
-        android:inputType="number"
-        android:minHeight="48dp"
-        android:textSize="16sp"/>
-
-    <TextView
         android:id="@+id/labelDeviceType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Device Type:"
         android:textSize="16sp"
         android:layout_alignParentStart="true"
-        android:layout_below="@id/editTextMqttPort"
+        android:layout_below="@id/editTextMqttPassword"
         android:layout_marginTop="16dp"/>
 
     <Spinner
@@ -151,6 +110,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/labelDeviceType"
+        android:layout_marginTop="8dp"
+        android:minHeight="48dp"/>
+
+    <TextView
+        android:id="@+id/labelCreatorUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Creator User:"
+        android:textSize="16sp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/spinnerDeviceType"
+        android:layout_marginTop="16dp"/>
+
+    <Spinner
+        android:id="@+id/spinnerCreatorUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/labelCreatorUser"
         android:layout_marginTop="8dp"
         android:minHeight="48dp"/>
 

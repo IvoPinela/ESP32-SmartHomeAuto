@@ -2,6 +2,7 @@ package com.example.smarthomeauto;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -25,12 +26,18 @@ public class AddDeviceActivity extends AppCompatActivity {
     private DeviceTypeDao deviceTypeDao;
     private UserDao userDao;
     private int specificUserId;
+    private String userRole;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_device);
 
+        Intent intent2 = getIntent();
+        if (intent2 != null) {
+            userRole = intent2.getStringExtra("USER_ROLE");
+            Log.d("UserListActivity", "User Role: " + userRole);
+        }
         editTextDeviceName = findViewById(R.id.editTextDeviceName);
         editTextMqttTopic = findViewById(R.id.editTextMqttTopic);
         editTextMqttUser = findViewById(R.id.editTextMqttUser);
@@ -52,6 +59,7 @@ public class AddDeviceActivity extends AppCompatActivity {
 
         buttonBack.setOnClickListener(v -> {
             Intent intent = new Intent(AddDeviceActivity.this, DeviceListActivity.class);
+            intent.putExtra("USER_ROLE", userRole);
             startActivity(intent);
             finish();
         });
@@ -156,7 +164,10 @@ public class AddDeviceActivity extends AppCompatActivity {
                 deviceDao.insert(newDevice);
                 runOnUiThread(() -> {
                     showAlert("Device saved!");
-                    setResult(RESULT_OK);
+
+                    Intent intent = new Intent(AddDeviceActivity.this, DeviceListActivity.class);
+                    intent.putExtra("USER_ROLE", userRole);
+                    setResult(RESULT_OK, intent);
                     finish();
                 });
             }

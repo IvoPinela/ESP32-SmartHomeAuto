@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <!-- Form Title -->
+    <TextView
+        android:id="@+id/formTitleUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add New User"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="24dp"/>
+
+    <!-- Username Label -->
+    <TextView
+        android:id="@+id/labelUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Username:"
+        android:textSize="16sp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/formTitleUser"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Username Input -->
+    <EditText
+        android:id="@+id/editTextUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/labelUsername"
+        android:layout_marginTop="8dp"
+        android:hint="Enter username"
+        android:minHeight="48dp"
+        android:textSize="16sp"/>
+
+    <!-- Password Label -->
+    <TextView
+        android:id="@+id/labelPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Password:"
+        android:textSize="16sp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/editTextUsername"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Password Input -->
+    <EditText
+        android:id="@+id/editTextPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/labelPassword"
+        android:layout_marginTop="8dp"
+        android:hint="Enter password"
+        android:inputType="textPassword"
+        android:minHeight="48dp"
+        android:textSize="16sp"/>
+
+    <!-- MQTT User Label -->
+    <TextView
+        android:id="@+id/labelMqttUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MQTT User:"
+        android:textSize="16sp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/editTextPassword"
+        android:layout_marginTop="16dp"/>
+
+    <!-- MQTT User Input -->
+    <EditText
+        android:id="@+id/editTextMqttUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/labelMqttUser"
+        android:layout_marginTop="8dp"
+        android:hint="Enter MQTT user"
+        android:minHeight="48dp"
+        android:textSize="16sp"/>
+
+    <!-- MQTT Password Label -->
+    <TextView
+        android:id="@+id/labelMqttPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MQTT Password:"
+        android:textSize="16sp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/editTextMqttUser"
+        android:layout_marginTop="16dp"/>
+
+    <!-- MQTT Password Input -->
+    <EditText
+        android:id="@+id/editTextMqttPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/labelMqttPassword"
+        android:layout_marginTop="8dp"
+        android:hint="Enter MQTT password"
+        android:inputType="textPassword"
+        android:minHeight="48dp"
+        android:textSize="16sp"/>
+
+    <!-- Role Label -->
+    <TextView
+        android:id="@+id/labelRole"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Role:"
+        android:textSize="16sp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/editTextMqttPassword"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Role Spinner -->
+    <Spinner
+        android:id="@+id/spinnerRole"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/labelRole"
+        android:layout_marginTop="8dp"
+        android:minHeight="48dp"/>
+
+    <!-- Manager User ID Label -->
+    <TextView
+        android:id="@+id/labelManagerUserId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Manager User ID:"
+        android:textSize="16sp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/spinnerRole"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Manager User ID Spinner -->
+    <Spinner
+        android:id="@+id/spinnerManagerUserId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/labelManagerUserId"
+        android:layout_marginTop="8dp"
+        android:minHeight="48dp"/>
+
+    <!-- Broker ID Label -->
+    <TextView
+        android:id="@+id/labelBrokerId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Broker ID:"
+        android:textSize="16sp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/spinnerManagerUserId"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Broker ID Spinner -->
+    <Spinner
+        android:id="@+id/spinnerBrokerId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/labelBrokerId"
+        android:layout_marginTop="8dp"
+        android:minHeight="48dp"/>
+
+    <!-- Save Button -->
+    <Button
+        android:id="@+id/buttonSaveUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save User"
+        android:textSize="18sp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="24dp"/>
+
+    <!-- Back Button -->
+    <Button
+        android:id="@+id/buttonBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:textSize="18sp"
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@id/buttonSaveUser"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="24dp"/>
+</RelativeLayout>

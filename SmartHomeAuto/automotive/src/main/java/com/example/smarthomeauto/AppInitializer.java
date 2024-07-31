@@ -34,6 +34,16 @@ public class AppInitializer {
             admin.managerUserId = null;
             userDao.insert(admin);
         }
+        if (userDao.countUsersByUsername("master") == 0) {
+            User admin = new User();
+            admin.username = "master";
+            admin.password = HashUtils.hashPassword("master");
+            admin.role = "adminmaster";
+            admin.mqttUser = null;
+            admin.mqttPassword = null;
+            admin.managerUserId = null;
+            userDao.insert(admin);
+        }
 
         if (userDao.countUsersByUsername("user") == 0) {
             User user = new User();

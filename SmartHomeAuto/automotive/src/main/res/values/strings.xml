@@ -29,4 +29,26 @@
     <string name="save_broker">Save Broker</string>
     <string name="back">Back</string>
 
+    <string name="textViewUsername">Username</string>
+    <string name="textViewRole">Role:</string>
+    <string name="textViewMqttUser">MQTT User:</string>
+    <string name="textViewMqttPassword">MQTT Password:</string>
+    <string name="textViewManagerUserId">Manager User:</string>
+    <string name="textViewBrokerId">Broker:</string>
+
+    <string name="formTitleUser">Edit User</string>
+    <string name="labelUsername">Username:</string>
+    <string name="labelRole">Role:</string>
+    <string name="labelMqttUser">MQTT User:</string>
+    <string name="labelMqttPassword">MQTT Password:</string>
+    <string name="labelManagerUserId">Manager User ID:</string>
+    <string name="labelBrokerId">Broker ID:</string>
+
+    <string name="buttonSaveUser">Save User</string>
+    <string name="buttonBack">Back</string>
+
+    <string name="hintUsername">Enter username</string>
+    <string name="hintMqttUser">Enter MQTT user</string>
+    <string name="hintMqttPassword">Enter MQTT password</string>
+
 </resources>

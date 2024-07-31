@@ -5,6 +5,8 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity(
         tableName = "users",
         foreignKeys = {
@@ -26,7 +28,7 @@ import androidx.room.PrimaryKey;
 )
 
 
-public class User {
+public class User implements Serializable {
     @PrimaryKey(autoGenerate = true)
     public int id;
 

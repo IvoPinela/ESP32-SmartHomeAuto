@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -19,12 +20,19 @@ public class EditBrokerActivity extends Activity {
     private Button buttonBack;
     private Broker broker;
     private BrokerDao brokerDao;
+    private String userRole;
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_edit_broker);
+
+        Intent intent3 = getIntent();
+        if (intent3!= null) {
+            userRole = intent3.getStringExtra("USER_ROLE");
+            Log.d("UserListActivity", "User Role: " + userRole);
+        }
 
         TextView formTitle = findViewById(R.id.formTitle);
         editTextClusterURL = findViewById(R.id.editTextClusterURL);
@@ -100,6 +108,7 @@ public class EditBrokerActivity extends Activity {
                         showAlert("Broker updated!");
                         Intent resultIntent = new Intent();
                         resultIntent.putExtra("broker", broker);
+                        resultIntent.putExtra("USER_ROLE", userRole);
                         setResult(RESULT_OK, resultIntent);
                         finish();
                     });
@@ -119,6 +128,7 @@ public class EditBrokerActivity extends Activity {
                         showAlert("Broker added!");
                         Intent resultIntent = new Intent();
                         resultIntent.putExtra("broker", newBroker);
+                        resultIntent.putExtra("USER_ROLE", userRole);
                         setResult(RESULT_OK, resultIntent);
                         finish();
                     });

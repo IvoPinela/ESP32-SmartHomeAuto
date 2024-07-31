@@ -40,4 +40,6 @@ public interface BrokerDao {
 
     @Query("SELECT * FROM broker WHERE ClusterURL = :clusterURL AND PORT = :port AND PK_BrokerID != :id")
     Broker getBrokerByUrlAndPortExcludingId(String clusterURL, int port, int id);
+
+
 }

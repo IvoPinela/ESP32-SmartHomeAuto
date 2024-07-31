@@ -19,7 +19,7 @@ public interface DeviceDao {
     @Delete
     void delete(Device device);
 
-    @Query("SELECT * FROM devices")
+    @Query("SELECT * FROM devices ")
     List<Device> getAllDevices();
 
     @Query("SELECT * FROM devices WHERE name = :deviceName AND creatorUserId = :creatorUserId")

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,7 +32,8 @@ public class EditDeviceActivity extends Activity {
     private List<User> userList; // List of users for the Creator User spinner
     private DeviceDao deviceDao;
     private DeviceTypeDao deviceTypeDao;
-    private UserDao userDao; // DAO for User
+    private UserDao userDao;// DAO for User
+    private String userRole;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -39,6 +41,11 @@ public class EditDeviceActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_device);
 
+        Intent intent3 = getIntent();
+        if (intent3 != null) {
+            userRole = intent3.getStringExtra("USER_ROLE");
+            Log.d("UserListActivity", "User Role: " + userRole);
+        }
         TextView formTitle = findViewById(R.id.formTitle);
         editTextDeviceName = findViewById(R.id.editTextDeviceName);
         editTextMqttTopic = findViewById(R.id.editTextMqttTopic);
@@ -73,6 +80,7 @@ public class EditDeviceActivity extends Activity {
 
         buttonBack.setOnClickListener(v -> {
             Intent intent2 = new Intent(EditDeviceActivity.this, DeviceListActivity.class);
+            intent2.putExtra("USER_ROLE", userRole);
             startActivity(intent2);
             finish();
         });
@@ -212,6 +220,7 @@ public class EditDeviceActivity extends Activity {
 
                 Intent resultIntent = new Intent();
                 resultIntent.putExtra("device", device);
+                resultIntent.putExtra("USER_ROLE", userRole);
                 setResult(RESULT_OK, resultIntent);
                 finish();
             }

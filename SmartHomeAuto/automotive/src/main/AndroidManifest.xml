@@ -38,6 +38,9 @@
         <activity android:name=".BrokerListActivity"/>
         <activity android:name=".AddBrokerActivity"/>
         <activity android:name=".EditBrokerActivity"/>
+        <activity android:name=".UserListActivity"/>
+        <activity android:name=".AddUserActivity"/>
+        <activity android:name=".EditUserActivity"/>
 
 
 

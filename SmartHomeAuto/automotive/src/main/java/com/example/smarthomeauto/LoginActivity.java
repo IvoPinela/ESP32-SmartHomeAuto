@@ -51,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
                     Log.d("login", "Password match successful");
                     loginAttempts = 0; // Reset attempts on successful login
                     Intent intent;
-                    if ("admin".equals(user.role)) {
+                    if ("admin".equals(user.role)|| "adminmaster".equals(user.role)) {
                         intent = new Intent(LoginActivity.this, AdminActivity.class);
                     } else if ("user".equals(user.role)) {
                         intent = new Intent(LoginActivity.this, UserActivity.class);
@@ -59,6 +59,7 @@ public class LoginActivity extends AppCompatActivity {
                         Log.d("login", "Unknown user role");
                         return;
                     }
+                    intent.putExtra("USER_ROLE", user.role);
                     startActivity(intent);
                 } else {
                     loginAttempts++;

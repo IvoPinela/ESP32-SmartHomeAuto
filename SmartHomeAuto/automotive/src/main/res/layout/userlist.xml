@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <!-- Header Layout -->
+    <RelativeLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="#EEE"
+        android:padding="8dp">
+
+        <Button
+            android:id="@+id/buttonBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:layout_alignParentStart="true"/>
+
+        <TextView
+            android:id="@+id/headerTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Users List"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"/>
+
+        <ImageButton
+            android:id="@+id/buttonEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="8dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/baseline_edit_24"
+            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+        <ImageButton
+            android:id="@+id/buttonDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@id/buttonEdit"
+            android:background="@android:color/transparent"
+            android:src="@drawable/baseline_delete_24"
+            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+    </RelativeLayout>
+
+    <!-- Spinners -->
+    <Spinner
+        android:id="@+id/spinnerUserRole"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/headerLayout"
+        android:layout_marginTop="16dp"
+        android:minHeight="48dp" />
+
+    <Spinner
+        android:id="@+id/spinnerBroker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/spinnerUserRole"
+        android:layout_marginTop="16dp"
+        android:minHeight="48dp" />
+
+    <!-- Search View -->
+    <SearchView
+        android:id="@+id/searchViewUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/spinnerBroker"
+        android:layout_marginTop="16dp"
+        android:queryHint="Search by username"/>
+
+    <!-- Switch for Null Fields -->
+    <Switch
+        android:id="@+id/switchFilterNullFields"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/searchViewUsername"
+        android:layout_marginTop="16dp"
+        android:minHeight="48dp"
+        android:text="Show Users with Null Fields" />
+
+    <!-- TextView for Displaying User Count -->
+    <TextView
+        android:id="@+id/textViewUserCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/switchFilterNullFields"
+        android:layout_marginTop="16dp"
+        android:text="Number of Users: 0"
+        android:textSize="16sp"/>
+
+    <!-- ListView for Users -->
+    <ListView
+        android:id="@+id/listViewUsers"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@id/textViewUserCount"
+        android:layout_above="@id/buttonAddUser"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"/>
+
+    <!-- Add User Button -->
+    <Button
+        android:id="@+id/buttonAddUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add User"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"/>
+</RelativeLayout>

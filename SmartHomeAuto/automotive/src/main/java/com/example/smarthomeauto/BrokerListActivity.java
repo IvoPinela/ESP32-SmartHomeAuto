@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,6 +29,7 @@ public class BrokerListActivity extends AppCompatActivity {
     private BrokerDao brokerDao;
     private Broker selectedBroker;
     private SearchView searchViewClusterURL;
+    private TextView textViewBrokerCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class BrokerListActivity extends AppCompatActivity {
         ImageButton buttonEditBroker = findViewById(R.id.buttonEdit);
         searchViewClusterURL = findViewById(R.id.searchViewClusterURL);
         listViewBrokers = findViewById(R.id.listViewBrokers);
+        textViewBrokerCount = findViewById(R.id.textViewBrokerCount);
 
         brokerDao = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "db_SmartHomeAuto").build().brokerDao();
 
@@ -100,6 +103,7 @@ public class BrokerListActivity extends AppCompatActivity {
             runOnUiThread(() -> {
                 brokerAdapter = new BrokerAdapter(BrokerListActivity.this, brokerList);
                 listViewBrokers.setAdapter(brokerAdapter);
+                textViewBrokerCount.setText("Number of Brokers: " + brokerList.size());
             });
         }).start();
     }
@@ -113,6 +117,7 @@ public class BrokerListActivity extends AppCompatActivity {
                 brokerAdapter.clear();
                 brokerAdapter.addAll(filteredBrokers);
                 brokerAdapter.notifyDataSetChanged();
+                textViewBrokerCount.setText("Number of Brokers: " + filteredBrokers.size());
             });
         }).start();
     }

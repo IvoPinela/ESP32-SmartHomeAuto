@@ -2,9 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/background_color">
 
-    <!-- Form Title -->
     <TextView
         android:id="@+id/formTitleUser"
         android:layout_width="wrap_content"
@@ -13,9 +13,9 @@
         android:textSize="24sp"
         android:textStyle="bold"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="24dp"/>
+        android:layout_marginBottom="24dp"
+        android:textColor="@color/white"/>
 
-    <!-- Username Label -->
     <TextView
         android:id="@+id/labelUsername"
         android:layout_width="wrap_content"
@@ -24,9 +24,9 @@
         android:textSize="16sp"
         android:layout_alignParentStart="true"
         android:layout_below="@id/formTitleUser"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:textColor="@color/white"/>
 
-    <!-- Username Input -->
     <EditText
         android:id="@+id/editTextUsername"
         android:layout_width="match_parent"
@@ -35,9 +35,11 @@
         android:layout_marginTop="8dp"
         android:hint="Enter username"
         android:minHeight="48dp"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/darkgray"
+        android:background="@drawable/edittext_background"/>
 
-    <!-- Password Label -->
     <TextView
         android:id="@+id/labelPassword"
         android:layout_width="wrap_content"
@@ -46,9 +48,9 @@
         android:textSize="16sp"
         android:layout_alignParentStart="true"
         android:layout_below="@id/editTextUsername"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:textColor="@color/white"/>
 
-    <!-- Password Input -->
     <EditText
         android:id="@+id/editTextPassword"
         android:layout_width="match_parent"
@@ -58,9 +60,11 @@
         android:hint="Enter password"
         android:inputType="textPassword"
         android:minHeight="48dp"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/darkgray"
+        android:background="@drawable/edittext_background"/>
 
-    <!-- MQTT User Label -->
     <TextView
         android:id="@+id/labelMqttUser"
         android:layout_width="wrap_content"
@@ -69,9 +73,9 @@
         android:textSize="16sp"
         android:layout_alignParentStart="true"
         android:layout_below="@id/editTextPassword"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:textColor="@color/white"/>
 
-    <!-- MQTT User Input -->
     <EditText
         android:id="@+id/editTextMqttUser"
         android:layout_width="match_parent"
@@ -80,9 +84,11 @@
         android:layout_marginTop="8dp"
         android:hint="Enter MQTT user"
         android:minHeight="48dp"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/darkgray"
+        android:background="@drawable/edittext_background"/>
 
-    <!-- MQTT Password Label -->
     <TextView
         android:id="@+id/labelMqttPassword"
         android:layout_width="wrap_content"
@@ -91,9 +97,9 @@
         android:textSize="16sp"
         android:layout_alignParentStart="true"
         android:layout_below="@id/editTextMqttUser"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:textColor="@color/white"/>
 
-    <!-- MQTT Password Input -->
     <EditText
         android:id="@+id/editTextMqttPassword"
         android:layout_width="match_parent"
@@ -103,9 +109,11 @@
         android:hint="Enter MQTT password"
         android:inputType="textPassword"
         android:minHeight="48dp"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/darkgray"
+        android:background="@drawable/edittext_background"/>
 
-    <!-- Role Label -->
     <TextView
         android:id="@+id/labelRole"
         android:layout_width="wrap_content"
@@ -114,18 +122,18 @@
         android:textSize="16sp"
         android:layout_alignParentStart="true"
         android:layout_below="@id/editTextMqttPassword"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:textColor="@color/white"/>
 
-    <!-- Role Spinner -->
     <Spinner
         android:id="@+id/spinnerRole"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/labelRole"
         android:layout_marginTop="8dp"
-        android:minHeight="48dp"/>
+        android:minHeight="48dp"
+        android:background="@drawable/spinner_background"/>
 
-    <!-- Manager User ID Label -->
     <TextView
         android:id="@+id/labelManagerUserId"
         android:layout_width="wrap_content"
@@ -134,18 +142,18 @@
         android:textSize="16sp"
         android:layout_alignParentStart="true"
         android:layout_below="@id/spinnerRole"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:textColor="@color/white"/>
 
-    <!-- Manager User ID Spinner -->
     <Spinner
         android:id="@+id/spinnerManagerUserId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/labelManagerUserId"
         android:layout_marginTop="8dp"
-        android:minHeight="48dp"/>
+        android:minHeight="48dp"
+        android:background="@drawable/spinner_background"/>
 
-    <!-- Broker ID Label -->
     <TextView
         android:id="@+id/labelBrokerId"
         android:layout_width="wrap_content"
@@ -154,18 +162,18 @@
         android:textSize="16sp"
         android:layout_alignParentStart="true"
         android:layout_below="@id/spinnerManagerUserId"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:textColor="@color/white"/>
 
-    <!-- Broker ID Spinner -->
     <Spinner
         android:id="@+id/spinnerBrokerId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/labelBrokerId"
         android:layout_marginTop="8dp"
-        android:minHeight="48dp"/>
+        android:minHeight="48dp"
+        android:background="@drawable/spinner_background"/>
 
-    <!-- Save Button -->
     <Button
         android:id="@+id/buttonSaveUser"
         android:layout_width="wrap_content"
@@ -174,9 +182,10 @@
         android:textSize="18sp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="24dp"/>
+        android:layout_marginTop="24dp"
+        android:background="@drawable/soft_blue_gradient"
+        android:textColor="@color/white"/>
 
-    <!-- Back Button -->
     <Button
         android:id="@+id/buttonBack"
         android:layout_width="wrap_content"
@@ -186,5 +195,7 @@
         android:layout_alignParentBottom="true"
         android:layout_toStartOf="@id/buttonSaveUser"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="24dp"/>
+        android:layout_marginTop="24dp"
+        android:background="@color/darkgray"
+        android:textColor="@color/white"/>
 </RelativeLayout>

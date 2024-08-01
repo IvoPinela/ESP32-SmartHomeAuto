@@ -25,12 +25,8 @@ public class SignUpActivity extends AppCompatActivity {
         // Get the user role from the intent
         userRole = getIntent().getStringExtra("USER_ROLE");
 
-        // Set the appropriate layout based on user role
-        if ("admin".equals(userRole)) {
-            setContentView(R.layout.adminsignup);
-        } else {
             setContentView(R.layout.usersignup);
-        }
+
 
         final EditText editTextUsername = findViewById(R.id.editTextSignupUsername);
         final EditText editTextPassword = findViewById(R.id.editTextSignupPassword);

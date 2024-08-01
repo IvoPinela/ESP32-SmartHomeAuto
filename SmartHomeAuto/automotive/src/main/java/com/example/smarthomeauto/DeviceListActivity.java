@@ -1,5 +1,6 @@
 package com.example.smarthomeauto;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,7 +36,9 @@ public class DeviceListActivity extends AppCompatActivity {
     private Spinner spinnerDeviceType;
     private SearchView searchViewName;
     private SearchView searchViewUser;
+    private TextView textViewDeviceCount;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +52,7 @@ public class DeviceListActivity extends AppCompatActivity {
         searchViewName = findViewById(R.id.searchViewName);
         searchViewUser = findViewById(R.id.searchViewUser);
         listViewDevices = findViewById(R.id.listViewDevices);
+        textViewDeviceCount = findViewById(R.id.textViewDeviceCount);
 
         deviceDao = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "db_SmartHomeAuto").build().deviceDao();
         deviceTypeDao = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "db_SmartHomeAuto").build().deviceTypeDao();
@@ -153,6 +158,7 @@ public class DeviceListActivity extends AppCompatActivity {
             runOnUiThread(() -> {
                 deviceAdapter = new DeviceAdapter(DeviceListActivity.this, deviceList);
                 listViewDevices.setAdapter(deviceAdapter);
+                textViewDeviceCount.setText("Number of Devices: " + deviceList.size());
             });
         }).start();
     }
@@ -169,6 +175,7 @@ public class DeviceListActivity extends AppCompatActivity {
                 deviceAdapter.clear();
                 deviceAdapter.addAll(filteredDevices);
                 deviceAdapter.notifyDataSetChanged();
+                textViewDeviceCount.setText("Number of Devices: " + filteredDevices.size());
             });
         }).start();
     }

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@android:color/black">
 
     <!-- Header Layout -->
     <RelativeLayout
@@ -11,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="#EEE"
+        android:background="@android:color/darker_gray"
         android:padding="8dp">
 
         <Button
@@ -19,7 +21,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Back"
-            android:layout_alignParentStart="true"/>
+            android:textColor="@android:color/white"
+            android:background="@color/darkgray" />
 
         <TextView
             android:id="@+id/headerTitle"
@@ -28,8 +31,9 @@
             android:text="Users List"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:textColor="@android:color/white"
             android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true" />
 
         <ImageButton
             android:id="@+id/buttonEdit"
@@ -40,6 +44,7 @@
             android:layout_marginEnd="8dp"
             android:background="@android:color/transparent"
             android:src="@drawable/baseline_edit_24"
+            app:tint="@android:color/white"
             tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
         <ImageButton
@@ -50,25 +55,29 @@
             android:layout_toStartOf="@id/buttonEdit"
             android:background="@android:color/transparent"
             android:src="@drawable/baseline_delete_24"
+            app:tint="@android:color/white"
             tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
     </RelativeLayout>
 
-    <!-- Spinners -->
+    <!-- User Role Spinner -->
     <Spinner
         android:id="@+id/spinnerUserRole"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/headerLayout"
         android:layout_marginTop="16dp"
-        android:minHeight="48dp" />
+        android:minHeight="48dp"
+        android:background="@android:color/white" />
 
+    <!-- Broker Spinner -->
     <Spinner
         android:id="@+id/spinnerBroker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/spinnerUserRole"
         android:layout_marginTop="16dp"
-        android:minHeight="48dp" />
+        android:minHeight="48dp"
+        android:background="@android:color/white" />
 
     <!-- Search View -->
     <SearchView
@@ -77,7 +86,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/spinnerBroker"
         android:layout_marginTop="16dp"
-        android:queryHint="Search by username"/>
+        android:queryHint="Search by username"
+        android:background="@android:color/white" />
 
     <!-- Switch for Null Fields -->
     <Switch
@@ -87,7 +97,8 @@
         android:layout_below="@id/searchViewUsername"
         android:layout_marginTop="16dp"
         android:minHeight="48dp"
-        android:text="Show Users with Null Fields" />
+        android:text="Show Users with Null Fields"
+        android:textColor="@android:color/white" />
 
     <!-- TextView for Displaying User Count -->
     <TextView
@@ -97,7 +108,8 @@
         android:layout_below="@id/switchFilterNullFields"
         android:layout_marginTop="16dp"
         android:text="Number of Users: 0"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:textColor="@android:color/white" />
 
     <!-- ListView for Users -->
     <ListView
@@ -107,7 +119,10 @@
         android:layout_below="@id/textViewUserCount"
         android:layout_above="@id/buttonAddUser"
         android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@android:color/white" />
 
     <!-- Add User Button -->
     <Button
@@ -115,7 +130,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add User"
+        android:background="@drawable/soft_blue_gradient"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"/>
+        android:layout_marginEnd="16dp"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="16dp" />
 </RelativeLayout>

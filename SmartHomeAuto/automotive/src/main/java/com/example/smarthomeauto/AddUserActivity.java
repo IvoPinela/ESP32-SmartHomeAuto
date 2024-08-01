@@ -22,22 +22,18 @@ public class AddUserActivity extends AppCompatActivity {
     private Button buttonSaveUser, buttonBack;
     private UserDao userDao;
     private BrokerDao brokerDao;
-    private String currentUserRole;
-    private int specificUserId;
     private String userRole;
+    private int specificUserId;
+
+    // Labels that will be hidden or shown
+    private View labelManagerUserId, labelBrokerId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Intent intent2 = getIntent();
-        if (intent2 != null) {
-            userRole = intent2.getStringExtra("USER_ROLE");
-            Log.d("UserListActivity", "User Role: " + userRole);
-        }
-
         setContentView(R.layout.add_edit_user);
 
+        // Initialize views
         editTextUsername = findViewById(R.id.editTextUsername);
         editTextPassword = findViewById(R.id.editTextPassword);
         editTextMqttUser = findViewById(R.id.editTextMqttUser);
@@ -48,30 +44,80 @@ public class AddUserActivity extends AppCompatActivity {
         buttonSaveUser = findViewById(R.id.buttonSaveUser);
         buttonBack = findViewById(R.id.buttonBack);
 
+        // Initialize labels that will be shown/hidden
+        labelManagerUserId = findViewById(R.id.labelManagerUserId);
+        labelBrokerId = findViewById(R.id.labelBrokerId);
+
+        // Initialize database and DAOs
         AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "db_SmartHomeAuto").build();
         userDao = db.userDao();
         brokerDao = db.brokerDao();
 
-        specificUserId = getIntent().getIntExtra("userId", -1);
-        currentUserRole = getIntent().getStringExtra("currentUserRole");
+        // Retrieve intent extras
+        Intent intent = getIntent();
+        if (intent != null) {
+            userRole = intent.getStringExtra("USER_ROLE");
+            Log.d("UserListActivity", "User Role: " + userRole);
+        }
 
+        specificUserId = getIntent().getIntExtra("userId", -1);
+
+        // Load data for spinners
         loadRoles();
         loadBrokers();
 
+        // Set onClick listeners
         buttonBack.setOnClickListener(v -> {
-            Intent intent = new Intent(AddUserActivity.this, UserListActivity.class);
-            intent.putExtra("USER_ROLE", userRole);
-            startActivity(intent);
+            Intent backIntent = new Intent(AddUserActivity.this, UserListActivity.class);
+            backIntent.putExtra("USER_ROLE", userRole);
+            startActivity(backIntent);
             finish();
         });
 
         buttonSaveUser.setOnClickListener(v -> saveUser());
 
+        // Handle role selection
         spinnerRole.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedRole = (String) parent.getItemAtPosition(position);
-                handleRoleSelection(selectedRole);
+
+                if ("admin".equals(selectedRole)) {
+                    // Hide broker spinner and its label
+                    spinnerBrokerId.setVisibility(View.GONE);
+                    labelBrokerId.setVisibility(View.GONE);
+
+                    // Hide MQTT fields and labels
+                    editTextMqttUser.setVisibility(View.GONE);
+                    editTextMqttPassword.setVisibility(View.GONE);
+                    // We assume there's a label for MQTT user and password, which should also be hidden
+                    findViewById(R.id.labelMqttUser).setVisibility(View.GONE);
+                    findViewById(R.id.labelMqttPassword).setVisibility(View.GONE);
+
+                    // Hide manager spinner and its label
+                    labelManagerUserId.setVisibility(View.GONE);
+                    spinnerManagerUserId.setVisibility(View.GONE);
+
+                    // Clear values
+                    editTextMqttUser.setText(null);
+                    editTextMqttPassword.setText(null);
+                } else {
+                    // Show broker spinner and its label
+                    spinnerBrokerId.setVisibility(View.VISIBLE);
+                    labelBrokerId.setVisibility(View.VISIBLE);
+
+                    // Show MQTT fields and labels
+                    editTextMqttUser.setVisibility(View.VISIBLE);
+                    editTextMqttPassword.setVisibility(View.VISIBLE);
+                    // Show MQTT labels
+                    findViewById(R.id.labelMqttUser).setVisibility(View.VISIBLE);
+                    findViewById(R.id.labelMqttPassword).setVisibility(View.VISIBLE);
+
+                    // Show manager spinner and its label if not already visible
+                    labelManagerUserId.setVisibility(View.VISIBLE);
+                    spinnerManagerUserId.setVisibility(View.VISIBLE);
+                }
+
                 if ("user".equals(selectedRole)) {
                     ArrayAdapter<String> emptyAdapter = new ArrayAdapter<>(AddUserActivity.this, android.R.layout.simple_spinner_item, new ArrayList<>());
                     emptyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -190,65 +236,86 @@ public class AddUserActivity extends AppCompatActivity {
             editTextUsername.setError("Username is required");
             hasError = true;
         }
-        if (password.isEmpty()) {
-            editTextPassword.setError("Password is required");
-            hasError = true;
-        }
         if (role == null || role.isEmpty()) {
             showAlert("Role is required");
             hasError = true;
+        }
+        if (!"admin".equals(role)) {
+            if (password.isEmpty()) {
+                editTextPassword.setError("Password is required");
+                hasError = true;
+            }
+            if (mqttUser.isEmpty()) {
+                editTextMqttUser.setError("MQTT user is required");
+                hasError = true;
+            }
+            if (mqttPassword.isEmpty()) {
+                editTextMqttPassword.setError("MQTT password is required");
+                hasError = true;
+            }
         }
 
         if (hasError) {
             return;
         }
 
-        // If the role is "admin", set brokerId to null
-        String selectedManagerUsername = "admin".equals(role) ? null : (String) spinnerManagerUserId.getSelectedItem();
-        String selectedBrokerDescription = "admin".equals(role) ? null : (String) spinnerBrokerId.getSelectedItem();
+        String selectedManagerUsername = (String) spinnerManagerUserId.getSelectedItem();
+        String selectedBrokerDescription = (String) spinnerBrokerId.getSelectedItem();
 
-        Integer brokerId;
-        if (selectedBrokerDescription != null) {
-            // Process broker details only if a broker is selected
-            String[] parts = selectedBrokerDescription.split(":");
-            if (parts.length != 2) {
-                showAlert("Invalid broker format");
-                return;
-            }
+        String brokerURL;
+        int brokerPort = -1;
 
-            String brokerURL = parts[0];
-            int brokerPort;
-            try {
-                brokerPort = Integer.parseInt(parts[1]);
-            } catch (NumberFormatException e) {
-                showAlert("Invalid broker port");
-                return;
-            }
-
-            // Find brokerId based on URL and port
-            Broker selectedBroker = brokerDao.getBrokerByUrlAndPort(brokerURL, brokerPort);
-            brokerId = (selectedBroker != null) ? selectedBroker.PK_BrokerID : null;
-
-            if (brokerId == null) {
-                showAlert("Please select a valid broker");
+        if (!"admin".equals(role)) {
+            if (selectedBrokerDescription != null) {
+                String[] parts = selectedBrokerDescription.split(":");
+                if (parts.length != 2) {
+                    showAlert("Invalid broker format");
+                    return;
+                }
+                brokerURL = parts[0];
+                try {
+                    brokerPort = Integer.parseInt(parts[1]);
+                } catch (NumberFormatException e) {
+                    showAlert("Invalid broker port");
+                    return;
+                }
+            } else {
+                brokerURL = null;
+                showAlert("Please select a broker");
                 return;
             }
         } else {
-            brokerId = null;
+            brokerURL = null;
         }
 
+        int finalBrokerPort = brokerPort;
         new Thread(() -> {
             User existingUser = userDao.getUserByUsername(username);
             if (existingUser != null) {
                 runOnUiThread(() -> showAlert("A user with the same username already exists!"));
             } else {
-                User managerUser = selectedManagerUsername != null ? userDao.getUserByUsername(selectedManagerUsername) : null;
-                Integer managerUserId = managerUser != null ? managerUser.id : null;
+                User managerUser = userDao.getUserByUsername(selectedManagerUsername);
+                Integer managerUserId = ("user".equals(role) || "admin".equals(role)) ? null : (managerUser != null ? managerUser.id : null);
 
-                // Hash the password before storing
+                int brokerId = -1;
+                if (brokerURL != null && finalBrokerPort != -1) {
+                    Broker selectedBroker = brokerDao.getBrokerByUrlAndPort(brokerURL, finalBrokerPort);
+                    brokerId = (selectedBroker != null) ? selectedBroker.PK_BrokerID : -1;
+                }
+
+                if (brokerId == -1 && !"admin".equals(role)) {
+                    runOnUiThread(() -> showAlert("Please select a broker"));
+                    return;
+                }
+
+
                 String hashedPassword = HashUtils.hashPassword(password);
 
-                User newUser = new User(username, hashedPassword, role, mqttUser, mqttPassword, managerUserId, brokerId);
+                User newUser = new User(username, hashedPassword, role,
+                        "admin".equals(role) ? null : mqttUser,
+                        "admin".equals(role) ? null : mqttPassword,
+                        "admin".equals(role) ? null :managerUserId,
+                        "admin".equals(role) ? null :brokerId);
 
                 try {
                     userDao.insert(newUser);
@@ -264,17 +331,6 @@ public class AddUserActivity extends AppCompatActivity {
                 }
             }
         }).start();
-    }
-
-
-    private void handleRoleSelection(String selectedRole) {
-        boolean isAdmin = "admin".equals(selectedRole);
-
-        // Show/Hide fields based on role
-        findViewById(R.id.spinnerManagerUserId).setVisibility(isAdmin ? View.GONE : View.VISIBLE);
-        findViewById(R.id.spinnerBrokerId).setVisibility(isAdmin ? View.GONE : View.VISIBLE);
-        findViewById(R.id.editTextMqttUser).setVisibility(isAdmin ? View.GONE : View.VISIBLE);
-        findViewById(R.id.editTextMqttPassword).setVisibility(isAdmin ? View.GONE : View.VISIBLE);
     }
 
     private void showAlert(String message) {

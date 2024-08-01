@@ -51,6 +51,11 @@ public class EditUserActivity extends Activity {
         // Inicializa os componentes da interface
         TextView formTitle = findViewById(R.id.formTitleUser);
         TextView passwordLabel = findViewById(R.id.labelPassword);
+        TextView mqttUserLabel = findViewById(R.id.labelMqttUser);
+        TextView mqttPasswordLabel = findViewById(R.id.labelMqttPassword);
+        TextView managerUserIdLabel = findViewById(R.id.labelManagerUserId);
+        TextView brokerIdLabel = findViewById(R.id.labelBrokerId);
+
         editTextUsername = findViewById(R.id.editTextUsername);
         editTextPassword = findViewById(R.id.editTextPassword);
         editTextMqttUser = findViewById(R.id.editTextMqttUser);
@@ -61,12 +66,10 @@ public class EditUserActivity extends Activity {
         buttonSaveUser = findViewById(R.id.buttonSaveUser);
         buttonBack = findViewById(R.id.buttonBack);
 
-        // Inicializa o banco de dados e os DAOs
         AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "db_SmartHomeAuto").build();
         userDao = db.userDao();
         brokerDao = db.brokerDao();
 
-        // Configura a intenção e o título do formulário
         if (intent.hasExtra("user")) {
             user = (User) intent.getSerializableExtra("user");
             formTitle.setText("Edit User");
@@ -74,11 +77,9 @@ public class EditUserActivity extends Activity {
             editTextMqttUser.setText(user.mqttUser);
             editTextMqttPassword.setText(user.mqttPassword);
 
-            // Oculta o campo de senha e o rótulo da senha se estiver editando um usuário existente
+            // Manter password invisível
             passwordLabel.setVisibility(View.GONE);
             editTextPassword.setVisibility(View.GONE);
-
-            // Carrega outros campos conforme necessário
         } else {
             formTitle.setText("Add New User");
         }
@@ -88,7 +89,6 @@ public class EditUserActivity extends Activity {
         loadManagers();
         loadBrokers();
 
-        // Configura os listeners dos botões
         buttonSaveUser.setOnClickListener(v -> saveUser());
 
         buttonBack.setOnClickListener(v -> {
@@ -98,19 +98,70 @@ public class EditUserActivity extends Activity {
             finish();
         });
 
-        // Configura o listener do Spinner de papéis
         spinnerRole.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedRole = (String) parent.getItemAtPosition(position);
-                updateUIForRole(selectedRole);
+
+                if ("admin".equals(selectedRole)) {
+                    // Ocultar campos para MQTT, manager e broker
+                    hideNonAdminFields();
+                } else {
+                    // Mostrar todos os campos
+                    showAllFields();
+                    if ("user".equals(selectedRole)) {
+                        ArrayAdapter<String> emptyAdapter = new ArrayAdapter<>(EditUserActivity.this, android.R.layout.simple_spinner_item, new ArrayList<>());
+                        emptyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        spinnerManagerUserId.setAdapter(emptyAdapter);
+                    } else if ("guest".equals(selectedRole)) {
+                        loadUsersWithRoleUser();
+                    } else {
+                        loadManagers();
+                    }
+                }
+
+                if (user != null) {
+                    spinnerRole.setSelection(getRoleIndex(user.role));
+                }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                // Implementar caso necessário
+                // Optional: Handle case where nothing is selected
             }
         });
+    }
+
+    private void hideNonAdminFields() {
+        spinnerBrokerId.setVisibility(View.GONE);
+        findViewById(R.id.labelBrokerId).setVisibility(View.GONE);
+        editTextMqttUser.setVisibility(View.GONE);
+        editTextMqttPassword.setVisibility(View.GONE);
+        findViewById(R.id.labelMqttUser).setVisibility(View.GONE);
+        findViewById(R.id.labelMqttPassword).setVisibility(View.GONE);
+        spinnerManagerUserId.setVisibility(View.GONE);
+        findViewById(R.id.labelManagerUserId).setVisibility(View.GONE);
+    }
+
+    private void showAllFields() {
+        spinnerBrokerId.setVisibility(View.VISIBLE);
+        findViewById(R.id.labelBrokerId).setVisibility(View.VISIBLE);
+        editTextMqttUser.setVisibility(View.VISIBLE);
+        editTextMqttPassword.setVisibility(View.VISIBLE);
+        findViewById(R.id.labelMqttUser).setVisibility(View.VISIBLE);
+        findViewById(R.id.labelMqttPassword).setVisibility(View.VISIBLE);
+        spinnerManagerUserId.setVisibility(View.VISIBLE);
+        findViewById(R.id.labelManagerUserId).setVisibility(View.VISIBLE);
+    }
+
+    private int getRoleIndex(String role) {
+        ArrayAdapter<String> adapter = (ArrayAdapter<String>) spinnerRole.getAdapter();
+        for (int i = 0; i < adapter.getCount(); i++) {
+            if (role.equals(adapter.getItem(i))) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private void loadRoles() {
@@ -131,7 +182,6 @@ public class EditUserActivity extends Activity {
                     break;
                 }
             }
-            updateUIForRole(user.role);
         }
     }
 
@@ -241,29 +291,6 @@ public class EditUserActivity extends Activity {
         }).start();
     }
 
-    private void updateUIForRole(String role) {
-        boolean isAdmin = "admin".equals(role);
-        boolean isUserOrGuest = !isAdmin;
-
-        // Atualiza a visibilidade dos campos com base no papel selecionado
-        editTextPassword.setVisibility(isUserOrGuest ? View.VISIBLE : View.GONE);
-        editTextMqttUser.setVisibility(isUserOrGuest ? View.VISIBLE : View.GONE);
-        editTextMqttPassword.setVisibility(isUserOrGuest ? View.VISIBLE : View.GONE);
-
-        spinnerManagerUserId.setVisibility(isUserOrGuest ? View.VISIBLE : View.GONE);
-        spinnerBrokerId.setVisibility(isUserOrGuest ? View.VISIBLE : View.GONE);
-
-        // Atualiza a UI para os campos que precisam estar visíveis
-        if (isUserOrGuest) {
-            loadManagers();
-            loadBrokers();
-        } else {
-            // Se for admin, não precisa carregar managers e brokers
-            spinnerManagerUserId.setAdapter(null);
-            spinnerBrokerId.setAdapter(null);
-        }
-    }
-
     private void saveUser() {
         String username = editTextUsername.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
@@ -279,11 +306,11 @@ public class EditUserActivity extends Activity {
             editTextUsername.setError("Username is required");
             hasError = true;
         }
-        if (isFieldVisible(editTextMqttUser) && mqttUser.isEmpty()) {
+        if (mqttUser.isEmpty() && !"admin".equals(role)) {
             editTextMqttUser.setError("MQTT user is required");
             hasError = true;
         }
-        if (isFieldVisible(editTextMqttPassword) && mqttPassword.isEmpty()) {
+        if (mqttPassword.isEmpty() && !"admin".equals(role)) {
             editTextMqttPassword.setError("MQTT password is required");
             hasError = true;
         }
@@ -291,66 +318,69 @@ public class EditUserActivity extends Activity {
             showAlert("Role is required");
             hasError = true;
         }
+        if ("guest".equals(role) && selectedManagerUsername == null) {
+            showAlert("Manager selection is required for guests");
+            hasError = true;
+        }
 
         if (hasError) {
             return;
         }
 
-        Integer managerUserId;
-        Integer brokerId;
-
-        if (!"admin".equals(role)) {
-            if (selectedBrokerDescription != null && !selectedBrokerDescription.isEmpty()) {
-                String[] parts = selectedBrokerDescription.split(":");
-                if (parts.length != 2) {
-                    showAlert("Invalid broker format");
-                    return;
-                }
-
-                String brokerURL = parts[0];
-                int brokerPort;
-                try {
-                    brokerPort = Integer.parseInt(parts[1]);
-                } catch (NumberFormatException e) {
-                    showAlert("Invalid broker port");
-                    return;
-                }
-
-                Broker selectedBroker = brokerDao.getBrokerByUrlAndPort(brokerURL, brokerPort);
-                brokerId = (selectedBroker != null) ? selectedBroker.PK_BrokerID : -1;
-
-                if (brokerId == -1) {
-                    runOnUiThread(() -> showAlert("Please select a broker"));
-                    return;
-                }
-            } else {
-                brokerId = null;
-            }
-
-            User managerUser = userDao.getUserByUsername(selectedManagerUsername);
-            managerUserId = (managerUser != null) ? managerUser.id : null;
-        } else {
-            brokerId = null;
-            managerUserId = null;
+        String[] parts = selectedBrokerDescription != null ? selectedBrokerDescription.split(":") : new String[0];
+        if (parts.length != 2 && !"admin".equals(role)) {
+            showAlert("Invalid broker format");
+            return;
         }
 
+        String brokerURL = parts.length == 2 ? parts[0] : "";
+        int brokerPort = -1;
+        try {
+            brokerPort = parts.length == 2 ? Integer.parseInt(parts[1]) : -1;
+        } catch (NumberFormatException e) {
+            showAlert("Invalid broker port");
+            return;
+        }
+
+        int finalBrokerPort = brokerPort;
         new Thread(() -> {
             User existingUser = userDao.getUserByUsername(username);
             if (existingUser != null && (user == null || existingUser.id != user.id)) {
                 runOnUiThread(() -> showAlert("A user with the same username already exists!"));
             } else {
+                User managerUser = ("guest".equals(role)) ? userDao.getUserByUsername(selectedManagerUsername) : null;
+                Integer managerUserId = ("guest".equals(role)) ? (managerUser != null ? managerUser.id : null) : null;
+
+                Broker selectedBroker = ("admin".equals(role)) ? null : brokerDao.getBrokerByUrlAndPort(brokerURL, finalBrokerPort);
+                int brokerId = (selectedBroker != null) ? selectedBroker.PK_BrokerID : -1;
+
+                if (brokerId == -1 && !"admin".equals(role)) {
+                    runOnUiThread(() -> showAlert("Please select a broker"));
+                    return;
+                }
+
+                if (managerUserId == null && "guest".equals(role)) {
+                    runOnUiThread(() -> showAlert("Please select a manager"));
+                    return;
+                }
+
                 if (user != null) {
                     user.username = username;
-                    user.password = password;
-                    user.mqttUser = mqttUser;
-                    user.mqttPassword = mqttPassword;
+                    user.password = password.isEmpty() ? user.password : password;
+                    user.mqttUser = "admin".equals(role) ? null : mqttUser;
+                    user.mqttPassword = "admin".equals(role) ? null : mqttPassword;
                     user.role = role;
-                    user.managerUserId = managerUserId;
-                    user.brokerID = brokerId;
+                    user.managerUserId = ("guest".equals(role)) ? managerUserId : null;
+                    user.brokerID = ("admin".equals(role)) ? null : brokerId;
 
                     userDao.update(user);
                 } else {
-                    User newUser = new User(username, password, mqttUser, mqttPassword, role, managerUserId, brokerId);
+                    User newUser = new User(username, password,
+                            "admin".equals(role) ? null : mqttUser,
+                            "admin".equals(role) ? null : mqttPassword,
+                            role,
+                            ("guest".equals(role)) ? managerUserId : null,
+                            ("admin".equals(role)) ? null : brokerId);
                     userDao.insert(newUser);
                 }
 
@@ -366,14 +396,12 @@ public class EditUserActivity extends Activity {
         }).start();
     }
 
-    private boolean isFieldVisible(View view) {
-        return view.getVisibility() == View.VISIBLE;
-    }
 
     private void showAlert(String message) {
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(EditUserActivity.this)
                 .setMessage(message)
-                .setPositiveButton("OK", null)
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss())
+                .create()
                 .show();
     }
 }

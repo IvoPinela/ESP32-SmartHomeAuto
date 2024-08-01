@@ -2,8 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/background_color">
 
+    <!-- Title of the Form -->
     <TextView
         android:id="@+id/formTitle"
         android:layout_width="wrap_content"
@@ -12,8 +14,10 @@
         android:textSize="24sp"
         android:textStyle="bold"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="24dp"/>
+        android:layout_marginBottom="24dp"
+        android:textColor="@color/white"/>
 
+    <!-- Device Name Label -->
     <TextView
         android:id="@+id/labelDeviceName"
         android:layout_width="wrap_content"
@@ -22,8 +26,10 @@
         android:textSize="16sp"
         android:layout_alignParentStart="true"
         android:layout_below="@id/formTitle"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:textColor="@color/white"/>
 
+    <!-- Device Name Input Field -->
     <EditText
         android:id="@+id/editTextDeviceName"
         android:layout_width="match_parent"
@@ -32,8 +38,12 @@
         android:layout_marginTop="8dp"
         android:hint="Enter device name"
         android:minHeight="48dp"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/darkgray"
+        android:background="@drawable/edittext_background"/>
 
+    <!-- MQTT Topic Label -->
     <TextView
         android:id="@+id/labelMqttTopic"
         android:layout_width="wrap_content"
@@ -42,8 +52,10 @@
         android:textSize="16sp"
         android:layout_alignParentStart="true"
         android:layout_below="@id/editTextDeviceName"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:textColor="@color/white"/>
 
+    <!-- MQTT Topic Input Field -->
     <EditText
         android:id="@+id/editTextMqttTopic"
         android:layout_width="match_parent"
@@ -52,8 +64,12 @@
         android:layout_marginTop="8dp"
         android:hint="Enter MQTT topic"
         android:minHeight="48dp"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/darkgray"
+        android:background="@drawable/edittext_background"/>
 
+    <!-- MQTT User Label -->
     <TextView
         android:id="@+id/labelMqttUser"
         android:layout_width="wrap_content"
@@ -62,8 +78,10 @@
         android:textSize="16sp"
         android:layout_alignParentStart="true"
         android:layout_below="@id/editTextMqttTopic"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:textColor="@color/white"/>
 
+    <!-- MQTT User Input Field -->
     <EditText
         android:id="@+id/editTextMqttUser"
         android:layout_width="match_parent"
@@ -72,8 +90,12 @@
         android:layout_marginTop="8dp"
         android:hint="Enter MQTT user"
         android:minHeight="48dp"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/darkgray"
+        android:background="@drawable/edittext_background"/>
 
+    <!-- MQTT Password Label -->
     <TextView
         android:id="@+id/labelMqttPassword"
         android:layout_width="wrap_content"
@@ -82,8 +104,10 @@
         android:textSize="16sp"
         android:layout_alignParentStart="true"
         android:layout_below="@id/editTextMqttUser"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:textColor="@color/white"/>
 
+    <!-- MQTT Password Input Field -->
     <EditText
         android:id="@+id/editTextMqttPassword"
         android:layout_width="match_parent"
@@ -93,8 +117,12 @@
         android:hint="Enter MQTT password"
         android:inputType="textPassword"
         android:minHeight="48dp"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/darkgray"
+        android:background="@drawable/edittext_background"/>
 
+    <!-- Device Type Label -->
     <TextView
         android:id="@+id/labelDeviceType"
         android:layout_width="wrap_content"
@@ -103,16 +131,20 @@
         android:textSize="16sp"
         android:layout_alignParentStart="true"
         android:layout_below="@id/editTextMqttPassword"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:textColor="@color/white"/>
 
+    <!-- Device Type Spinner -->
     <Spinner
         android:id="@+id/spinnerDeviceType"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/labelDeviceType"
         android:layout_marginTop="8dp"
-        android:minHeight="48dp"/>
+        android:minHeight="48dp"
+        android:background="@drawable/spinner_background"/>
 
+    <!-- Creator User Label -->
     <TextView
         android:id="@+id/labelCreatorUser"
         android:layout_width="wrap_content"
@@ -121,16 +153,20 @@
         android:textSize="16sp"
         android:layout_alignParentStart="true"
         android:layout_below="@id/spinnerDeviceType"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:textColor="@color/white"/>
 
+    <!-- Creator User Spinner -->
     <Spinner
         android:id="@+id/spinnerCreatorUser"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/labelCreatorUser"
         android:layout_marginTop="8dp"
-        android:minHeight="48dp"/>
+        android:minHeight="48dp"
+        android:background="@drawable/spinner_background"/>
 
+    <!-- Save Device Button -->
     <Button
         android:id="@+id/buttonSaveDevice"
         android:layout_width="wrap_content"
@@ -139,8 +175,11 @@
         android:textSize="18sp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="24dp"/>
+        android:layout_marginTop="24dp"
+        android:background="@drawable/soft_blue_gradient"
+        android:textColor="@color/white"/>
 
+    <!-- Back Button -->
     <Button
         android:id="@+id/buttonBack"
         android:layout_width="wrap_content"
@@ -150,5 +189,7 @@
         android:layout_alignParentBottom="true"
         android:layout_toStartOf="@id/buttonSaveDevice"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="24dp"/>
+        android:layout_marginTop="24dp"
+        android:background="@color/darkgray"
+        android:textColor="@color/white"/>
 </RelativeLayout>

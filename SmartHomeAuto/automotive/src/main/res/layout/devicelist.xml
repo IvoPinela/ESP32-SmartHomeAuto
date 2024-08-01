@@ -3,14 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="16dp"
+    android:background="@android:color/black">
 
     <RelativeLayout
         android:id="@+id/headerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="#EEE"
+        android:background="@android:color/darker_gray"
         android:padding="8dp">
 
         <Button
@@ -18,6 +20,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Back"
+            android:textColor="@android:color/white"
+            android:background="@color/darkgray"
             android:layout_alignParentStart="true"/>
 
         <TextView
@@ -27,6 +31,7 @@
             android:text="Devices List"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:textColor="@android:color/white"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"/>
 
@@ -39,6 +44,7 @@
             android:layout_marginEnd="8dp"
             android:background="@android:color/transparent"
             android:src="@drawable/baseline_edit_24"
+            app:tint="@android:color/white"
             tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
         <ImageButton
@@ -49,6 +55,7 @@
             android:layout_toStartOf="@id/buttonEdit"
             android:background="@android:color/transparent"
             android:src="@drawable/baseline_delete_24"
+            app:tint="@android:color/white"
             tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
     </RelativeLayout>
 
@@ -58,7 +65,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/headerLayout"
         android:layout_marginTop="16dp"
-        android:minHeight="48dp" />
+        android:minHeight="48dp"
+        android:background="@android:color/white" />
 
     <SearchView
         android:id="@+id/searchViewName"
@@ -66,7 +74,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/spinnerDeviceType"
         android:layout_marginTop="16dp"
-        android:queryHint="Search by name"/>
+        android:queryHint="Search by name"
+        android:background="@android:color/white" />
 
     <SearchView
         android:id="@+id/searchViewUser"
@@ -74,23 +83,50 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/searchViewName"
         android:layout_marginTop="16dp"
-        android:queryHint="Search by user"/>
+        android:queryHint="Search by user"
+        android:background="@android:color/white" />
+
+    <Switch
+        android:id="@+id/switchFilterNullFields"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/searchViewUsername"
+        android:layout_marginTop="16dp"
+        android:minHeight="48dp"
+        android:text="Show Users with Null Fields"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/textViewDeviceCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/searchViewUser"
+        android:layout_marginTop="16dp"
+        android:text="Number of Devices: 0"
+        android:textSize="16sp"
+        android:textColor="@android:color/white" />
 
     <ListView
         android:id="@+id/listViewDevices"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_below="@id/searchViewUser"
+        android:layout_below="@id/textViewDeviceCount"
         android:layout_above="@id/buttonAddDevice"
         android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@android:color/white" />
 
     <Button
         android:id="@+id/buttonAddDevice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add Device"
+        android:background="@drawable/soft_blue_gradient"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"/>
+        android:layout_marginEnd="16dp"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="16dp"/>
 </RelativeLayout>

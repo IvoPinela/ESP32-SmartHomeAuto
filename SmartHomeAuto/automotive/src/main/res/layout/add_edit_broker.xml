@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/background_color">
 
     <!-- Title of the Form -->
     <TextView
@@ -13,7 +14,8 @@
         android:textSize="24sp"
         android:textStyle="bold"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="24dp"/>
+        android:layout_marginBottom="24dp"
+        android:textColor="@color/white"/>
 
     <!-- Cluster URL Label -->
     <TextView
@@ -24,7 +26,8 @@
         android:textSize="16sp"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/formTitle"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:textColor="@color/white"/>
 
     <!-- Cluster URL Input Field -->
     <EditText
@@ -35,7 +38,10 @@
         android:layout_marginTop="8dp"
         android:hint="Enter cluster URL"
         android:minHeight="48dp"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/darkgray"
+        android:background="@drawable/edittext_background"/>
 
     <!-- Port Label -->
     <TextView
@@ -46,7 +52,8 @@
         android:textSize="16sp"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/editTextClusterURL"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:textColor="@color/white"/>
 
     <!-- Port Input Field -->
     <EditText
@@ -58,7 +65,10 @@
         android:hint="Enter port"
         android:inputType="number"
         android:minHeight="48dp"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/darkgray"
+        android:background="@drawable/edittext_background"/>
 
     <!-- Save Broker Button -->
     <Button
@@ -69,7 +79,9 @@
         android:textSize="18sp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="24dp"/>
+        android:layout_marginTop="24dp"
+        android:background="@drawable/soft_blue_gradient"
+        android:textColor="@color/white"/>
 
     <!-- Back Button -->
     <Button
@@ -79,7 +91,9 @@
         android:text="Back"
         android:textSize="18sp"
         android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@+id/buttonSaveBroker"
+        android:layout_toStartOf="@id/buttonSaveBroker"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="24dp"/>
+        android:layout_marginTop="24dp"
+        android:background="@color/darkgray"
+        android:textColor="@color/white"/>
 </RelativeLayout>

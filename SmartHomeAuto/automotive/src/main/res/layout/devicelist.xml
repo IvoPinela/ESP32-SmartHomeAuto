@@ -90,17 +90,17 @@
         android:id="@+id/switchFilterNullFields"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/searchViewUsername"
+        android:layout_below="@id/searchViewUser"
         android:layout_marginTop="16dp"
         android:minHeight="48dp"
-        android:text="Show Users with Null Fields"
+        android:text="Show Devices with Null Fields"
         android:textColor="@android:color/white" />
 
     <TextView
         android:id="@+id/textViewDeviceCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/searchViewUser"
+        android:layout_below="@id/switchFilterNullFields"
         android:layout_marginTop="16dp"
         android:text="Number of Devices: 0"
         android:textSize="16sp"

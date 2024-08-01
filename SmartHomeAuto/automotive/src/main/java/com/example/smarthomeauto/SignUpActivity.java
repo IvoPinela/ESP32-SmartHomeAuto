@@ -1,12 +1,13 @@
 package com.example.smarthomeauto;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.concurrent.ExecutorService;
@@ -16,17 +17,11 @@ public class SignUpActivity extends AppCompatActivity {
 
     private AppDatabase db;
     private ExecutorService executorService;
-    private String userRole;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Get the user role from the intent
-        userRole = getIntent().getStringExtra("USER_ROLE");
-
-            setContentView(R.layout.usersignup);
-
+        setContentView(R.layout.usersignup);
 
         final EditText editTextUsername = findViewById(R.id.editTextSignupUsername);
         final EditText editTextPassword = findViewById(R.id.editTextSignupPassword);
@@ -36,75 +31,65 @@ public class SignUpActivity extends AppCompatActivity {
         db = AppDatabase.getDatabase(this);
         executorService = Executors.newSingleThreadExecutor();
 
-        buttonSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final String username = editTextUsername.getText().toString();
-                final String password = editTextPassword.getText().toString();
+        buttonSignUp.setOnClickListener(v -> {
+            final String username = editTextUsername.getText().toString();
+            final String password = editTextPassword.getText().toString();
 
-                if (username.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(SignUpActivity.this, "Username and password cannot be empty", Toast.LENGTH_SHORT).show();
-                    return;
+            if (username.isEmpty() || password.isEmpty()) {
+                // Set error messages on the EditText fields
+                if (username.isEmpty()) {
+                    editTextUsername.setError("Username cannot be empty");
                 }
-
-                executorService.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        // Check if the user already exists
-                        if (db.userDao().countUsersByUsername(username) > 0) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(SignUpActivity.this, "Username already exists", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                            return;
-                        }
-
-                        // Create and insert the new user
-                        User newUser = new User();
-                        newUser.username = username;
-                        newUser.password = HashUtils.hashPassword(password); // Hash the password
-                        newUser.role = userRole; // Set the role based on intent
-
-                        newUser.mqttUser = null;
-                        newUser.mqttPassword = null;
-                        newUser.managerUserId = null;
-                        newUser.brokerID = null;
-
-                        db.userDao().insert(newUser);
-                        Log.d("signup", userRole + " user created successfully");
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(SignUpActivity.this, userRole + " sign up successful", Toast.LENGTH_SHORT).show();
-                                // Redirect based on user role
-                                Intent intent;
-                                if ("admin".equals(userRole)) {
-                                    // Redirect to admin activity if the role is admin
-                                    intent = new Intent(SignUpActivity.this, AdminActivity.class);
-                                } else {
-                                    // Redirect to user activity if the role is user
-                                    intent = new Intent(SignUpActivity.this, UserActivity.class);
-                                }
-                                startActivity(intent);
-                                finish(); // Close the sign-up activity
-                            }
-                        });
-                    }
-                });
+                if (password.isEmpty()) {
+                    editTextPassword.setError("Password cannot be empty");
+                }
+                return;
             }
+
+            executorService.execute(() -> {
+                // Check if the user already exists
+                boolean userExists = db.userDao().countUsersByUsername(username) > 0;
+
+                if (userExists) {
+                    runOnUiThread(() -> showAlertDialog("Error", "Username already exists"));
+                } else {
+                    // Create and insert the new user
+                    User newUser = new User();
+                    newUser.username = username;
+                    newUser.password = HashUtils.hashPassword(password);
+                    newUser.role = "user";
+                    newUser.mqttUser = null;
+                    newUser.mqttPassword = null;
+                    newUser.managerUserId = null;
+                    newUser.brokerID = null;
+
+
+
+                    // Pass the user ID to the next activity
+                    Intent intent = new Intent(SignUpActivity.this, UserActivity.class);
+                    intent.putExtra("USER_ID", newUser.id);
+                    intent.putExtra("USER_ROLE", newUser.role);
+                    runOnUiThread(() -> {
+                        startActivity(intent);
+                        finish(); // Close the sign-up activity
+                    });
+                }
+            });
         });
 
-        buttonBackToLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Navigate back to the login screen
-                Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish(); // Close the sign-up activity
-            }
+        buttonBackToLogin.setOnClickListener(v -> {
+            // Navigate back to the login screen
+            Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish(); // Close the sign-up activity
         });
+    }
+
+    private void showAlertDialog(String title, String message) {
+        new AlertDialog.Builder(SignUpActivity.this)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("OK", (DialogInterface dialog, int which) -> dialog.dismiss())
+                .show();
     }
 }

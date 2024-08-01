@@ -50,5 +50,6 @@
     <string name="hintUsername">Enter username</string>
     <string name="hintMqttUser">Enter MQTT user</string>
     <string name="hintMqttPassword">Enter MQTT password</string>
+    <string name="add_guest">add new guest</string>
 
 </resources>

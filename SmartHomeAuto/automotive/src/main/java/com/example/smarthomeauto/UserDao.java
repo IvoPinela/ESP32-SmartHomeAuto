@@ -65,6 +65,9 @@ public interface UserDao {
     List<User> getAllUsersExcludingAdmin();
 
 
+    @Query("SELECT * FROM users WHERE role = 'guest' AND managerUserId = :managerId")
+    List<User> getAllGuests(int managerId);
+
     @Query("SELECT * FROM users WHERE role = :role " +
             "AND ((role = 'user' AND (mqttUser IS NULL OR mqttPassword IS NULL OR brokerID IS NULL)) " +
             "OR (role = 'guest' AND (mqttUser IS NULL OR mqttPassword IS NULL OR brokerID IS NULL OR managerUserId IS NULL)))")
@@ -73,8 +76,11 @@ public interface UserDao {
     @Query("SELECT * FROM users WHERE mqttUser IS NULL OR mqttPassword IS NULL OR brokerID IS NULL OR managerUserId IS NULL")
     List<User> searchAllUsersWithNullFields();
 
+    @Query("SELECT id FROM users WHERE username = :username")
+    int getUserIdByUsername(String username);
 
-
+    @Query("SELECT COUNT(*) > 0 FROM users WHERE id = :userId AND (mqttUser IS NULL OR mqttPassword IS NULL OR brokerID IS NULL OR managerUserId IS NULL)")
+    boolean doesUserHaveNullFields(int userId);
 
 
 

@@ -6,8 +6,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.snackbar.Snackbar;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -48,10 +51,11 @@ public class LoginActivity extends AppCompatActivity {
                     Log.d("login", "User found: " + user.username);
                     Log.d("login", "User role: " + user.role);
 
-                    Log.d("login", "Password match successful");
-                    loginAttempts = 0; // Reset attempts on successful login
+                    // Reset attempts on successful login
+                    loginAttempts = 0;
+
                     Intent intent;
-                    if ("admin".equals(user.role)|| "adminmaster".equals(user.role)) {
+                    if ("admin".equals(user.role) || "adminmaster".equals(user.role)) {
                         intent = new Intent(LoginActivity.this, AdminActivity.class);
                     } else if ("user".equals(user.role)) {
                         intent = new Intent(LoginActivity.this, UserActivity.class);
@@ -59,6 +63,9 @@ public class LoginActivity extends AppCompatActivity {
                         Log.d("login", "Unknown user role");
                         return;
                     }
+
+                    // Pass both the user ID and role to the next activity
+                    intent.putExtra("USER_ID", user.id);
                     intent.putExtra("USER_ROLE", user.role);
                     startActivity(intent);
                 } else {
@@ -76,9 +83,8 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         buttonSignUp.setOnClickListener(v -> {
-            // Navigate to Sign Up Activity with user role
+            // Navigate to Sign Up Activity
             Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-            intent.putExtra("USER_ROLE", "user");
             startActivity(intent);
         });
     }

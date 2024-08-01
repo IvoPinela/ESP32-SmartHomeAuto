@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -37,6 +38,7 @@ public class DeviceListActivity extends AppCompatActivity {
     private SearchView searchViewName;
     private SearchView searchViewUser;
     private TextView textViewDeviceCount;
+    private Switch switchFilterMissingMQTT;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -53,6 +55,7 @@ public class DeviceListActivity extends AppCompatActivity {
         searchViewUser = findViewById(R.id.searchViewUser);
         listViewDevices = findViewById(R.id.listViewDevices);
         textViewDeviceCount = findViewById(R.id.textViewDeviceCount);
+        switchFilterMissingMQTT = findViewById(R.id.switchFilterNullFields);
 
         deviceDao = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "db_SmartHomeAuto").build().deviceDao();
         deviceTypeDao = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "db_SmartHomeAuto").build().deviceTypeDao();
@@ -87,6 +90,8 @@ public class DeviceListActivity extends AppCompatActivity {
             deviceAdapter.setSelectedPosition(position);
             Snackbar.make(findViewById(android.R.id.content), "Selected: " + selectedDevice.name, Snackbar.LENGTH_SHORT).show();
         });
+
+        switchFilterMissingMQTT.setOnCheckedChangeListener((buttonView, isChecked) -> filterDevices());
 
         setupSpinner();
         setupSearchViews();
@@ -169,8 +174,20 @@ public class DeviceListActivity extends AppCompatActivity {
         DeviceType selectedType = (DeviceType) spinnerDeviceType.getSelectedItem();
         Integer deviceTypeId = (selectedType != null && selectedType.id != -1) ? selectedType.id : null;
 
+        boolean filterMissingMQTT = switchFilterMissingMQTT.isChecked();
+
         new Thread(() -> {
-            List<Device> filteredDevices = deviceDao.searchDevices2(queryName, deviceTypeId, queryUser);
+            List<Device> filteredDevices;
+
+            // Aplica filtros principais
+            filteredDevices = deviceDao.searchDevices(queryName, deviceTypeId, queryUser);
+
+            // Se o filtro de campos MQTT vazios estiver ativado, aplica esse filtro adicional
+            if (filterMissingMQTT) {
+                filteredDevices.removeIf(device -> device.mqttUser != null && !device.mqttUser.isEmpty() &&
+                        device.mqttPassword != null && !device.mqttPassword.isEmpty());
+            }
+
             runOnUiThread(() -> {
                 deviceAdapter.clear();
                 deviceAdapter.addAll(filteredDevices);
@@ -179,6 +196,7 @@ public class DeviceListActivity extends AppCompatActivity {
             });
         }).start();
     }
+
 
     private void showDeleteConfirmationDialog() {
         new AlertDialog.Builder(this)

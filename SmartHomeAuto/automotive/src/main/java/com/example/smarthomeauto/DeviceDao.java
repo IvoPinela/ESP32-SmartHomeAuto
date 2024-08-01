@@ -60,5 +60,23 @@ public interface DeviceDao {
     )
     List<Device> searchDevices(String deviceName, Integer deviceTypeId);
 
+    @Query("SELECT * FROM devices " +
+            "WHERE (mqttUser IS NULL OR mqttUser = '') " +
+            "AND (mqttPassword IS NULL OR mqttPassword = '')")
+    List<Device> searchDevicesWithMissingMQTT();
+
+    @Query("SELECT * FROM devices WHERE " +
+            "(:name IS NULL OR name LIKE '%' || :name || '%') " +
+            "AND (:deviceTypeId IS NULL OR deviceTypeId = :deviceTypeId) " +
+            "AND (:user IS NULL OR creatorUserId IN (SELECT id FROM users WHERE username LIKE '%' || :user || '%'))")
+    List<Device> searchDevices(String name, Integer deviceTypeId, String user);
+
+    @Query("SELECT * FROM devices WHERE " +
+            "(:name IS NULL OR name LIKE '%' || :name || '%') " +
+            "AND (:deviceTypeId IS NULL OR deviceTypeId = :deviceTypeId) " +
+            "AND (:user IS NULL OR creatorUserId IN (SELECT id FROM users WHERE username LIKE '%' || :user || '%'))")
+    List<Device> searchDevicesWithFilter(String name, Integer deviceTypeId, String user);
+
+
 
 }

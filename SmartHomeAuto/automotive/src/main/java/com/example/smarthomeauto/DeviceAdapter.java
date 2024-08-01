@@ -2,6 +2,7 @@ package com.example.smarthomeauto;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +36,6 @@ public class DeviceAdapter extends ArrayAdapter<Device> {
 
         Device device = getItem(position);
 
-
         TextView textViewName = convertView.findViewById(R.id.textViewName);
         TextView textViewTopic = convertView.findViewById(R.id.textViewTopic);
         TextView textViewDeviceType = convertView.findViewById(R.id.textViewDeviceType);
@@ -43,13 +43,11 @@ public class DeviceAdapter extends ArrayAdapter<Device> {
         TextView textViewMqttUser = convertView.findViewById(R.id.textViewMqttUser);
         TextView textViewMqttPassword = convertView.findViewById(R.id.textViewMqttPassword);
 
-
         if (device != null) {
             textViewName.setText("Name: " + device.name);
             textViewTopic.setText("MQTT Topic: " + device.mqttTopic);
             textViewMqttUser.setText("MQTT User: " + device.mqttUser);
             textViewMqttPassword.setText("MQTT Password: " + device.mqttPassword);
-
 
             new Thread(() -> {
                 String deviceTypeName = deviceTypeDao.getDeviceTypeNameById(device.deviceTypeId);
@@ -62,7 +60,6 @@ public class DeviceAdapter extends ArrayAdapter<Device> {
                 });
             }).start();
 
-
             new Thread(() -> {
                 User creatorUser = userDao.getUserById(device.creatorUserId);
                 final String creatorUserName = (creatorUser != null) ? creatorUser.username : "Unknown";
@@ -72,15 +69,21 @@ public class DeviceAdapter extends ArrayAdapter<Device> {
             }).start();
         }
 
-
+        // Definir cor de fundo
+        int backgroundColor;
         if (position == selectedPosition) {
-            convertView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorSelectedItem));
+            backgroundColor = ContextCompat.getColor(getContext(), R.color.colorSelectedItem);
+        } else if (device != null && (device.mqttUser == null || device.mqttUser.isEmpty() || device.mqttPassword == null || device.mqttPassword.isEmpty())) {
+            backgroundColor = Color.YELLOW;
         } else {
-            convertView.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.white));
+            backgroundColor = ContextCompat.getColor(getContext(), android.R.color.white);
         }
+
+        convertView.setBackgroundColor(backgroundColor);
 
         return convertView;
     }
+
 
     public void setSelectedPosition(int position) {
         selectedPosition = position;

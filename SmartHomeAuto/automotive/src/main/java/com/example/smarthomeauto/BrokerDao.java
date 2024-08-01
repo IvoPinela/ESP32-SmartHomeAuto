@@ -26,9 +26,11 @@ public interface BrokerDao {
     @Query("SELECT * FROM broker WHERE PK_BrokerID = :brokerId")
     Broker getBrokerById(int brokerId);
 
-    @Query("SELECT * FROM broker WHERE ClusterURL = :url")
-    List<Broker> getBrokersByUrl(String url);
+    @Query("SELECT COUNT(*) FROM broker")
+    int countBrokers();
 
+    @Query("SELECT PK_BrokerID FROM broker WHERE ClusterURL = :clusterURL")
+    int getBrokerIdByUrl(String clusterURL);
     @Query("SELECT * FROM broker WHERE PORT = :port")
     List<Broker> getBrokersByPort(int port);
 
@@ -40,6 +42,9 @@ public interface BrokerDao {
 
     @Query("SELECT * FROM broker WHERE ClusterURL = :clusterURL AND PORT = :port AND PK_BrokerID != :id")
     Broker getBrokerByUrlAndPortExcludingId(String clusterURL, int port, int id);
+
+    @Query("SELECT * FROM broker WHERE ClusterURL = :url LIMIT 1")
+    Broker getBrokerByUrl(String url);
 
 
 }

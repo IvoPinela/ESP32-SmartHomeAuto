@@ -35,4 +35,7 @@ public interface DeviceTypeDao {
     @Query("SELECT name FROM device_types WHERE id = :deviceTypeId")
     String getDeviceTypeNameById(int deviceTypeId);
 
+    @Query("SELECT id FROM device_types WHERE name = :deviceTypeName")
+    int getDeviceTypeIdByName(String deviceTypeName);
+
 }

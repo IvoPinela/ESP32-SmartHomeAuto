@@ -34,15 +34,20 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
     private TextView gateStatusTextView;
     private boolean isGateOpen = false;
     private boolean isConnected = false;
+    private int userId;
+    private String userRole;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gatescreen);
 
-        // Initialize MQTT handler with this activity as the listener
-        mqttHandler = new MqttHandler(this);
-        mqttHandler.connect(BROKER_URL, USERNAME, PASSWORD);
+        Intent intent = getIntent();
+        userId = intent.getIntExtra("USER_ID", -1);
+        userRole = intent.getStringExtra("USER_ROLE");
+
+        // Initialize MQTT connection
+        initializeMqtt();
 
         // Initialize UI components
         gateStatusTextView = findViewById(R.id.gateStatusTextView);
@@ -76,7 +81,34 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
         // Set click listener for back button
         buttonBackToMenuGate.setOnClickListener(v -> finish());
     }
+    private void initializeMqtt() {
+        new Thread(() -> {
+            AppDatabase db = AppDatabase.getDatabase(this);
 
+            // Initialize DAOs
+            UserDao userDao = db.userDao();
+            BrokerDao brokerDao = db.brokerDao();
+
+            // Fetch brokerID, username, and password
+            int brokerId = userDao.getBrokerById(userId);
+            String mqttUsername = String.valueOf(userDao.getMqtttUsernameById(userId));
+            String mqttPassword = String.valueOf(userDao.getMqtttpassordById(userId));
+
+            // Fetch broker URL and port
+            String brokerUrl = brokerDao.getClusterURLById(brokerId);
+            int port = brokerDao.getPORTById(brokerId);
+
+            if (brokerUrl == null || port <= 0) {
+                Log.e(TAG, "Broker URL or port is invalid.");
+                Log.e(TAG, "Broker URL: " + brokerUrl);
+                Log.e(TAG, "Port: " + port);
+                return;
+            }
+            String fullBrokerUrl = "ssl://" + brokerUrl + ":" + port;
+            mqttHandler = new MqttHandler(this);
+            mqttHandler.connect(fullBrokerUrl, mqttUsername, mqttPassword);
+        }).start();
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();

@@ -86,4 +86,10 @@ public interface UserDao {
     @Query("SELECT brokerID FROM Users WHERE id = :userId")
     int getBrokerById(int userId);
 
+    @Query("SELECT mqttUser FROM Users WHERE id = :userId")
+    String getMqtttUsernameById(int userId);
+
+    @Query("SELECT mqttPassword FROM Users WHERE id = :userId")
+    String getMqtttpassordById(int userId);
+
 }

@@ -42,7 +42,11 @@ public class UserActivity extends AppCompatActivity {
 
         rootView = findViewById(android.R.id.content);
 
-        mqttManager = new MqttManager(this);
+        // Initialize buttons
+        buttonLights = findViewById(R.id.buttonLights);
+        buttonGate = findViewById(R.id.buttonGate);
+        buttonLogOff = findViewById(R.id.buttonLogOff);
+        buttonAddGuest = findViewById(R.id.buttonAddGuest);
 
         Intent intent = getIntent();
         userId = intent.getIntExtra("USER_ID", -1);
@@ -52,22 +56,30 @@ public class UserActivity extends AppCompatActivity {
         Log.d(TAG, "User ID: " + userId);
         Log.d(TAG, "User Role: " + userRole);
 
-        // Initialize buttons
-        buttonLights = findViewById(R.id.buttonLights);
-        buttonGate = findViewById(R.id.buttonGate);
-        buttonLogOff = findViewById(R.id.buttonLogOff);
-        buttonAddGuest = findViewById(R.id.buttonAddGuest);
-
         // Check user role and hide buttonAddGuest if userRole is "guest"
         if ("guest".equals(userRole)) {
             buttonAddGuest.setVisibility(View.GONE);
         }
 
+        // Initialize MqttManager with userId
+        mqttManager = new MqttManager(this, userId);
+
         // Check MQTT permissions
         checkMqttPermissions(userId);
 
-        buttonLights.setOnClickListener(v -> startActivity(new Intent(UserActivity.this, LightsControlActivity.class)));
-        buttonGate.setOnClickListener(v -> startActivity(new Intent(UserActivity.this, GateControlActivity.class)));
+        buttonLights.setOnClickListener(v -> {
+            Intent lightsIntent = new Intent(UserActivity.this, LightsControlActivity.class);
+            lightsIntent.putExtra("USER_ID", userId);
+            lightsIntent.putExtra("USER_ROLE", userRole);
+            startActivity(lightsIntent);
+        });
+
+        buttonGate.setOnClickListener(v -> {
+            Intent gateIntent = new Intent(UserActivity.this, GateControlActivity.class);
+            gateIntent.putExtra("USER_ID", userId);
+            gateIntent.putExtra("USER_ROLE", userRole);
+            startActivity(gateIntent);
+        });
         buttonLogOff.setOnClickListener(v -> {
             Intent logoutIntent = new Intent(UserActivity.this, LoginActivity.class);
             startActivity(logoutIntent);
@@ -77,6 +89,7 @@ public class UserActivity extends AppCompatActivity {
         buttonAddGuest.setOnClickListener(v -> {
             Intent newActivityIntent = new Intent(UserActivity.this, GuestListActivity.class);
             newActivityIntent.putExtra("USER_ID", userId);
+            newActivityIntent.putExtra("USER_ROLE", userRole);
             startActivity(newActivityIntent);
         });
 
@@ -121,7 +134,9 @@ public class UserActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mqttManager.disconnect();
+        if (mqttManager != null) {
+            mqttManager.disconnect();
+        }
     }
 
     private void createNotificationChannels() {

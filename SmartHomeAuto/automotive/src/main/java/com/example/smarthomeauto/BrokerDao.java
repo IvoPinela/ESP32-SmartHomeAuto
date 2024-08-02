@@ -46,5 +46,8 @@ public interface BrokerDao {
     @Query("SELECT * FROM broker WHERE ClusterURL = :url LIMIT 1")
     Broker getBrokerByUrl(String url);
 
-
+    @Query("SELECT ClusterURL FROM broker WHERE PK_BrokerID = :brokerId")
+    String getClusterURLById(int brokerId);
+    @Query("SELECT PORT FROM broker WHERE PK_BrokerID = :brokerId")
+    int getPORTById(int brokerId);
 }

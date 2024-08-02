@@ -18,9 +18,6 @@ import androidx.core.content.ContextCompat;
 public class MqttManager implements MqttHandler.MessageListener {
 
     private static final String TAG = "MqttManager";
-    private static final String BROKER_URL = "ssl://05e815044648452d9966e9b6701cb998.s1.eu.hivemq.cloud:8883";
-    private static final String USERNAME = "Test1234";
-    private static final String PASSWORD = "Test1234";
     private static final String LIGHT_TOPIC = "home/light";
     private static final String GATE_TOPIC = "home/gate";
     private static final String LIGHT_CHANNEL_ID = "light_status_channel";
@@ -29,15 +26,52 @@ public class MqttManager implements MqttHandler.MessageListener {
     private Context context;
     private MqttHandler mqttHandler;
     private boolean isConnected = false;
+    private int UserId;
+    private String USERNAME;
+    private String PASSWORD;
+    private String BROKER_URL;
 
-    public MqttManager(Context context) {
+    public MqttManager(Context context, int userid) {
         this.context = context;
         createNotificationChannels();
         requestNotificationPermission();
         mqttHandler = new MqttHandler(this);
         mqttHandler.connect(BROKER_URL, USERNAME, PASSWORD);
+        UserId=userid;
+        iniciateMqtt();
     }
 
+    private void iniciateMqtt() {
+        new Thread(() -> {
+            AppDatabase db = AppDatabase.getDatabase(context);
+
+            // Initialize DAOs
+            UserDao userDao = db.userDao();
+            BrokerDao brokerDao = db.brokerDao();
+           Log.e(TAG, "ID "+UserId);
+            // Fetch brokerID, username, and password
+            int brokerId = userDao.getBrokerById(UserId);
+            USERNAME = String.valueOf(userDao.getMqtttUsernameById(UserId));
+            PASSWORD = String.valueOf(userDao.getMqtttpassordById(UserId));
+
+            // Fetch broker URL and port
+            String brokerUrl = brokerDao.getClusterURLById(brokerId);
+            int port = brokerDao.getPORTById(brokerId);
+
+            if (brokerUrl == null || port <= 0) {
+                Log.e(TAG, "Broker URL or port is invalid.");
+                Log.e(TAG, "Broker URL "+brokerUrl);
+                Log.e(TAG, "Broker URL "+port);
+                return;
+            }
+
+            // Update BROKER_URL with the full URL
+            BROKER_URL = "ssl://"+brokerUrl + ":" + port;
+
+            // Connect to the broker after fetching the details
+            connect();
+        }).start();
+    }
     public void connect() {
         mqttHandler.connect(BROKER_URL, USERNAME, PASSWORD);
     }

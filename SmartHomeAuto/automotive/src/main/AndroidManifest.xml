@@ -45,6 +45,9 @@
         <activity android:name=".AddGuestActivity"/>
         <activity android:name=".EditGuestActivity"/>
         <activity android:name=".PermissionsActivity"/>
+        <activity android:name=".DevicesUserListActivity"/>
+        <activity android:name=".EditDevicesUserListActivity"/>
+        <activity android:name=".AddDevicesUserListActivity"/>
 
 
 

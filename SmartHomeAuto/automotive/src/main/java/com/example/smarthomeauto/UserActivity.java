@@ -33,6 +33,7 @@ public class UserActivity extends AppCompatActivity {
     private ImageButton buttonGate;
     private ImageButton buttonLogOff;
     private ImageButton buttonAddGuest;
+    private ImageButton buttonCreateDevice;
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -47,6 +48,7 @@ public class UserActivity extends AppCompatActivity {
         buttonGate = findViewById(R.id.buttonGate);
         buttonLogOff = findViewById(R.id.buttonLogOff);
         buttonAddGuest = findViewById(R.id.buttonAddGuest);
+        buttonCreateDevice = findViewById(R.id.buttonCreateDevice);
 
         Intent intent = getIntent();
         userId = intent.getIntExtra("USER_ID", -1);
@@ -93,6 +95,13 @@ public class UserActivity extends AppCompatActivity {
             startActivity(newActivityIntent);
         });
 
+        buttonCreateDevice.setOnClickListener(v -> {
+            Intent createDeviceIntent = new Intent(UserActivity.this, DevicesUserListActivity.class);
+            createDeviceIntent.putExtra("USER_ID", userId);
+            createDeviceIntent.putExtra("USER_ROLE", userRole);
+            startActivity(createDeviceIntent);
+        });
+
         createNotificationChannels();
         requestNotificationPermission();
     }
@@ -120,7 +129,6 @@ public class UserActivity extends AppCompatActivity {
     private void enableButtons(boolean enabled) {
         buttonLights.setEnabled(enabled);
         buttonGate.setEnabled(enabled);
-        // No need to enable buttonAddGuest here as it is hidden for "guest" role
     }
 
     private void showAccessDeniedDialog() {

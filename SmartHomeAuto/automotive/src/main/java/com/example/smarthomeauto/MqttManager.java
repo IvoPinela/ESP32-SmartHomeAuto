@@ -36,7 +36,6 @@ public class MqttManager implements MqttHandler.MessageListener {
         createNotificationChannels();
         requestNotificationPermission();
         mqttHandler = new MqttHandler(this);
-        mqttHandler.connect(BROKER_URL, USERNAME, PASSWORD);
         UserId=userid;
         iniciateMqtt();
     }

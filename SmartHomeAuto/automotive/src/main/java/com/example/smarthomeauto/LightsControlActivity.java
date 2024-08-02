@@ -80,6 +80,10 @@ public class LightsControlActivity extends AppCompatActivity implements MqttHand
         buttonBackToMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("USER_ROLE", userRole);
+                resultIntent.putExtra("USER_ID", userId);
+                setResult(RESULT_OK, resultIntent);
                 finish();
             }
         });

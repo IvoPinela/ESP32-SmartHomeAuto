@@ -2,6 +2,7 @@ package com.example.smarthomeauto;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -30,6 +31,8 @@ public class BrokerListActivity extends AppCompatActivity {
     private Broker selectedBroker;
     private SearchView searchViewClusterURL;
     private TextView textViewBrokerCount;
+    private String userRole;
+    private int creatorid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,10 +49,18 @@ public class BrokerListActivity extends AppCompatActivity {
 
         brokerDao = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "db_SmartHomeAuto").build().brokerDao();
 
+        Intent intent2 = getIntent();
+        if (intent2 != null) {
+            userRole = intent2.getStringExtra("USER_ROLE");
+            creatorid = intent2.getIntExtra("USER_ID",-1);
+            Log.d("UserListActivity", "User Role: " + userRole);
+        }
+
         buttonBack.setOnClickListener(v -> finish());
 
         buttonAddBroker.setOnClickListener(v -> {
             Intent intent = new Intent(BrokerListActivity.this, AddBrokerActivity.class);
+            intent.putExtra("USER_ROLE", userRole);
             startActivityForResult(intent, REQUEST_ADD_BROKER);
         });
 
@@ -57,6 +68,7 @@ public class BrokerListActivity extends AppCompatActivity {
             if (selectedBroker != null) {
                 Intent intent = new Intent(BrokerListActivity.this, EditBrokerActivity.class);
                 intent.putExtra("broker",selectedBroker);
+                intent.putExtra("USER_ROLE", userRole);
                 startActivityForResult(intent, REQUEST_EDIT_BROKER);
             } else {
                 Snackbar.make(findViewById(android.R.id.content), "No broker selected", Snackbar.LENGTH_SHORT).show();

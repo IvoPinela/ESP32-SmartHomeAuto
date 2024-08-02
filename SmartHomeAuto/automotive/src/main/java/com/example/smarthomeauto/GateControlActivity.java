@@ -24,9 +24,6 @@ import com.google.android.material.snackbar.Snackbar;
 public class GateControlActivity extends AppCompatActivity implements MqttHandler.MessageListener {
 
     private static final String TAG = "GateControlActivity";
-    private static final String BROKER_URL = "ssl://05e815044648452d9966e9b6701cb998.s1.eu.hivemq.cloud:8883";
-    private static final String USERNAME = "PublishTest";
-    private static final String PASSWORD = "Publish123";
     private static final String TOPIC = "home/gate";
     private static final String CHANNEL_ID = "gate_status_channel";
 
@@ -79,7 +76,13 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
         });
 
         // Set click listener for back button
-        buttonBackToMenuGate.setOnClickListener(v -> finish());
+        buttonBackToMenuGate.setOnClickListener(v -> {
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("USER_ROLE", userRole);
+            resultIntent.putExtra("USER_ID", userId);
+            setResult(RESULT_OK, resultIntent);
+            finish();
+        });
     }
     private void initializeMqtt() {
         new Thread(() -> {

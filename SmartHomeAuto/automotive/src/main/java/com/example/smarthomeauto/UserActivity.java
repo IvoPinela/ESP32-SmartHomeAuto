@@ -2,15 +2,16 @@ package com.example.smarthomeauto;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,8 +19,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.snackbar.Snackbar;
-
-import java.util.List;
 
 public class UserActivity extends AppCompatActivity {
 
@@ -33,7 +32,7 @@ public class UserActivity extends AppCompatActivity {
     private ImageButton buttonLights;
     private ImageButton buttonGate;
     private ImageButton buttonLogOff;
-    private ImageButton buttonAddGuest; /// Novo botão
+    private ImageButton buttonAddGuest;
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -57,7 +56,12 @@ public class UserActivity extends AppCompatActivity {
         buttonLights = findViewById(R.id.buttonLights);
         buttonGate = findViewById(R.id.buttonGate);
         buttonLogOff = findViewById(R.id.buttonLogOff);
-        buttonAddGuest= findViewById(R.id.buttonAddGuest);
+        buttonAddGuest = findViewById(R.id.buttonAddGuest);
+
+        // Check user role and hide buttonAddGuest if userRole is "guest"
+        if ("guest".equals(userRole)) {
+            buttonAddGuest.setVisibility(View.GONE);
+        }
 
         // Check MQTT permissions
         checkMqttPermissions(userId);
@@ -89,7 +93,7 @@ public class UserActivity extends AppCompatActivity {
                 if (hasNullFields) {
                     // User is missing MQTT permissions, disable buttons
                     Log.d(TAG, "User is missing MQTT permissions.");
-                    showAccessDeniedMessage();
+                    showAccessDeniedDialog();
                     enableButtons(false);
                 } else {
                     // User has valid MQTT permissions, enable buttons
@@ -103,11 +107,15 @@ public class UserActivity extends AppCompatActivity {
     private void enableButtons(boolean enabled) {
         buttonLights.setEnabled(enabled);
         buttonGate.setEnabled(enabled);
+        // No need to enable buttonAddGuest here as it is hidden for "guest" role
     }
 
-    private void showAccessDeniedMessage() {
-        String message = "Access denied. Please wait for an admin to grant you permissions.";
-        Snackbar.make(rootView, message, Snackbar.LENGTH_LONG).show();
+    private void showAccessDeniedDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Access Denied")
+                .setMessage("You do not have MQTT permissions. Please wait for an admin to grant you access.")
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                .show();
     }
 
     @Override

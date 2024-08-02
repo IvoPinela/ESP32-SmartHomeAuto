@@ -57,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent;
                     if ("admin".equals(user.role) || "adminmaster".equals(user.role)) {
                         intent = new Intent(LoginActivity.this, AdminActivity.class);
-                    } else if ("user".equals(user.role)) {
+                    } else if ("user".equals(user.role)||("guest".equals(user.role))) {
                         intent = new Intent(LoginActivity.this, UserActivity.class);
                     } else {
                         Log.d("login", "Unknown user role");

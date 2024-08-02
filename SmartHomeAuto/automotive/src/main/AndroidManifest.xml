@@ -42,6 +42,8 @@
         <activity android:name=".AddUserActivity"/>
         <activity android:name=".EditUserActivity"/>
         <activity android:name=".GuestListActivity"/>
+        <activity android:name=".AddGuestActivity"/>
+        <activity android:name=".EditGuestActivity"/>
         <activity android:name=".PermissionsActivity"/>
 
 

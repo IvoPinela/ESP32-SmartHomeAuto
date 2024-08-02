@@ -236,8 +236,6 @@ public class UserListActivity extends AppCompatActivity {
                 userAdapter.clear();
                 userAdapter.addAll(finalFilteredUsers);
                 userAdapter.notifyDataSetChanged();
-
-                // Atualizar o número de usuários filtrados
                 textViewUserCount.setText("Number of Users: " + finalFilteredUsers.size());
             });
         }).start();
@@ -248,7 +246,6 @@ public class UserListActivity extends AppCompatActivity {
         for (User user : users) {
             boolean hasNullFields = false;
 
-            // Verificar campos nulos específicos baseados no tipo de usuário
             if ("guest".equals(user.role)) {
                 if (user.mqttUser == null || user.mqttPassword == null || user.managerUserId == null || user.brokerID == null) {
                     hasNullFields = true;

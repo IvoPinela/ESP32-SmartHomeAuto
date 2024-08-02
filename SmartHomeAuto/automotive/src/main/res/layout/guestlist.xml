@@ -28,7 +28,7 @@
             android:id="@+id/headerTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Users List"
+            android:text="Guest List"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@android:color/white"
@@ -69,20 +69,20 @@
         android:queryHint="Search by username"
         android:background="@android:color/white" />
 
-    <!-- TextView for Displaying User Count -->
+    <!-- Guest Count TextView -->
     <TextView
         android:id="@+id/textViewUserCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/searchViewUsername"
         android:layout_marginTop="16dp"
-        android:text="Number of Users: 0"
+        android:text="Number of Guests: 0"
         android:textSize="16sp"
         android:textColor="@android:color/white" />
 
-    <!-- ListView for Users -->
+    <!-- Guest ListView -->
     <ListView
-        android:id="@+id/listViewUsers"
+        android:id="@+id/listViewGuest"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_below="@id/textViewUserCount"
@@ -91,14 +91,15 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        android:background="@android:color/white" />
+        android:background="@android:color/white"
+        android:choiceMode="singleChoice" />
 
-    <!-- Add User Button -->
+    <!-- Add Guest Button -->
     <Button
         android:id="@+id/buttonAddUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add User"
+        android:text="Add Guest"
         android:background="@drawable/soft_blue_gradient"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"

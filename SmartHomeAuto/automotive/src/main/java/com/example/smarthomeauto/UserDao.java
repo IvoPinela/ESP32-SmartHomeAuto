@@ -79,9 +79,11 @@ public interface UserDao {
     @Query("SELECT id FROM users WHERE username = :username")
     int getUserIdByUsername(String username);
 
-    @Query("SELECT COUNT(*) > 0 FROM users WHERE id = :userId AND (mqttUser IS NULL OR mqttPassword IS NULL OR brokerID IS NULL OR managerUserId IS NULL)")
+    @Query("SELECT COUNT(*) > 0 FROM users WHERE id = :userId AND (mqttUser IS NULL OR mqttPassword IS NULL OR brokerID IS NULL)")
     boolean doesUserHaveNullFields(int userId);
 
 
+    @Query("SELECT brokerID FROM Users WHERE id = :userId")
+    int getBrokerById(int userId);
 
 }

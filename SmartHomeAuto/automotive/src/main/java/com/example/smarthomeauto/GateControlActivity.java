@@ -142,6 +142,7 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
         this.isConnected = isConnected;
         if (isConnected) {
             mqttHandler.subscribe(TOPIC);
+            publishMessage("Connected");
         } else {
             Log.e(TAG, "MQTT client is not connected.");
             String errorMessage = "MQTT client is not connected.";

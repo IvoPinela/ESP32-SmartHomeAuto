@@ -182,6 +182,7 @@ public class LightsControlActivity extends AppCompatActivity implements MqttHand
         if (isConnected) {
             mqttHandler.subscribe(LIGHT_TOPIC);
             mqttHandler.subscribe(GATE_TOPIC);
+            publishMessage(LIGHT_TOPIC, "Connected");
         } else {
             Log.e(TAG, "MQTT client is not connected.");
             sendNotification(LIGHT_CHANNEL_ID, "MQTT client is not connected.");

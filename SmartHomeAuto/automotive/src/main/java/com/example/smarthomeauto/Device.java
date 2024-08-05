@@ -37,4 +37,7 @@ public class Device implements Serializable {
         this.deviceTypeId = deviceTypeId;
         this.creatorUserId = creatorUserId;
     }
+    public String getMqttTopic() {
+        return mqttTopic;
+    }
 }

@@ -92,4 +92,7 @@ public interface UserDao {
     @Query("SELECT mqttPassword FROM Users WHERE id = :userId")
     String getMqtttpassordById(int userId);
 
+    @Query("SELECT role FROM Users WHERE id = :userId")
+    String getRoleById(int userId);
+
 }

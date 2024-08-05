@@ -83,4 +83,7 @@ public interface DeviceDao {
     @Query("SELECT * FROM devices WHERE creatorUserId = :creatorUserId AND name LIKE '%' || :name || '%' AND (:deviceTypeId IS NULL OR deviceTypeId = :deviceTypeId)")
     List<Device> searchDevicesByCreatorIdAndFilters(int creatorUserId, String name, Integer deviceTypeId);
 
+    @Query("SELECT * FROM devices WHERE creatorUserId = :userId")
+    List<Device> getDevicesByUserId(int userId);
+
 }

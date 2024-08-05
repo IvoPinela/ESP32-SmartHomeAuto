@@ -38,4 +38,6 @@ public interface DeviceTypeDao {
     @Query("SELECT id FROM device_types WHERE name = :deviceTypeName")
     int getDeviceTypeIdByName(String deviceTypeName);
 
+    @Query("SELECT mqttPrincipalTopic FROM device_types WHERE id = :deviceTypeId")
+    String getMqttPrincipalTopicById(int deviceTypeId);
 }

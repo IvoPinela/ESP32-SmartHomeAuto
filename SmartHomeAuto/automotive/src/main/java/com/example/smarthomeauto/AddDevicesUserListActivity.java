@@ -1,8 +1,14 @@
 package com.example.smarthomeauto;
 
+import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,7 +16,11 @@ import android.widget.Spinner;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.room.Room;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
@@ -24,11 +34,15 @@ public class AddDevicesUserListActivity extends AppCompatActivity {
     private UserDao userDao;
     private String userRole;
     private int creatorUserId;
+    private MqttManager mqttManager;
+    private View rootView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_edit_userdevice);
+
+        rootView = findViewById(android.R.id.content);
 
         Intent intent2 = getIntent();
         if (intent2 != null) {
@@ -37,6 +51,7 @@ public class AddDevicesUserListActivity extends AppCompatActivity {
             Log.d("UserListActivity", "User Role: " + userRole);
         }
 
+        mqttManager = new MqttManager(this, creatorUserId);
         editTextDeviceName = findViewById(R.id.editTextDeviceName);
         spinnerDeviceType = findViewById(R.id.spinnerDeviceType);
         buttonSaveDevice = findViewById(R.id.buttonSaveDevice);
@@ -127,5 +142,13 @@ public class AddDevicesUserListActivity extends AppCompatActivity {
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss())
                 .create()
                 .show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mqttManager != null) {
+            mqttManager.disconnect();
+        }
     }
 }

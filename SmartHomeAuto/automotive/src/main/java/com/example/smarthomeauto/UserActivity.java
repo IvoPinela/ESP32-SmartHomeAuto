@@ -182,27 +182,4 @@ public class UserActivity extends AppCompatActivity {
             }
         }
     }
-
-    public void showSnackbar(String message) {
-        Snackbar.make(rootView, message, Snackbar.LENGTH_LONG).show();
-    }
-
-    public void updateLightStatus(String status) {
-        String message = "Light is " + status;
-        showSnackbar(message);
-    }
-
-    public void updateGateStatus(String status) {
-        String message = "Gate is " + status;
-        showSnackbar(message);
-    }
-
-    // Call this method to handle MQTT notifications
-    public void handleNotification(String channelId, String message) {
-        if (LIGHT_CHANNEL_ID.equals(channelId)) {
-            updateLightStatus(message);
-        } else if (GATE_CHANNEL_ID.equals(channelId)) {
-            updateGateStatus(message);
-        }
-    }
 }

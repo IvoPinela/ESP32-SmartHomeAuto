@@ -3,14 +3,17 @@ package com.example.smarthomeauto;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
+
 
 import java.util.List;
 
@@ -24,18 +27,27 @@ public class EditDevicesUserListActivity extends AppCompatActivity {
     private UserDao userDao;
     private String userRole;
     private int creatorUserId;
-    private int deviceId;  // ID of the device to be edited
+    private int deviceId;
+    private MqttManager mqttManager;
+    private View rootView;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_edit_userdevice);
 
+        rootView = findViewById(android.R.id.content);
+        TextView titleForm = findViewById(R.id.formTitle);
+        titleForm.setText("Edit Devices");
+
         Intent intent = getIntent();
         if (intent != null) {
             userRole = intent.getStringExtra("USER_ROLE");
             creatorUserId = intent.getIntExtra("USER_ID", -1);
-            Device device = (Device) intent.getSerializableExtra("DEVICE");  // Retrieve the device object
+            Device device = (Device) intent.getSerializableExtra("DEVICE");
+            mqttManager = new MqttManager(this, creatorUserId);
 
             if (device != null) {
                 deviceId = device.id;
@@ -153,5 +165,12 @@ public class EditDevicesUserListActivity extends AppCompatActivity {
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss())
                 .create()
                 .show();
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mqttManager != null) {
+            mqttManager.disconnect();
+        }
     }
 }

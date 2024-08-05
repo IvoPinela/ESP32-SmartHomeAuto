@@ -31,11 +31,16 @@ public class GuestListActivity extends AppCompatActivity {
     private SearchView searchViewUsername;
     private TextView textViewGuestCount;
     private int managerUserId;
+    private MqttManager mqttManager;
+    private View rootView;
+    private String role;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.guestlist);
+
+        rootView = findViewById(android.R.id.content);
 
         Button buttonBack = findViewById(R.id.buttonBack);
         Button buttonAddGuest = findViewById(R.id.buttonAddUser);
@@ -48,7 +53,8 @@ public class GuestListActivity extends AppCompatActivity {
         // Obtendo o ID do gerente do Intent
         Intent intent = getIntent();
         managerUserId = intent.getIntExtra("USER_ID", -1);
-
+        role= intent.getStringExtra("USER_ROLE");
+        mqttManager = new MqttManager(this, managerUserId);
         userDao = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "db_SmartHomeAuto").build().userDao();
 
         buttonBack.setOnClickListener(v -> finish());
@@ -56,6 +62,7 @@ public class GuestListActivity extends AppCompatActivity {
         buttonAddGuest.setOnClickListener(v -> {
             Intent addGuestIntent = new Intent(GuestListActivity.this, AddGuestActivity.class);
             addGuestIntent.putExtra("USER_ID", managerUserId);
+            addGuestIntent.putExtra("USER_ROLE", role);
             startActivityForResult(addGuestIntent, REQUEST_ADD_GUEST);
         });
 
@@ -64,6 +71,7 @@ public class GuestListActivity extends AppCompatActivity {
                 Intent editGuestIntent = new Intent(GuestListActivity.this, EditGuestActivity.class);
                 editGuestIntent.putExtra("user", selectedGuest);
                 editGuestIntent.putExtra("USER_ID", managerUserId);
+                editGuestIntent.putExtra("USER_ROLE", role);
                 startActivityForResult(editGuestIntent, REQUEST_EDIT_GUEST);
             } else {
                 Snackbar.make(findViewById(android.R.id.content), "No guest selected", Snackbar.LENGTH_SHORT).show();
@@ -161,6 +169,14 @@ public class GuestListActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 loadGuests();
             }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mqttManager != null) {
+            mqttManager.disconnect();
         }
     }
 }

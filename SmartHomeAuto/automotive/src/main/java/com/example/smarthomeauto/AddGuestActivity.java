@@ -17,11 +17,15 @@ public class AddGuestActivity extends AppCompatActivity {
     private UserDao userDao;
     private String userRole;
     private int managerUserId;
+    private MqttManager mqttManager;
+    private View rootView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_edit_guest);
+
+        rootView = findViewById(android.R.id.content);
 
         // Inicializa as views
         editTextUsername = findViewById(R.id.editTextUsername);
@@ -41,7 +45,7 @@ public class AddGuestActivity extends AppCompatActivity {
             Log.d("AddGuestActivity", "User Role: " + userRole);
             Log.d("AddGuestActivity", "Manager User ID: " + managerUserId);
         }
-
+        mqttManager = new MqttManager(this, managerUserId);
         // Define os listeners dos botões
         buttonSaveGuest.setOnClickListener(v -> saveGuest());
 
@@ -113,5 +117,12 @@ public class AddGuestActivity extends AppCompatActivity {
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss())
                 .create()
                 .show();
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mqttManager != null) {
+            mqttManager.disconnect();
+        }
     }
 }

@@ -31,6 +31,7 @@ public class MqttManager implements MqttHandler.MessageListener {
     private String PASSWORD;
     private String BROKER_URL;
 
+
     public MqttManager(Context context, int userid) {
         this.context = context;
         createNotificationChannels();

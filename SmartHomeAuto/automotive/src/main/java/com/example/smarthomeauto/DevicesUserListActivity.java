@@ -1,8 +1,14 @@
 package com.example.smarthomeauto;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,6 +22,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.room.Room;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -39,12 +47,21 @@ public class DevicesUserListActivity extends AppCompatActivity {
     private TextView textViewDeviceCount;
     private int creatorUserId;
     private String userrole;
+    private MqttManager mqttManager;
+    private View rootView;
+    private static final String TAG = "Device List";
+    private static final String LIGHT_CHANNEL_ID = "light_status_channel";
+    private static final String GATE_CHANNEL_ID = "gate_status_channel";
+
 
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.deviceuserlist);
+
+
+        rootView = findViewById(android.R.id.content);
 
         Button buttonBack = findViewById(R.id.buttonBack);
         Button buttonAddDevice = findViewById(R.id.buttonAddDevice);
@@ -59,6 +76,8 @@ public class DevicesUserListActivity extends AppCompatActivity {
         userrole=getIntent().getStringExtra("USER_ROLE");
         deviceDao = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "db_SmartHomeAuto").build().deviceDao();
         deviceTypeDao = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "db_SmartHomeAuto").build().deviceTypeDao();
+
+        mqttManager = new MqttManager(this, creatorUserId);
 
         buttonBack.setOnClickListener(v -> finish());
 
@@ -213,6 +232,41 @@ public class DevicesUserListActivity extends AppCompatActivity {
         if (requestCode == REQUEST_ADD_DEVICE || requestCode == REQUEST_EDIT_DEVICE) {
             if (resultCode == RESULT_OK) {
                 loadDevices();
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mqttManager != null) {
+            mqttManager.disconnect();
+        }
+    }
+
+    private void createNotificationChannels() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Light Status Channel
+            CharSequence lightName = "Light Status";
+            String lightDescription = "Channel for light status notifications";
+            int lightImportance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel lightChannel = new NotificationChannel(LIGHT_CHANNEL_ID, lightName, lightImportance);
+            lightChannel.setDescription(lightDescription);
+
+            // Gate Status Channel
+            CharSequence gateName = "Gate Status";
+            String gateDescription = "Channel for gate status notifications";
+            int gateImportance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel gateChannel = new NotificationChannel(GATE_CHANNEL_ID, gateName, gateImportance);
+            gateChannel.setDescription(gateDescription);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(lightChannel);
+                notificationManager.createNotificationChannel(gateChannel);
+                Log.i(TAG, "Notification channels created.");
+            } else {
+                Log.e(TAG, "Failed to create notification channels.");
             }
         }
     }

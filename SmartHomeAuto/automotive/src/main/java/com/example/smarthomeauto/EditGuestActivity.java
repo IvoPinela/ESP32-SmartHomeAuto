@@ -23,11 +23,15 @@ public class EditGuestActivity extends Activity {
     private int managerUserId;
     private int brokerId;
     private String userRole;
+    private MqttManager mqttManager;
+    private View rootView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_edit_guest);
+
+        rootView = findViewById(android.R.id.content);
 
         textViewTitle = findViewById(R.id.formTitleUser);
         editTextUsername = findViewById(R.id.editTextUsername);
@@ -40,6 +44,8 @@ public class EditGuestActivity extends Activity {
         Intent intent = getIntent();
         managerUserId = intent.getIntExtra("USER_ID", -1);
         userRole = intent.getStringExtra("USER_ROLE");
+
+        mqttManager = new MqttManager(this, managerUserId);
         if (intent.hasExtra("user")) {
             guest = (User) intent.getSerializableExtra("user");
             textViewTitle.setText("Edit Guest");
@@ -102,5 +108,12 @@ public class EditGuestActivity extends Activity {
                 finish();
             });
         }).start();
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mqttManager != null) {
+            mqttManager.disconnect();
+        }
     }
 }

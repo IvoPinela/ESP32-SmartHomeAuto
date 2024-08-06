@@ -1,6 +1,7 @@
 package com.example.smarthomeauto;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -38,8 +39,8 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
     private static final String TOPIC = "home/gate";
     private LinearLayout devicesContainer;
     private MqttHandler mqttHandler;
-    private TextView lightStatusTextView;
-    private Switch switchLightControl;
+    private TextView GateStatusTextView;
+    private Switch switchGateControl;
     private boolean isGateOn = false;
     private boolean isConnected = false;
     private int userId;
@@ -65,15 +66,16 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
         }
     };
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lightscreen);
+        setContentView(R.layout.gatescreen);
         rootView = findViewById(android.R.id.content);
 
-        lightStatusTextView = findViewById(R.id.lightStatusTextView);
-        switchLightControl = findViewById(R.id.switchLightControl);
-        Button buttonBackToMenu = findViewById(R.id.buttonBackToMenu);
+        GateStatusTextView = findViewById(R.id.gateStatusTextView);
+        switchGateControl = findViewById(R.id.switchGateControl);
+        Button buttonBackToMenu = findViewById(R.id.buttonBackToMenuGate);
         devicesContainer = findViewById(R.id.devicesContainer);
 
         Intent intent = getIntent();
@@ -83,7 +85,7 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
         // Initialize MQTT connection
         initializeMqtt();
 
-        switchLightControl.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
+        switchGateControl.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isProgrammaticUpdate) {
@@ -94,7 +96,7 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
                 if (isConnected) {
                     isGateOn = isChecked;
                     publishMessage(TOPIC, isGateOn ? "OPEN" : "CLOSE");
-                    lightStatusTextView.setText("Light Status: " + (isGateOn ? "OPEN" : "CLOSE"));
+                    GateStatusTextView.setText("Light Status: " + (isGateOn ? "OPEN" : "CLOSE"));
                     showSnackbar("Gate is " + (isGateOn ? "OPEN" : "CLOSE"));
 
                     // Update all device switches
@@ -191,9 +193,9 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
             if (TOPIC.equals(topic)) {
                 isGateOn = "OPEN".equals(message);
                 setProgrammaticUpdate(true);
-                switchLightControl.setChecked(isGateOn);
+                switchGateControl.setChecked(isGateOn);
                 setProgrammaticUpdate(false);
-                lightStatusTextView.setText("Light Status: " + (isGateOn ? "OPEN" : "CLOSE"));
+                GateStatusTextView.setText("Light Status: " + (isGateOn ? "OPEN" : "CLOSE"));
                 showSnackbar("Light status updated: " + (isGateOn ? "OPEN" : "CLOSE"));
             } else if ("MQTT_CONNECTION_STATUS".equals(topic)) {
                 isConnected = "Connected".equals(message);
@@ -358,7 +360,8 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
         }
 
         setProgrammaticUpdate(true);
-        switchLightControl.setChecked(allOn);
+        switchGateControl.setChecked(allOn);
+        GateStatusTextView.setText("Light Status: " + (allOn ? "OPEN" : "CLOSE"));
         setProgrammaticUpdate(false);
     }
 
@@ -367,7 +370,6 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
     }
 
     private void updateLightStatusFromMessage(String message) {
-        // Example message format: "deviceName:ON" or "deviceName:OFF"
         String[] parts = message.split(":");
         if (parts.length != 2) {
             Log.e(TAG, "Invalid message format: " + message);

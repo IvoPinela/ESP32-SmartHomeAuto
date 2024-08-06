@@ -351,6 +351,7 @@ public class LightsControlActivity extends AppCompatActivity implements MqttHand
 
         setProgrammaticUpdate(true);
         switchLightControl.setChecked(allOn);
+        lightStatusTextView.setText("Light Status: " + (allOn ? "ON" : "OFF"));
         setProgrammaticUpdate(false);
     }
 

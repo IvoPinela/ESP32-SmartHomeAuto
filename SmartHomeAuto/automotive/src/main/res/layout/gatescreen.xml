@@ -62,6 +62,17 @@
             android:trackTint="@android:color/darker_gray" />
     </LinearLayout>
 
+
+    <LinearLayout
+        android:id="@+id/devicesContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/statusContainer"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_marginBottom="16dp">
+    </LinearLayout>
+
     <Button
         android:id="@+id/buttonBackToMenuGate"
         android:layout_width="wrap_content"

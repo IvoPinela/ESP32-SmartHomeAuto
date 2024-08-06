@@ -1,19 +1,19 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
 #include <WiFiClientSecure.h>
-#include <ESP32Servo.h>  // Inclua a biblioteca ESP32Servo para controle de servos
+#include <ESP32Servo.h>  // Include the ESP32Servo library for servo control
 
-// Configuração da rede WiFi
+// WiFi settings
 const char* ssid = "MeoMaster";
 const char* password = "inesleandro6122016";
 
-// Configuração do broker MQTT
+// MQTT broker settings
 const char* mqtt_server = "05e815044648452d9966e9b6701cb998.s1.eu.hivemq.cloud";
 const char* mqtt_user = "subscribeTest";
 const char* mqtt_password = "subscribeTest123";
-const int mqtt_port = 8883; // Porta SSL/TLS
+const int mqtt_port = 8883; // SSL/TLS port
 
-// Certificado CA para conexão segura
+// CA certificate for secure connection
 static const char* root_ca PROGMEM = R"EOF(
 -----BEGIN CERTIFICATE-----
 MIIFazCCA1OgAwIBAgIRAIIQz7DSQONZRGPgu2OCiwAwDQYJKoZIhvcNAQELBQAw
@@ -48,28 +48,28 @@ emyPxgcYxn/eR44/KJ4EBs+lVDR3veyJm+kXQ99b21/+jh5Xos1AnX5iItreGCc=
 -----END CERTIFICATE-----
 )EOF";
 
-// Definindo o pino do servo e do botão
-const int servoPin = 12; // Alterar para o pino onde o servo está conectado
-const int buttonPin = 14; // Alterar para o pino onde o botão está conectado
+// Define the servo and button pins
+const int servoPin = 12; // Pin where the servo is connected
+const int buttonPin = 14; // Pin where the button is connected
 
 int buttonState = 0;
 int lastButtonState = 0;
-int servoPosition = 0; // Posição inicial do servo
+int servoPosition = 0; // Initial servo position
 unsigned long lastDebounceTime = 0;
-const int debounceDelay = 50; // Atraso para debounce do botão
+const int debounceDelay = 50; // Debounce delay for the button
 
 WiFiClientSecure espClient;
 PubSubClient client(espClient);
-Servo myServo; // Criar um objeto Servo compatível com ESP32
+Servo myServo; // Create a Servo object compatible with ESP32
 
 void setup() {
-  Serial.begin(115200); // Iniciar a comunicação serial
-  myServo.attach(servoPin); // Anexar o servo ao pino
-  myServo.write(servoPosition); // Definir posição inicial
+  Serial.begin(115200); // Initialize serial communication
+  myServo.attach(servoPin); // Attach the servo to the pin
+  myServo.write(servoPosition); // Set initial position
 
   pinMode(buttonPin, INPUT);
 
-  Serial.println("Conectando ao WiFi...");
+  Serial.println("Connecting to WiFi...");
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
 
@@ -77,16 +77,16 @@ void setup() {
     delay(500);
     Serial.print(".");
   }
-  Serial.println("Conectado ao WiFi!");
-  Serial.print("Endereço IP: ");
+  Serial.println("Connected to WiFi!");
+  Serial.print("IP Address: ");
   Serial.println(WiFi.localIP());
 
-  // Configurar o certificado CA
+  // Set the CA certificate
   espClient.setCACert(root_ca);
   client.setServer(mqtt_server, mqtt_port);
   client.setCallback(callback);
 
-  reconnect(); // Tentar conectar ao broker MQTT
+  reconnect(); // Attempt to connect to the MQTT broker
 }
 
 void loop() {
@@ -106,59 +106,66 @@ void loop() {
       buttonState = reading;
 
       if (buttonState == HIGH) {
-        // Botão pressionado, enviar comando MQTT para abrir ou fechar
-        String stateMessage = (servoPosition > 90) ? "CLOSE" : "OPEN";
-        Serial.print("Enviando mensagem MQTT: ");
+        // Button pressed, send MQTT command to open or closed
+        String stateMessage = (servoPosition == 0) ? "OPEN" : "CLOSE";
+        Serial.print("Sending MQTT message to topic 'home/gate/frontgate': ");
         Serial.println(stateMessage);
-        client.publish("home/gate", stateMessage.c_str());
+        client.publish("home/gate/frontgate", stateMessage.c_str());
 
-        // Atualizar a posição do servo
-        servoPosition = (servoPosition > 90) ? 0 : 180;
-        Serial.print("Movendo servo para a posição: ");
+        // Update servo position
+        servoPosition = (servoPosition == 0) ? 180 : 0;
+        Serial.print("Moving servo to position: ");
         Serial.println(servoPosition);
         myServo.write(servoPosition);
       }
     }
   }
+
   lastButtonState = reading;
+}
+
+void callback(char* topic, byte* payload, unsigned int length) {
+  Serial.print("Message received on topic: ");
+  Serial.println(topic);
+  String message;
+
+  for (int i = 0; i < length; i++) {
+    message += (char)payload[i];
+  }
+
+  if (String(topic) == "home/gate" || String(topic) == "home/gate/frontgate") {
+    if (message == "OPEN" && servoPosition == 0) {
+      servoPosition = 180;
+      Serial.print("Opening gate, moving servo to position: ");
+      Serial.println(servoPosition);
+      myServo.write(servoPosition);
+    } else if (message == "CLOSE" && servoPosition == 180) {
+      servoPosition = 0;
+      Serial.print("Closing gate, moving servo to position: ");
+      Serial.println(servoPosition);
+      myServo.write(servoPosition);
+    }else if(message == "Connected" && String(topic) == "home/gate"){
+    // Send current state to "home/gate/frontgate"
+    String stateMessage = (servoPosition == 0) ? "CLOSE" : "OPEN";
+    Serial.print("Sending current state to topic 'home/gate/frontgate': ");
+    Serial.println(stateMessage);
+    client.publish("home/gate/frontgate", stateMessage.c_str());
+    }
+  }
 }
 
 void reconnect() {
   while (!client.connected()) {
-    String clientId = "ESP32Client-";
-    clientId += String(random(0xffff), HEX);
-
-    Serial.print("Tentando conexão MQTT...");
-    if (client.connect(clientId.c_str(), mqtt_user, mqtt_password)) {
-      Serial.println("Conectado ao broker MQTT.");
+    Serial.print("Attempting to reconnect to MQTT broker...");
+    if (client.connect("ESP32Client", mqtt_user, mqtt_password)) {
+      Serial.println("Connected!");
       client.subscribe("home/gate");
+      client.subscribe("home/gate/frontgate"); 
     } else {
-      Serial.print("Falha na conexão. Código do erro: ");
-      Serial.println(client.state());
+      Serial.print("Failed to connect, rc=");
+      Serial.print(client.state());
+      Serial.println(" Try again in 5 seconds");
       delay(5000);
     }
-  }
-}
-
-void callback(char* topic, byte* payload, unsigned int length) {
-  String message;
-  for (unsigned int i = 0; i < length; i++) {
-    message += (char)payload[i];
-  }
-
-  Serial.print("Mensagem recebida no tópico: ");
-  Serial.print(topic);
-  Serial.print(" - Mensagem: ");
-  Serial.println(message);
-
-  if (String(topic) == "home/gate") {
-    if (message == "OPEN") {
-      servoPosition = 180;
-    } else if (message == "CLOSE") {
-      servoPosition = 0;
-    }
-    Serial.print("Atualizando a posição do servo para: ");
-    Serial.println(servoPosition);
-    myServo.write(servoPosition); // Atualizar a posição do servo
   }
 }

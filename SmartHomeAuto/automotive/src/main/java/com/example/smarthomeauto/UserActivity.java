@@ -23,8 +23,6 @@ import com.google.android.material.snackbar.Snackbar;
 public class UserActivity extends AppCompatActivity {
 
     private static final String TAG = "UserActivity";
-    private static final String LIGHT_CHANNEL_ID = "light_status_channel";
-    private static final String GATE_CHANNEL_ID = "gate_status_channel";
     private MqttManager mqttManager;
     private View rootView;
     private int userId;
@@ -102,8 +100,6 @@ public class UserActivity extends AppCompatActivity {
             startActivity(createDeviceIntent);
         });
 
-        createNotificationChannels();
-        requestNotificationPermission();
     }
 
     private void checkMqttPermissions(int userId) {
@@ -144,42 +140,6 @@ public class UserActivity extends AppCompatActivity {
         super.onDestroy();
         if (mqttManager != null) {
             mqttManager.disconnect();
-        }
-    }
-
-    private void createNotificationChannels() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Light Status Channel
-            CharSequence lightName = "Light Status";
-            String lightDescription = "Channel for light status notifications";
-            int lightImportance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel lightChannel = new NotificationChannel(LIGHT_CHANNEL_ID, lightName, lightImportance);
-            lightChannel.setDescription(lightDescription);
-
-            // Gate Status Channel
-            CharSequence gateName = "Gate Status";
-            String gateDescription = "Channel for gate status notifications";
-            int gateImportance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel gateChannel = new NotificationChannel(GATE_CHANNEL_ID, gateName, gateImportance);
-            gateChannel.setDescription(gateDescription);
-
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            if (notificationManager != null) {
-                notificationManager.createNotificationChannel(lightChannel);
-                notificationManager.createNotificationChannel(gateChannel);
-                Log.i(TAG, "Notification channels created.");
-            } else {
-                Log.e(TAG, "Failed to create notification channels.");
-            }
-        }
-    }
-
-    private void requestNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
-                Log.i(TAG, "Requested notification permission.");
-            }
         }
     }
 }

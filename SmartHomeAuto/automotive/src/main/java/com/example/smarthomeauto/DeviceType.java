@@ -9,7 +9,7 @@ public class DeviceType {
     public int id;
 
     public String name; // e.g., "light", "gate"
-    public String mqttPrincipalTopic; // Novo campo para o tópico MQTT
+    public String mqttPrincipalTopic;
 
     public DeviceType() {
     }

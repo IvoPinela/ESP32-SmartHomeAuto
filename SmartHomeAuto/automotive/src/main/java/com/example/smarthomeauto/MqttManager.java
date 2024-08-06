@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
+import android.view.View;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
@@ -90,6 +91,12 @@ public class MqttManager implements MqttHandler.MessageListener {
         mqttHandler.disconnect();
     }
 
+    private void sendBroadcastForLightTopic(String message) {
+        Intent intent = new Intent("com.example.smarthomeauto.LIGHT_NOTIFICATION");
+        intent.putExtra("message", message);
+        context.sendBroadcast(intent);
+    }
+
     public void subscribe() {
         if (isConnected) {
             AppDatabase db = AppDatabase.getDatabase(context);
@@ -112,8 +119,6 @@ public class MqttManager implements MqttHandler.MessageListener {
                             subscribedTopics.add(principalTopic);
                         }
                     }
-                    Log.e(TAG, "Device Topic: " + device.getMqttTopic());
-                    Log.e(TAG, "Principal Topic: " + principalTopic);
                 }
             } else {
                 List<Integer> deviceIds = userDeviceDao.getReadableDeviceIdsByUserId(UserId);
@@ -136,6 +141,10 @@ public class MqttManager implements MqttHandler.MessageListener {
         String formattedMessage = formatMessage(topic, message);
         String title = generateNotificationTitle(topic); // Generate a more specific title based on the topic
         sendNotification(channelId, notificationId, title, formattedMessage);
+
+        if (topic.startsWith("home/light/")) {
+            sendBroadcastForLightTopic(topic+":"+message);
+        }
     }
 
     private String generateNotificationTitle(String topic) {
@@ -145,7 +154,7 @@ public class MqttManager implements MqttHandler.MessageListener {
         } else if (topic.startsWith("home/gate")) {
             return "Gate Status Update";
         } else {
-            return "Status Update"; // Default title for unrecognized topics
+            return "Status Update";
         }
     }
 

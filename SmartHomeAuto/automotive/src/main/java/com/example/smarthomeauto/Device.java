@@ -40,4 +40,11 @@ public class Device implements Serializable {
     public String getMqttTopic() {
         return mqttTopic;
     }
+    public String getName() {
+        return name;
+    }
+
+    public int getId(){
+        return id;
+    }
 }

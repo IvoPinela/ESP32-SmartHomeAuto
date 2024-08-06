@@ -175,7 +175,7 @@ public class DevicesUserListActivity extends AppCompatActivity {
     private void loadDevices() {
         new Thread(() -> {
 
-            deviceList = deviceDao.getDevicesByCreatorId(creatorUserId);
+            deviceList = deviceDao.getDevicesByUserId(creatorUserId);
             runOnUiThread(() -> {
                 userDeviceAdapter = new UserDeviceAdapter(DevicesUserListActivity.this, deviceList, deviceTypeDao);
                 listViewDevices.setAdapter(userDeviceAdapter);

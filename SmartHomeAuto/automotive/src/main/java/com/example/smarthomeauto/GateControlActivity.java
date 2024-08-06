@@ -51,17 +51,17 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
     private final Map<Integer, Switch> deviceSwitchMap = new HashMap<>();
     private boolean isProgrammaticUpdate = false;
 
-    // BroadcastReceiver to handle notifications about light status
-    private BroadcastReceiver lightNotificationReceiver = new BroadcastReceiver() {
+    // BroadcastReceiver to handle notifications about gate status
+    private BroadcastReceiver GateNotificationReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String message = intent.getStringExtra("message");
             if (message != null) {
                 // Process the received message
-                Log.i(TAG, "Received light notification: " + message);
+                Log.i(TAG, "Received Gate notification: " + message);
                 // Update the UI or handle the message as needed
-                updateLightStatusFromMessage(message);
-                showSnackbar("Light Notification: " + message);
+                updateGateStatusFromMessage(message);
+                showSnackbar("Gate Notification: " + message);
             }
         }
     };
@@ -96,7 +96,7 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
                 if (isConnected) {
                     isGateOn = isChecked;
                     publishMessage(TOPIC, isGateOn ? "OPEN" : "CLOSE");
-                    GateStatusTextView.setText("Light Status: " + (isGateOn ? "OPEN" : "CLOSE"));
+                    GateStatusTextView.setText("Gate Status: " + (isGateOn ? "OPEN" : "CLOSE"));
                     showSnackbar("Gate is " + (isGateOn ? "OPEN" : "CLOSE"));
 
                     // Update all device switches
@@ -106,8 +106,8 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
                         updateDeviceStatus(deviceId, isChecked);
                     }
                 } else {
-                    Log.e(TAG, "Cannot toggle light. MQTT client is not connected.");
-                    showSnackbar("Cannot toggle light. MQTT client is not connected.");
+                    Log.e(TAG, "Cannot toggle Gate. MQTT client is not connected.");
+                    showSnackbar("Cannot toggle Gate. MQTT client is not connected.");
                 }
             }
         });
@@ -127,8 +127,8 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
         loadAndDisplayDevices();
 
         // Register BroadcastReceiver
-        IntentFilter filter = new IntentFilter("com.example.smarthomeauto.LIGHT_NOTIFICATION");
-        registerReceiver(lightNotificationReceiver, filter);
+        IntentFilter filter = new IntentFilter("com.example.smarthomeauto.GATE_NOTIFICATION");
+        registerReceiver(GateNotificationReceiver, filter);
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -176,7 +176,7 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
         super.onDestroy();
         mqttHandler.disconnect();
         // Unregister BroadcastReceiver
-        unregisterReceiver(lightNotificationReceiver);
+        unregisterReceiver(GateNotificationReceiver);
     }
 
     private void publishMessage(String topic, String message) {
@@ -195,8 +195,8 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
                 setProgrammaticUpdate(true);
                 switchGateControl.setChecked(isGateOn);
                 setProgrammaticUpdate(false);
-                GateStatusTextView.setText("Light Status: " + (isGateOn ? "OPEN" : "CLOSE"));
-                showSnackbar("Light status updated: " + (isGateOn ? "OPEN" : "CLOSE"));
+                GateStatusTextView.setText("Gate Status: " + (isGateOn ? "OPEN" : "CLOSE"));
+                showSnackbar("Gate status updated: " + (isGateOn ? "OPEN" : "CLOSE"));
             } else if ("MQTT_CONNECTION_STATUS".equals(topic)) {
                 isConnected = "Connected".equals(message);
                 if (isConnected) {
@@ -240,8 +240,8 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
             DeviceDao deviceDao = db.deviceDao();
             DeviceTypeDao deviceTypeDao = db.deviceTypeDao();
 
-            int lightDeviceTypeId = deviceTypeDao.getIdByName("gate");
-            List<Device> devices = deviceDao.getDevicesByTypeAndUser(lightDeviceTypeId, userId);
+            int gateDeviceTypeId = deviceTypeDao.getIdByName("gate");
+            List<Device> devices = deviceDao.getDevicesByTypeAndUser(gateDeviceTypeId, userId);
 
             runOnUiThread(() -> {
                 devicesContainer.removeAllViews();
@@ -361,7 +361,7 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
 
         setProgrammaticUpdate(true);
         switchGateControl.setChecked(allOn);
-        GateStatusTextView.setText("Light Status: " + (allOn ? "OPEN" : "CLOSE"));
+        GateStatusTextView.setText("Gate Status: " + (allOn ? "OPEN" : "CLOSE"));
         setProgrammaticUpdate(false);
     }
 
@@ -369,7 +369,7 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
         this.isProgrammaticUpdate = isProgrammaticUpdate;
     }
 
-    private void updateLightStatusFromMessage(String message) {
+    private void updateGateStatusFromMessage(String message) {
         String[] parts = message.split(":");
         if (parts.length != 2) {
             Log.e(TAG, "Invalid message format: " + message);
@@ -408,7 +408,7 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
                         Log.e(TAG, "No Switch found for device ID: " + deviceId);
                     }
 
-                    // Check and update the main light switch status
+                    // Check and update the main gate switch status
                     checkAllDeviceStatusAndUpdateMainSwitch();
                 });
             } else {

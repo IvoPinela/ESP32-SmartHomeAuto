@@ -96,6 +96,11 @@ public class MqttManager implements MqttHandler.MessageListener {
         intent.putExtra("message", message);
         context.sendBroadcast(intent);
     }
+    private void sendBroadcastForGateTopic(String message) {
+        Intent intent = new Intent("com.example.smarthomeauto.GATE_NOTIFICATION");
+        intent.putExtra("message", message);
+        context.sendBroadcast(intent);
+    }
 
     public void subscribe() {
         if (isConnected) {
@@ -145,6 +150,10 @@ public class MqttManager implements MqttHandler.MessageListener {
         if (topic.startsWith("home/light/")) {
             sendBroadcastForLightTopic(topic+":"+message);
         }
+        if (topic.startsWith("home/gate/")) {
+            sendBroadcastForGateTopic(topic+":"+message);
+        }
+
     }
 
     private String generateNotificationTitle(String topic) {
@@ -292,7 +301,7 @@ public class MqttManager implements MqttHandler.MessageListener {
                 // Check if message is "OPEN" or "CLOSED" (case insensitive)
                 if (message.equalsIgnoreCase("OPEN")) {
                     return "All gates: opened";
-                } else if (message.equalsIgnoreCase("CLOSED")) {
+                } else if (message.equalsIgnoreCase("CLOSE")) {
                     return "All gates: closed";
                 } else {
                     Log.w(TAG, "Unrecognized gate status message: " + message);
@@ -308,12 +317,16 @@ public class MqttManager implements MqttHandler.MessageListener {
         if (parts.length == 3) {
             String type = parts[1];
             String location = parts[2];
+
             String formattedType = type.equals("light") ? "Light" : type;
+            if(type=="gate") {
+                formattedType = type.equals("gate") ? "gate" : type;
+            }
             String formattedMessage;
 
             if (message.equalsIgnoreCase("ON") || message.equalsIgnoreCase("OPEN")) {
                 formattedMessage = "turned on";
-            } else if (message.equalsIgnoreCase("OFF") || message.equalsIgnoreCase("CLOSED")) {
+            } else if (message.equalsIgnoreCase("OFF") || message.equalsIgnoreCase("CLOSE")) {
                 formattedMessage = "turned off";
             } else {
                 Log.w(TAG, "Unrecognized message for specific topic: " + message);

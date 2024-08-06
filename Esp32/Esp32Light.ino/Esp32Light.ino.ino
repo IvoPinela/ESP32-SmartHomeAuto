@@ -47,30 +47,47 @@ emyPxgcYxn/eR44/KJ4EBs+lVDR3veyJm+kXQ99b21/+jh5Xos1AnX5iItreGCc=
 -----END CERTIFICATE-----
 )EOF";
 
-// Defining the LED pin and button pin
-const int ledPin = 12; // Change to the pin where the LED is connected
-const int buttonPin = 14; // Change to the pin where the button is connected
+// Defining the LED pins and button pins
+const int ledPin1 = 12; // LED 1 pin
+const int buttonPin1 = 14; // Button 1 pin
+const int ledPin2 = 27; // LED 2 pin
+const int buttonPin2 = 26; // Button 2 pin
 
-int buttonState = 0;
-int lastButtonState = 0;
-int ledState = LOW;
-unsigned long lastDebounceTime = 0;
-const int debounceDelay = 50; // Delay for debouncing the button
+int buttonState1 = 0;
+int lastButtonState1 = 0;
+int ledState1 = LOW;
+unsigned long lastDebounceTime1 = 0;
+const int debounceDelay1 = 50; // Delay for debouncing button 1
+
+int buttonState2 = 0;
+int lastButtonState2 = 0;
+int ledState2 = LOW;
+unsigned long lastDebounceTime2 = 0;
+const int debounceDelay2 = 50; // Delay for debouncing button 2
 
 WiFiClientSecure espClient;
 PubSubClient client(espClient);
 
 void setup() {
-  pinMode(ledPin, OUTPUT);
-  digitalWrite(ledPin, LOW);
-  pinMode(buttonPin, INPUT);
+  Serial.begin(115200);
+
+  pinMode(ledPin1, OUTPUT);
+  digitalWrite(ledPin1, LOW);
+  pinMode(buttonPin1, INPUT);
+  
+  pinMode(ledPin2, OUTPUT);
+  digitalWrite(ledPin2, LOW);
+  pinMode(buttonPin2, INPUT);
 
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
+    Serial.println("Connecting to WiFi...");
   }
+
+  Serial.println("WiFi connected");
 
   // Configure the CA certificate
   espClient.setCACert(root_ca);
@@ -86,6 +103,11 @@ void loop() {
   }
   client.loop();
 
+  handleButton(buttonPin1, buttonState1, lastButtonState1, ledState1, lastDebounceTime1, debounceDelay1, ledPin1, "home/light/livingroom");
+  handleButton(buttonPin2, buttonState2, lastButtonState2, ledState2, lastDebounceTime2, debounceDelay2, ledPin2, "home/light/Garage");
+}
+
+void handleButton(int buttonPin, int& buttonState, int& lastButtonState, int& ledState, unsigned long& lastDebounceTime, const int debounceDelay, int ledPin, const char* topic) {
   int reading = digitalRead(buttonPin);
 
   if (reading != lastButtonState) {
@@ -103,9 +125,11 @@ void loop() {
 
         // Publish the new LED state
         if (ledState == HIGH) {
-          client.publish("home/light", "ON");
+          client.publish(topic, "ON");
+          Serial.println(String(topic) + " ON");
         } else {
-          client.publish("home/light", "OFF");
+          client.publish(topic, "OFF");
+          Serial.println(String(topic) + " OFF");
         }
       }
     }
@@ -119,8 +143,14 @@ void reconnect() {
     clientId += String(random(0xffff), HEX);
 
     if (client.connect(clientId.c_str(), mqtt_user, mqtt_password)) {
+      Serial.println("Connected to MQTT broker");
       client.subscribe("home/light"); // Subscribe to the topic to control the LED
+      client.subscribe("home/light/livingroom"); // Subscribe to the topic for LED 1
+      client.subscribe("home/light/Garage"); // Subscribe to the topic for LED 2
     } else {
+      Serial.print("Failed to connect, rc=");
+      Serial.print(client.state());
+      Serial.println(" try again in 5 seconds");
       delay(5000);
     }
   }
@@ -132,11 +162,53 @@ void callback(char* topic, byte* payload, unsigned int length) {
     incomingMessage += (char)payload[i];
   }
 
+  Serial.print("Message arrived [");
+  Serial.print(topic);
+  Serial.print("] ");
+  Serial.println(incomingMessage);
+
   if (String(topic) == "home/light") {
     if (incomingMessage == "ON") {
-      digitalWrite(ledPin, HIGH); // Turn on the LED
+      digitalWrite(ledPin1, HIGH); // Turn on LED 1
+      digitalWrite(ledPin2, HIGH); // Turn on LED 2
+      Serial.println("home/light ON");
+      // Publish states to respective topics
+      client.publish("home/light/livingroom", "ON");
+      client.publish("home/light/Garage", "ON");
     } else if (incomingMessage == "OFF") {
-      digitalWrite(ledPin, LOW); // Turn off the LED
+      digitalWrite(ledPin1, LOW); // Turn off LED 1
+      digitalWrite(ledPin2, LOW); // Turn off LED 2
+      Serial.println("home/light OFF");
+      // Publish states to respective topics
+      client.publish("home/light/livingroom", "OFF");
+      client.publish("home/light/Garage", "OFF");
+    }else if(incomingMessage == "Connected"){
+
+      client.publish("home/light/livingroom", ledState1 == HIGH ? "ON" : "OFF");
+      Serial.print("Sent current state of LED 1: ");
+      Serial.println(ledState1 == HIGH ? "ON" : "OFF");
+
+      client.publish("home/light/Garage", ledState2 == HIGH ? "ON" : "OFF");
+      Serial.print("Sent current state of LED 2: ");
+      Serial.println(ledState2 == HIGH ? "ON" : "OFF");
+
+      Serial.println("Sent current LED states due to 'Connected' message");
     }
-  }
+  } else if (String(topic) == "home/light/livingroom") {
+    if (incomingMessage == "ON") {
+      digitalWrite(ledPin1, HIGH); // Turn on LED 1
+      Serial.println("home/light/livingroom ON");
+    } else if (incomingMessage == "OFF") {
+      digitalWrite(ledPin1, LOW); // Turn off LED 1
+      Serial.println("home/light/livingroom OFF");
+    }
+  } else if (String(topic) == "home/light/Garage") {
+    if (incomingMessage == "ON") {
+      digitalWrite(ledPin2, HIGH); // Turn on LED 2
+      Serial.println("home/light/Garage ON");
+    } else if (incomingMessage == "OFF") {
+      digitalWrite(ledPin2, LOW); // Turn off LED 2
+      Serial.println("home/light/Garage OFF");
+    }
+  } 
 }

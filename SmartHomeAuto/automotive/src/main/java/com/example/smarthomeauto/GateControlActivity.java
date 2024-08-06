@@ -4,14 +4,21 @@ import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,69 +28,118 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class GateControlActivity extends AppCompatActivity implements MqttHandler.MessageListener {
 
     private static final String TAG = "GateControlActivity";
     private static final String TOPIC = "home/gate";
-    private static final String CHANNEL_ID = "gate_status_channel";
-
+    private LinearLayout devicesContainer;
     private MqttHandler mqttHandler;
-    private TextView gateStatusTextView;
-    private boolean isGateOpen = false;
+    private TextView lightStatusTextView;
+    private Switch switchLightControl;
+    private boolean isGateOn = false;
     private boolean isConnected = false;
     private int userId;
     private String userRole;
+    private View rootView;
+    private MqttManager mqttManager;
+    private final Map<Integer, TextView> deviceStatusTextViewMap = new HashMap<>();
+    private final Map<Integer, Switch> deviceSwitchMap = new HashMap<>();
+    private boolean isProgrammaticUpdate = false;
+
+    // BroadcastReceiver to handle notifications about light status
+    private BroadcastReceiver lightNotificationReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            if (message != null) {
+                // Process the received message
+                Log.i(TAG, "Received light notification: " + message);
+                // Update the UI or handle the message as needed
+                updateLightStatusFromMessage(message);
+                showSnackbar("Light Notification: " + message);
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.gatescreen);
+        setContentView(R.layout.lightscreen);
+        rootView = findViewById(android.R.id.content);
+
+        lightStatusTextView = findViewById(R.id.lightStatusTextView);
+        switchLightControl = findViewById(R.id.switchLightControl);
+        Button buttonBackToMenu = findViewById(R.id.buttonBackToMenu);
+        devicesContainer = findViewById(R.id.devicesContainer);
 
         Intent intent = getIntent();
         userId = intent.getIntExtra("USER_ID", -1);
         userRole = intent.getStringExtra("USER_ROLE");
-
+        mqttManager = new MqttManager(this, userId);
         // Initialize MQTT connection
         initializeMqtt();
 
-        // Initialize UI components
-        gateStatusTextView = findViewById(R.id.gateStatusTextView);
-        Button buttonToggleGate = findViewById(R.id.buttonToggleGate);
-        Button buttonBackToMenuGate = findViewById(R.id.buttonBackToMenuGate);
+        switchLightControl.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isProgrammaticUpdate) {
+                    // If the change is programmatic, do not send MQTT message
+                    return;
+                }
 
-        // Create notification channel
-        createNotificationChannel();
-        requestNotificationPermission(); // Request notification permission for Android 13+
+                if (isConnected) {
+                    isGateOn = isChecked;
+                    publishMessage(TOPIC, isGateOn ? "OPEN" : "CLOSE");
+                    lightStatusTextView.setText("Light Status: " + (isGateOn ? "OPEN" : "CLOSE"));
+                    showSnackbar("Gate is " + (isGateOn ? "OPEN" : "CLOSE"));
 
-        // Set click listener for toggle gate button
-        buttonToggleGate.setOnClickListener(v -> {
-            if (isConnected) {
-                // Toggle gate state and publish message
-                isGateOpen = !isGateOpen;
-                publishMessage(isGateOpen ? "OPEN" : "CLOSED");
-                // Update TextView with gate status
-                gateStatusTextView.setText("Gate Status: " + (isGateOpen ? "OPEN" : "CLOSED"));
-                // Show Snackbar and send notification
-                String statusMessage = "Gate is now " + (isGateOpen ? "OPEN" : "CLOSED");
-                showSnackbar(statusMessage);
-                sendNotification(statusMessage);
-            } else {
-                Log.e(TAG, "Cannot toggle gate. MQTT client is not connected.");
-                String errorMessage = "MQTT client is not connected.";
-                showSnackbar(errorMessage);
-                sendNotification(errorMessage);
+                    // Update all device switches
+                    for (Map.Entry<Integer, Switch> entry : deviceSwitchMap.entrySet()) {
+                        int deviceId = entry.getKey();
+                        Switch deviceSwitch = entry.getValue();
+                        updateDeviceStatus(deviceId, isChecked);
+                    }
+                } else {
+                    Log.e(TAG, "Cannot toggle light. MQTT client is not connected.");
+                    showSnackbar("Cannot toggle light. MQTT client is not connected.");
+                }
             }
         });
 
-        // Set click listener for back button
-        buttonBackToMenuGate.setOnClickListener(v -> {
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra("USER_ROLE", userRole);
-            resultIntent.putExtra("USER_ID", userId);
-            setResult(RESULT_OK, resultIntent);
-            finish();
+        buttonBackToMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("USER_ROLE", userRole);
+                resultIntent.putExtra("USER_ID", userId);
+                setResult(RESULT_OK, resultIntent);
+                finish();
+            }
         });
+
+        // Load and display devices
+        loadAndDisplayDevices();
+
+        // Register BroadcastReceiver
+        IntentFilter filter = new IntentFilter("com.example.smarthomeauto.LIGHT_NOTIFICATION");
+        registerReceiver(lightNotificationReceiver, filter);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (isConnected) {
+                    mqttHandler.subscribe(TOPIC);
+                } else {
+                    Log.e(TAG, "Failed to subscribe: MQTT client is not connected");
+                }
+            }
+        }, 2000);
     }
+
     private void initializeMqtt() {
         new Thread(() -> {
             AppDatabase db = AppDatabase.getDatabase(this);
@@ -108,33 +164,56 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
                 return;
             }
             String fullBrokerUrl = "ssl://" + brokerUrl + ":" + port;
-            mqttHandler = new MqttHandler(this);
+            mqttHandler = new MqttHandler(this); // Pass this instance
             mqttHandler.connect(fullBrokerUrl, mqttUsername, mqttPassword);
         }).start();
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mqttHandler.disconnect();
+        // Unregister BroadcastReceiver
+        unregisterReceiver(lightNotificationReceiver);
     }
 
-    private void publishMessage(String message) {
-        Log.i(TAG, "Publishing message to topic " + TOPIC + ": " + message);
-        mqttHandler.publish(TOPIC, message);
+    private void publishMessage(String topic, String message) {
+        Log.i(TAG, "Publishing message to " + topic + ": " + message);
+        mqttHandler.publish(topic, message);
     }
 
     @Override
     public void onMessageReceived(String topic, String message) {
         Log.i(TAG, "Message received on topic " + topic + ": " + message);
-        if (TOPIC.equals(topic)) {
-            isGateOpen = "OPEN".equals(message);
-            runOnUiThread(() -> {
-                String statusMessage = "Gate status updated to " + (isGateOpen ? "OPEN" : "CLOSED");
-                gateStatusTextView.setText("Gate Status: " + (isGateOpen ? "OPEN" : "CLOSED"));
-                showSnackbar(statusMessage);
-                sendNotification(statusMessage);
-            });
-        }
+        Log.d(TAG, "Processing message for topic: " + topic);
+
+        runOnUiThread(() -> {
+            if (TOPIC.equals(topic)) {
+                isGateOn = "OPEN".equals(message);
+                setProgrammaticUpdate(true);
+                switchLightControl.setChecked(isGateOn);
+                setProgrammaticUpdate(false);
+                lightStatusTextView.setText("Light Status: " + (isGateOn ? "OPEN" : "CLOSE"));
+                showSnackbar("Light status updated: " + (isGateOn ? "OPEN" : "CLOSE"));
+            } else if ("MQTT_CONNECTION_STATUS".equals(topic)) {
+                isConnected = "Connected".equals(message);
+                if (isConnected) {
+                    mqttHandler.subscribe(TOPIC);
+                } else {
+                    Log.e(TAG, "MQTT connection lost.");
+                    showSnackbar("MQTT connection lost.");
+                }
+            } else {
+                // Handle unrecognized topics
+                Log.d(TAG, "Handling unrecognized topic: " + topic);
+                handleUnrecognizedMessage(topic, message);
+            }
+        });
+    }
+
+    private void handleUnrecognizedMessage(String topic, String message) {
+        // Optional: Add logic to process or log unrecognized messages
+        Log.d(TAG, "Received unrecognized message on topic: " + topic + " with message: " + message);
     }
 
     @Override
@@ -142,73 +221,198 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
         this.isConnected = isConnected;
         if (isConnected) {
             mqttHandler.subscribe(TOPIC);
-            publishMessage("Connected");
+            publishMessage(TOPIC, "Connected");
         } else {
             Log.e(TAG, "MQTT client is not connected.");
-            String errorMessage = "MQTT client is not connected.";
-            showSnackbar(errorMessage);
-            sendNotification(errorMessage);
-        }
-    }
-
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Gate Status";
-            String description = "Channel for gate status notifications";
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            if (notificationManager != null) {
-                notificationManager.createNotificationChannel(channel);
-                Log.i(TAG, "Notification channel created.");
-            } else {
-                Log.e(TAG, "Failed to create notification channel.");
-            }
-        }
-    }
-
-    private void requestNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
-                    != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
-            }
-        }
-    }
-
-    private void sendNotification(String message) {
-        Log.d(TAG, "Preparing to send notification with message: " + message);
-
-        Intent intent = new Intent(this, GateControlActivity.class);
-        PendingIntent pendingIntent;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
-        } else {
-            pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        }
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.baseline_notifications_24)
-                .setContentTitle("Gate Status")
-                .setContentText(message)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (notificationManager != null) {
-            notificationManager.notify(1, builder.build());
-            Log.d(TAG, "Notification sent.");
-        } else {
-            Log.e(TAG, "NotificationManager is null.");
+            showSnackbar("MQTT client is not connected.");
         }
     }
 
     private void showSnackbar(String message) {
-        View rootView = findViewById(android.R.id.content);
         Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT).show();
     }
+
+    private void loadAndDisplayDevices() {
+        new Thread(() -> {
+            AppDatabase db = AppDatabase.getDatabase(this);
+            DeviceDao deviceDao = db.deviceDao();
+            DeviceTypeDao deviceTypeDao = db.deviceTypeDao();
+
+            int lightDeviceTypeId = deviceTypeDao.getIdByName("gate");
+            List<Device> devices = deviceDao.getDevicesByTypeAndUser(lightDeviceTypeId, userId);
+
+            runOnUiThread(() -> {
+                devicesContainer.removeAllViews();
+                LayoutInflater inflater = LayoutInflater.from(this);
+                for (Device device : devices) {
+                    View deviceView = inflater.inflate(R.layout.itemdevicelightgate, devicesContainer, false);
+
+                    TextView deviceNameTextView = deviceView.findViewById(R.id.deviceNameTextView);
+                    TextView deviceStatusTextView = deviceView.findViewById(R.id.deviceStatusTextView);
+                    Switch deviceSwitch = deviceView.findViewById(R.id.deviceSwitch);
+
+                    deviceNameTextView.setText(device.getName());
+                    deviceStatusTextView.setText("Status: CLOSE");
+                    deviceSwitch.setChecked(false);
+
+                    deviceStatusTextViewMap.put(device.getId(), deviceStatusTextView);
+                    deviceSwitchMap.put(device.getId(), deviceSwitch);
+
+                    deviceSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                        updateDeviceStatus(device.getId(), isChecked);
+                        checkAllDeviceStatusAndUpdateMainSwitch();
+                    });
+
+                    devicesContainer.addView(deviceView);
+                }
+            });
+        }).start();
+    }
+
+    private void updateDeviceStatus(int deviceId, boolean isOn) {
+        new Thread(() -> {
+            AppDatabase db = AppDatabase.getDatabase(this);
+            DeviceDao deviceDao = db.deviceDao();
+
+            String topic = deviceDao.getTopicById(deviceId);
+            if (topic != null) {
+                String message = isOn ? "OPEN" : "CLOSE";
+                publishMessage(topic, message);
+
+                runOnUiThread(() -> {
+                    TextView statusTextView = deviceStatusTextViewMap.get(deviceId);
+                    Switch deviceSwitch = deviceSwitchMap.get(deviceId);
+
+                    if (statusTextView != null) {
+                        statusTextView.setText("Status: " + (isOn ? "OPEN" : "CLOSE"));
+                    } else {
+                        Log.e(TAG, "No TextView found for device ID: " + deviceId);
+                    }
+
+                    if (deviceSwitch != null) {
+                        setProgrammaticUpdate(true);
+                        deviceSwitch.setChecked(isOn);
+                        setProgrammaticUpdate(false);
+                    } else {
+                        Log.e(TAG, "No Switch found for device ID: " + deviceId);
+                    }
+                });
+            } else {
+                Log.e(TAG, "No topic found for device ID: " + deviceId);
+            }
+        }).start();
+    }
+
+    private void updateDeviceStatusFromMessage(String message) {
+        new Thread(() -> {
+            AppDatabase db = AppDatabase.getDatabase(this);
+            DeviceDao deviceDao = db.deviceDao();
+
+            String[] topicParts = message.split("/");
+            if (topicParts.length < 3) {
+                Log.e(TAG, "Topic format is incorrect: " + message);
+                return;
+            }
+
+            String deviceName = topicParts[2];
+            Integer deviceId = deviceDao.getDeviceIdByName(deviceName);
+
+            if (deviceId != null) {
+                runOnUiThread(() -> {
+                    TextView statusTextView = deviceStatusTextViewMap.get(deviceId);
+                    Switch deviceSwitch = deviceSwitchMap.get(deviceId);
+
+                    if (statusTextView != null) {
+                        boolean newStatus = "OPEN".equals(message);
+                        statusTextView.setText("Status: " + (newStatus ? "OPEN" : "CLOSE"));
+                    } else {
+                        Log.e(TAG, "No TextView found for device ID: " + deviceId);
+                    }
+
+                    if (deviceSwitch != null) {
+                        if (isProgrammaticUpdate) {
+                            Log.d(TAG, "Skipping programmatic update for device ID: " + deviceId);
+                        } else {
+                            boolean newStatus = "ON".equals(message);
+                            Log.d(TAG, "Updating switch for device ID: " + deviceId + " to " + (newStatus ? "OPEN" : "CLOSE"));
+                            deviceSwitch.setChecked(newStatus);
+                        }
+                    } else {
+                        Log.e(TAG, "No Switch found for device ID: " + deviceId);
+                    }
+                    checkAllDeviceStatusAndUpdateMainSwitch();
+                });
+            } else {
+                Log.e(TAG, "No device found for name: " + deviceName);
+            }
+        }).start();
+    }
+
+    private void checkAllDeviceStatusAndUpdateMainSwitch() {
+        boolean allOn = true;
+        for (Switch deviceSwitch : deviceSwitchMap.values()) {
+            if (!deviceSwitch.isChecked()) {
+                allOn = false;
+                break;
+            }
+        }
+
+        setProgrammaticUpdate(true);
+        switchLightControl.setChecked(allOn);
+        setProgrammaticUpdate(false);
+    }
+
+    private void setProgrammaticUpdate(boolean isProgrammaticUpdate) {
+        this.isProgrammaticUpdate = isProgrammaticUpdate;
+    }
+
+    private void updateLightStatusFromMessage(String message) {
+        // Example message format: "deviceName:ON" or "deviceName:OFF"
+        String[] parts = message.split(":");
+        if (parts.length != 2) {
+            Log.e(TAG, "Invalid message format: " + message);
+            return;
+        }
+
+        String topic = parts[0];
+        String status = parts[1];
+
+        // Update device status based on received message
+        new Thread(() -> {
+            AppDatabase db = AppDatabase.getDatabase(this);
+            DeviceDao deviceDao = db.deviceDao();
+            Integer deviceId = deviceDao.getDeviceIdByTopic(topic);
+
+            if (deviceId != null) {
+                runOnUiThread(() -> {
+                    TextView statusTextView = deviceStatusTextViewMap.get(deviceId);
+                    Switch deviceSwitch = deviceSwitchMap.get(deviceId);
+
+                    if (statusTextView != null) {
+                        statusTextView.setText("Status: " + (status.equals("OPEN") ? "OPEN" : "CLOSE"));
+                    } else {
+                        Log.e(TAG, "No TextView found for device ID: " + deviceId);
+                    }
+
+                    if (deviceSwitch != null) {
+                        if (isProgrammaticUpdate) {
+                            Log.d(TAG, "Skipping programmatic update for device ID: " + deviceId);
+                        } else {
+                            boolean newStatus = status.equals("OPEN");
+                            Log.d(TAG, "Updating switch for device ID: " + deviceId + " to " + (newStatus ? "OPEN" : "CLOSE"));
+                            deviceSwitch.setChecked(newStatus);
+                        }
+                    } else {
+                        Log.e(TAG, "No Switch found for device ID: " + deviceId);
+                    }
+
+                    // Check and update the main light switch status
+                    checkAllDeviceStatusAndUpdateMainSwitch();
+                });
+            } else {
+                Log.e(TAG, "No device found for topic: " + topic);
+            }
+        }).start();
+    }
+
 }

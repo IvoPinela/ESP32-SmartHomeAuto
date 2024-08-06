@@ -5,7 +5,6 @@
     android:padding="16dp"
     android:background="@android:color/black">
 
-    <!-- Ícone de Luz de Fundo -->
     <ImageView
         android:id="@+id/lightIconBackground"
         android:layout_width="match_parent"
@@ -18,7 +17,6 @@
         android:scaleType="centerInside"
         android:alpha="0.2" />
 
-    <!-- Título -->
     <TextView
         android:id="@+id/lightsControlTitle"
         android:layout_width="wrap_content"
@@ -32,7 +30,6 @@
         android:layout_marginTop="32dp"
         android:elevation="4dp" />
 
-    <!-- Container para Status e Switch -->
     <LinearLayout
         android:id="@+id/statusContainer"
         android:layout_width="match_parent"
@@ -45,7 +42,6 @@
         android:orientation="horizontal"
         android:padding="24dp">
 
-        <!-- Status -->
         <TextView
             android:id="@+id/lightStatusTextView"
             android:layout_width="wrap_content"

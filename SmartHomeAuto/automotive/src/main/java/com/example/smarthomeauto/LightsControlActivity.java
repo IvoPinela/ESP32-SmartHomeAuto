@@ -1,13 +1,9 @@
 package com.example.smarthomeauto;
 
-import android.Manifest;
-import android.app.NotificationChannel;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -20,9 +16,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.content.ContextCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -244,7 +237,7 @@ public class LightsControlActivity extends AppCompatActivity implements MqttHand
                 devicesContainer.removeAllViews();
                 LayoutInflater inflater = LayoutInflater.from(this);
                 for (Device device : devices) {
-                    View deviceView = inflater.inflate(R.layout.itemdevicelight, devicesContainer, false);
+                    View deviceView = inflater.inflate(R.layout.itemdevicelightgate, devicesContainer, false);
 
                     TextView deviceNameTextView = deviceView.findViewById(R.id.deviceNameTextView);
                     TextView deviceStatusTextView = deviceView.findViewById(R.id.deviceStatusTextView);

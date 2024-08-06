@@ -1,10 +1,8 @@
 package com.example.smarthomeauto;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -15,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DeviceLightAdapter extends RecyclerView.Adapter<DeviceLightAdapter.DeviceViewHolder> {
+public class DeviceLightGateAdapter extends RecyclerView.Adapter<DeviceLightGateAdapter.DeviceViewHolder> {
 
     private static final String TAG = "DeviceLightAdapter";
     private final List<Device> devices;
@@ -26,7 +24,7 @@ public class DeviceLightAdapter extends RecyclerView.Adapter<DeviceLightAdapter.
         void onDeviceSwitchChanged(String topic, boolean isChecked);
     }
 
-    public DeviceLightAdapter(List<Device> devices, OnDeviceSwitchChangedListener listener) {
+    public DeviceLightGateAdapter(List<Device> devices, OnDeviceSwitchChangedListener listener) {
         this.devices = devices;
         this.listener = listener;
         // Initialize device state map
@@ -38,7 +36,7 @@ public class DeviceLightAdapter extends RecyclerView.Adapter<DeviceLightAdapter.
     @NonNull
     @Override
     public DeviceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.itemdevicelight, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.itemdevicelightgate, parent, false);
         return new DeviceViewHolder(view);
     }
 

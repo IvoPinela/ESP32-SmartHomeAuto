@@ -2,45 +2,75 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@android:color/black">
+
+    <ImageView
+        android:id="@+id/gateIconBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/outline_door_front_24"
+        android:scaleType="centerInside"
+        android:alpha="0.2" />
 
     <TextView
         android:id="@+id/gateControlTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/gate_control_title"
-        android:textSize="@dimen/text_size_title"
+        android:textSize="32sp"
         android:textStyle="bold"
+        android:textColor="@android:color/white"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/margin_bottom_large"/>
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="16dp"
+        android:elevation="4dp" />
 
-    <TextView
-        android:id="@+id/gateStatusTextView"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/statusContainer"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/gate_status_text"
-        android:textSize="@dimen/text_size_status"
         android:layout_below="@id/gateControlTitle"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/margin_bottom_large"/>
+        android:layout_marginTop="16dp"
+        android:background="@drawable/container_background"
+        android:elevation="6dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="24dp">
 
-    <Button
-        android:id="@+id/buttonToggleGate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/toggle_gate_button"
-        android:textSize="@dimen/text_size_button"
-        android:layout_below="@id/gateStatusTextView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/margin_bottom_medium"/>
+        <TextView
+            android:id="@+id/gateStatusTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="@string/gate_status_text"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
+
+        <Switch
+            android:id="@+id/switchGateControl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:thumbTint="@android:color/black"
+            android:trackTint="@android:color/darker_gray" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/buttonBackToMenuGate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/back_to_menu_button"
-        android:textSize="@dimen/text_size_button"
-        android:layout_below="@id/buttonToggleGate"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/margin_bottom_medium"/>
+        android:layout_marginTop="16dp"
+        android:background="@color/white"
+        android:text="@string/back_to_menu_button"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
 </RelativeLayout>

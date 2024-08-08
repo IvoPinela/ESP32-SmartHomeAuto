@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -73,8 +74,10 @@ public class LoginActivity extends AppCompatActivity {
                     Log.d("login", "No user found with the given credentials");
                     runOnUiThread(() -> {
                         String errorMessage = "Invalid user or password";
-                        if (loginAttempts >= MAX_ATTEMPTS) {
+                        if (loginAttempts > MAX_ATTEMPTS) {
                             errorMessage = "Account locked due to too many failed login attempts.";
+                        } else if (MAX_ATTEMPTS-loginAttempts <= 3 && MAX_ATTEMPTS-loginAttempts >0) {
+                            showAttemptsWarningDialog(MAX_ATTEMPTS-loginAttempts);
                         }
                         showSnackbar(v, errorMessage);
                     });
@@ -92,4 +95,12 @@ public class LoginActivity extends AppCompatActivity {
     private void showSnackbar(View view, String message) {
         Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
+    private void showAttemptsWarningDialog(int remainingAttempts) {
+        new AlertDialog.Builder(this)
+                .setTitle("Warning")
+                .setMessage("You have " + remainingAttempts + " attempts remaining before your account is locked.")
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                .show();
+    }
+
 }

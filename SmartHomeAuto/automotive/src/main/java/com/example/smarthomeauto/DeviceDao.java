@@ -97,6 +97,19 @@ public interface DeviceDao {
     @Query("SELECT id FROM devices WHERE name = :Name")
     int   getDeviceIdByName(String Name);
 
+    @Query("SELECT * FROM devices WHERE id IN (:deviceIds)")
+    List<Device> getDevicesByIds(List<Integer> deviceIds);
+
+    @Query("SELECT * FROM devices WHERE creatorUserId = :userId")
+    List<Device> getAllDevicesForUser(int userId);
+
+    @Query("SELECT * FROM devices WHERE creatorUserId = :userId AND id NOT IN (SELECT deviceId FROM user_devices WHERE userId = :guestId)")
+    List<Device> getAvailableDevicesForUserExcludingGuest(int userId, int guestId);
 
 
+    @Query("SELECT * FROM devices WHERE creatorUserId = :creatorUserId AND name LIKE '%' || :name || '%' AND (:deviceTypeId IS NULL OR deviceTypeId = :deviceTypeId)AND id NOT IN (SELECT deviceId FROM user_devices WHERE userId = :guestId)")
+    List<Device> searchDevicesByCreatorIdAndFilters2(int creatorUserId, String name, Integer deviceTypeId,int guestId);
+
+    @Query("SELECT name FROM devices WHERE id IN (:deviceId)")
+    String getDeviceNameById(int deviceId);
 }

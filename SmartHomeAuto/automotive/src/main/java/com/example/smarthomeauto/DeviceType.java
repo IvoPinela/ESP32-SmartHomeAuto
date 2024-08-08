@@ -11,6 +11,7 @@ public class DeviceType {
     public String name; // e.g., "light", "gate"
     public String mqttPrincipalTopic;
 
+
     public DeviceType() {
     }
 
@@ -23,4 +24,9 @@ public class DeviceType {
     public String toString() {
         return name;
     }
+
+    public int getId() {
+        return  id;
+    }
+
 }

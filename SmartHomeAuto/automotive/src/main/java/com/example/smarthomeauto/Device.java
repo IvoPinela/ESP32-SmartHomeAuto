@@ -47,4 +47,8 @@ public class Device implements Serializable {
     public int getId(){
         return id;
     }
+    public int getDeviceTypeId() {
+        return deviceTypeId;
+    }
+
 }

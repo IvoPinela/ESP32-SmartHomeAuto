@@ -51,4 +51,7 @@ public interface UserDeviceDao {
             "WHERE d.id = ud.deviceId AND d.deviceTypeId = :deviceTypeId)) " +
             "AND (:permissions IS NULL OR ud.permissions = :permissions)")
     List<UserDevice> getFilteredUserDevices(int guestId, String deviceName, Integer deviceTypeId, String permissions);
+
+    @Query("SELECT COUNT(*) FROM user_devices WHERE userId = :userId AND deviceId = :deviceId")
+    int countUserDeviceAssociations(int userId, int deviceId);
 }

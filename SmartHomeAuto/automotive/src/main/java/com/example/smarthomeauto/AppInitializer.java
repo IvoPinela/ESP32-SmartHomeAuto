@@ -15,11 +15,13 @@ public class AppInitializer {
                 DeviceTypeDao deviceTypeDao = db.deviceTypeDao();
                 DeviceDao deviceDao = db.deviceDao();
                 BrokerDao brokerDao = db.brokerDao();
+                UserDeviceDao userDeviceDao = db.userDeviceDao();
 
                 initializeBrokers(brokerDao, db);
                 initializeUsers(userDao, brokerDao);
                 initializeDeviceTypes(deviceTypeDao);
                 initializeDevices(deviceDao, deviceTypeDao, userDao, brokerDao);
+                initializeUserDeviceAssociations(userDeviceDao, userDao, deviceDao);
             }
         });
     }
@@ -76,6 +78,17 @@ public class AppInitializer {
             user.brokerID = broker1Id;
             userDao.insert(user);
         }
+
+        if (userDao.countUsersByUsername("guest") == 0) {
+            User guest = new User();
+            guest.username = "guest";
+            guest.password = HashUtils.hashPassword("guest");
+            guest.role = "guest";
+            guest.mqttUser = "Guest";
+            guest.mqttPassword = "Guest1234";
+            guest.brokerID = broker1Id;
+            userDao.insert(guest);
+        }
     }
 
     private static void initializeDeviceTypes(DeviceTypeDao deviceTypeDao) {
@@ -128,11 +141,42 @@ public class AppInitializer {
             lightDevice.name = "Garage";
             lightDevice.deviceTypeId = lightDeviceTypeId != null ? lightDeviceTypeId : 0;
             lightDevice.creatorUserId = userId != null ? userId : 0;
-            lightDevice.mqttTopic = "home/light/Garage";
+            lightDevice.mqttTopic = "home/light/garage";
             lightDevice.mqttUser = "";
             lightDevice.mqttPassword = "";
             deviceDao.insert(lightDevice);
         }
     }
+    private static void initializeUserDeviceAssociations(UserDeviceDao userDeviceDao, UserDao userDao, DeviceDao deviceDao) {
+        // Retrieve user ID for "guest"
+        Integer guestId = userDao.getUserIdByUsername("guest");
+
+        // Retrieve device IDs
+        Integer frontGateDeviceId = deviceDao.getDeviceIdByName("Front Gate");
+        Integer livingRoomDeviceId = deviceDao.getDeviceIdByName("Living Room");
+        Integer garageDeviceId = deviceDao.getDeviceIdByName("Garage");
+
+        if (guestId != null && frontGateDeviceId != null) {
+            // Check if association already exists
+            if (userDeviceDao.countUserDeviceAssociations(guestId, frontGateDeviceId) == 0) {
+                // Associate guest with "Front Gate" with "read" permission
+                UserDevice guestFrontGate = new UserDevice(guestId, frontGateDeviceId, "read");
+                userDeviceDao.insert(guestFrontGate);
+            }
+        }
+
+        if (guestId != null && livingRoomDeviceId != null) {
+            // Check if association already exists
+            if (userDeviceDao.countUserDeviceAssociations(guestId, livingRoomDeviceId) == 0) {
+                // Associate guest with "Living Room" with "control" permission
+                UserDevice guestLivingRoom = new UserDevice(guestId, livingRoomDeviceId, "control");
+                userDeviceDao.insert(guestLivingRoom);
+            }
+        }
+    }
+
+
+
+
 
 }

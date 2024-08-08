@@ -34,7 +34,7 @@ public interface UserDeviceDao {
     @Query("SELECT * FROM users INNER JOIN user_devices ON users.id = user_devices.userId WHERE user_devices.deviceId = :deviceId")
     List<User> getUsersForDevice(int deviceId);
 
-    @Query("SELECT deviceId FROM user_devices WHERE userId = :userId AND permissions LIKE '%read%'")
+    @Query("SELECT deviceId FROM user_devices WHERE userId = :userId")
     List<Integer> getReadableDeviceIdsByUserId(int userId);
 
     @Query("SELECT deviceId FROM user_devices WHERE userId = :guestId")

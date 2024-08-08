@@ -71,6 +71,7 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(intent);
                 } else {
                     loginAttempts++;
+
                     Log.d("login", "No user found with the given credentials");
                     runOnUiThread(() -> {
                         String errorMessage = "Invalid user or password";
@@ -79,6 +80,9 @@ public class LoginActivity extends AppCompatActivity {
                         } else if (MAX_ATTEMPTS-loginAttempts <= 3 && MAX_ATTEMPTS-loginAttempts >0) {
                             showAttemptsWarningDialog(MAX_ATTEMPTS-loginAttempts);
                         }
+
+                        editTextUsername.setError("UserName or Password Incorrect");
+                        editTextPassword.setError("UserName or Password Incorrect ");
                         showSnackbar(v, errorMessage);
                     });
                 }

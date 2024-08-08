@@ -59,6 +59,7 @@ public class UserActivity extends AppCompatActivity {
         // Check user role and hide buttonAddGuest if userRole is "guest"
         if ("guest".equals(userRole)) {
             buttonAddGuest.setVisibility(View.GONE);
+            buttonCreateDevice.setVisibility(View.GONE);
         }
 
         // Initialize MqttManager with userId

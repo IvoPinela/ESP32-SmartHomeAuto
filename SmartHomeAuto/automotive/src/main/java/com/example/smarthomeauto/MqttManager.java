@@ -125,13 +125,19 @@ public class MqttManager implements MqttHandler.MessageListener {
                         }
                     }
                 }
-            } else {
+            }  else if ("guest".equals(userRole)) {
+                // Guest user can only subscribe to devices they have access to via UserDevice
                 List<Integer> deviceIds = userDeviceDao.getReadableDeviceIdsByUserId(UserId);
+                Log.d(TAG, "Device IDs retrieved for guest: " + deviceIds.size());
                 for (int deviceId : deviceIds) {
                     Device device = deviceDao.getDeviceById(deviceId);
                     if (device != null) {
-                        mqttHandler.subscribe(device.getMqttTopic());
+                        String deviceTopic = device.getMqttTopic();
+                        mqttHandler.subscribe(deviceTopic);
+                        subscribedTopics.add(deviceTopic);
+                        Log.d(TAG, "Subscribing to device topic: " + deviceTopic);
                     }
+
                 }
             }
         } else {
@@ -157,7 +163,7 @@ public class MqttManager implements MqttHandler.MessageListener {
     }
 
     private String generateNotificationTitle(String topic) {
-        // Define the logic to generate a title based on the topic
+
         if (topic.startsWith("home/light")) {
             return "Light Status Update";
         } else if (topic.startsWith("home/gate")) {

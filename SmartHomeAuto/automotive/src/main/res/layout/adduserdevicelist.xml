@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@android:color/black">
+
+    <!-- Header Layout -->
+    <RelativeLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/darker_gray"
+        android:padding="8dp">
+
+        <Button
+            android:id="@+id/buttonBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:textColor="@android:color/white"
+            android:background="@color/darkgray"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/headerTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Devices and Permissions"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>
+
+    <!-- Device Type Spinner with Label -->
+    <TextView
+        android:id="@+id/textViewDeviceTypeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/headerLayout"
+        android:layout_marginTop="24dp"
+        android:text="Device Type:"
+        android:textSize="16sp"
+        android:textColor="@android:color/white" />
+
+    <Spinner
+        android:id="@+id/spinnerDeviceType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewDeviceTypeLabel"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/white"
+        android:minHeight="48dp" />
+
+    <!-- Search View with Label -->
+    <TextView
+        android:id="@+id/textViewSearchLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/spinnerDeviceType"
+        android:layout_marginTop="24dp"
+        android:text="Search Device:"
+        android:textSize="16sp"
+        android:textColor="@android:color/white" />
+
+    <SearchView
+        android:id="@+id/searchViewDevice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewSearchLabel"
+        android:layout_marginTop="8dp"
+        android:queryHint="Search by device name"
+        android:background="@android:color/white" />
+
+    <!-- Device Count TextView -->
+    <TextView
+        android:id="@+id/textViewDeviceCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/searchViewDevice"
+        android:layout_marginTop="24dp"
+        android:text="Number of Devices: 0"
+        android:textSize="16sp"
+        android:textColor="@android:color/white" />
+
+    <!-- Device ListView -->
+
+    <!-- Permission Spinner with Label -->
+    <ListView
+        android:id="@+id/listViewDevices"
+        android:layout_width="wrap_content"
+        android:layout_height="274dp"
+        android:layout_below="@id/textViewDeviceCount"
+        android:layout_marginTop="37dp"
+        android:background="@android:color/white"
+        android:choiceMode="multipleChoice" />
+
+    <TextView
+        android:id="@+id/textViewPermissionsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/listViewDevices"
+        android:layout_marginTop="24dp"
+        android:text="Permission:"
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
+
+    <Spinner
+        android:id="@+id/spinnerPermissions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewPermissionsLabel"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/white"
+        android:minHeight="48dp" />
+
+    <Button
+        android:id="@+id/buttonAddDevices"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Permission"
+        android:background="@drawable/soft_blue_gradient"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:textColor="@android:color/white" />
+</RelativeLayout>

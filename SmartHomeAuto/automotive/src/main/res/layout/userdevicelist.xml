@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp"
     android:background="@android:color/black">
 
-    <!-- Header Layout -->
     <RelativeLayout
         android:id="@+id/headerLayout"
         android:layout_width="match_parent"
@@ -22,37 +21,26 @@
             android:layout_height="wrap_content"
             android:text="Back"
             android:textColor="@android:color/white"
-            android:background="@color/darkgray" />
+            android:background="@color/darkgray"
+            android:layout_alignParentStart="true"/>
 
         <TextView
             android:id="@+id/headerTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Guest List"
+            android:text="Permission List"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@android:color/white"
             android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true" />
-
-        <ImageButton
-            android:id="@+id/buttonPermissions"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="16dp"
-            android:background="@android:color/transparent"
-            android:src="@drawable/baseline_info_outline_24"
-            app:tint="@android:color/white"
-            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+            android:layout_centerVertical="true"/>
 
         <ImageButton
             android:id="@+id/buttonEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_toStartOf="@id/buttonPermissions"
             android:layout_marginEnd="8dp"
             android:background="@android:color/transparent"
             android:src="@drawable/baseline_edit_24"
@@ -64,57 +52,71 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="8dp"
+            android:layout_toStartOf="@id/buttonEdit"
             android:background="@android:color/transparent"
             android:src="@drawable/baseline_delete_24"
             app:tint="@android:color/white"
-            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck"
-            android:layout_toStartOf="@id/buttonEdit"/>
-
+            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
     </RelativeLayout>
 
-    <SearchView
-        android:id="@+id/searchViewUsername"
+    <Spinner
+        android:id="@+id/spinnerDeviceType"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/headerLayout"
         android:layout_marginTop="16dp"
-        android:queryHint="Search by username"
+        android:minHeight="48dp"
         android:background="@android:color/white" />
 
+    <Spinner
+        android:id="@+id/spinnerPermissions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/spinnerDeviceType"
+        android:layout_marginTop="16dp"
+        android:minHeight="48dp"
+        android:background="@android:color/white" />
+
+    <SearchView
+        android:id="@+id/searchViewName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/spinnerPermissions"
+        android:layout_marginTop="16dp"
+        android:queryHint="Search by name"
+        android:background="@android:color/white" />
 
     <TextView
-        android:id="@+id/textViewUserCount"
+        android:id="@+id/textViewDeviceCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/searchViewUsername"
+        android:layout_below="@id/searchViewName"
         android:layout_marginTop="16dp"
-        android:text="Number of Guests: 0"
+        android:text="Number of Devices: 0"
         android:textSize="16sp"
         android:textColor="@android:color/white" />
 
     <ListView
-        android:id="@+id/listViewGuest"
+        android:id="@+id/listViewDevices"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_below="@id/textViewUserCount"
-        android:layout_above="@id/buttonAddUser"
+        android:layout_below="@id/textViewDeviceCount"
+        android:layout_above="@id/buttonAddDevice"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        android:background="@android:color/white"
-        android:choiceMode="singleChoice" />
+        android:background="@android:color/white" />
 
     <Button
-        android:id="@+id/buttonAddUser"
+        android:id="@+id/buttonAddDevice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Guest"
+        android:text="Add Device"
         android:background="@drawable/soft_blue_gradient"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="16dp"
         android:textColor="@android:color/white"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp"/>
 </RelativeLayout>

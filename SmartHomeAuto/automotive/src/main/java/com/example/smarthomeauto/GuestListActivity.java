@@ -46,9 +46,11 @@ public class GuestListActivity extends AppCompatActivity {
         Button buttonAddGuest = findViewById(R.id.buttonAddUser);
         ImageButton buttonDelete = findViewById(R.id.buttonDelete);
         ImageButton buttonEditGuest = findViewById(R.id.buttonEdit);
+        ImageButton buttonPermissions= findViewById(R.id.buttonPermissions);
         searchViewUsername = findViewById(R.id.searchViewUsername);
         listViewGuests = findViewById(R.id.listViewGuest);
         textViewGuestCount = findViewById(R.id.textViewUserCount);
+
 
         // Obtendo o ID do gerente do Intent
         Intent intent = getIntent();
@@ -65,6 +67,19 @@ public class GuestListActivity extends AppCompatActivity {
             addGuestIntent.putExtra("USER_ROLE", role);
             startActivityForResult(addGuestIntent, REQUEST_ADD_GUEST);
         });
+
+        buttonPermissions.setOnClickListener(v -> {
+            if (selectedGuest != null) {
+                Intent intent2 = new Intent(GuestListActivity.this, DeviceUserListActivity.class);
+                intent2.putExtra("GUEST_ID", selectedGuest.id);
+                intent2.putExtra("USER_ID", managerUserId);
+                intent2.putExtra("USER_ROLE", role);
+                startActivity(intent2);
+            } else {
+                Snackbar.make(findViewById(android.R.id.content), "No guest selected", Snackbar.LENGTH_SHORT).show();
+            }
+        });
+
 
         buttonEditGuest.setOnClickListener(v -> {
             if (selectedGuest != null) {

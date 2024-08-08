@@ -48,6 +48,10 @@
         <activity android:name=".DevicesUserListActivity"/>
         <activity android:name=".EditDevicesUserListActivity"/>
         <activity android:name=".AddDevicesUserListActivity"/>
+        <activity android:name=".DeviceUserListActivity"/>
+        <activity android:name=".AddUserDeviceListActivity"/>
+        <activity android:name=".EditUserDeviceListActivity"/>
+
 
 
 

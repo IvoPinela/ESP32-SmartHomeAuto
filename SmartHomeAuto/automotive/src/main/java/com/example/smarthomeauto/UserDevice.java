@@ -21,4 +21,11 @@ public class UserDevice {
         this.deviceId = deviceId;
         this.permissions = permissions;
     }
+    public int getDeviceId() {
+        return deviceId;
+    }
+
+    public String getPermissions() {
+        return permissions;
+    }
 }

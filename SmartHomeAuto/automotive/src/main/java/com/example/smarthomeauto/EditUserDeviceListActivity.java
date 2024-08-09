@@ -26,7 +26,7 @@ public class EditUserDeviceListActivity extends AppCompatActivity {
 
     private UserDeviceDao userDeviceDao;
     private DeviceDao deviceDao;
-    private String[] permissions = {"Read", "Control"};
+    private String[] permissions = {"read", "control"};
     private String currentPermission;
     private View rootView;
     private MqttManager mqttManager;

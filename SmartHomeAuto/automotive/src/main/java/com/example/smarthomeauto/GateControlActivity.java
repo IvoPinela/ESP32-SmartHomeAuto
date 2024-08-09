@@ -32,6 +32,8 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class GateControlActivity extends AppCompatActivity implements MqttHandler.MessageListener {
 
@@ -84,6 +86,11 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
         mqttManager = new MqttManager(this, userId);
         // Initialize MQTT connection
         initializeMqtt();
+
+        if ("guest".equals(userRole)) {
+            LinearLayout statusContainer = findViewById(R.id.statusContainer);
+            statusContainer.setVisibility(View.GONE);
+        }
 
         switchGateControl.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
             @Override
@@ -233,7 +240,7 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
     private void showSnackbar(String message) {
         Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT).show();
     }
-
+/*
     private void loadAndDisplayDevices() {
         new Thread(() -> {
             AppDatabase db = AppDatabase.getDatabase(this);
@@ -269,7 +276,103 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
                 }
             });
         }).start();
+    }*/
+
+    private void loadAndDisplayDevices() {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            AppDatabase db = AppDatabase.getDatabase(this);
+            DeviceDao deviceDao = db.deviceDao();
+            DeviceTypeDao deviceTypeDao = db.deviceTypeDao();
+            UserDeviceDao userDeviceDao = db.userDeviceDao();
+
+            // Fetch device type ID for 'gate'
+            int gateDeviceTypeId = deviceTypeDao.getIdByName("gate");
+
+            // List of all devices based on type
+            List<Device> allDevices = deviceDao.getDevicesByType(gateDeviceTypeId);
+
+            // List of devices for the current user
+            List<Device> devices = deviceDao.getDevicesByTypeAndUser(gateDeviceTypeId, userId);
+
+            if ("guest".equals(userRole)) {
+                List<UserDevice> userDevices = userDeviceDao.getDevicesByUserId(userId);
+                Map<Integer, String> devicePermissionsMap = new HashMap<>();
+                for (UserDevice userDevice : userDevices) {
+                    devicePermissionsMap.put(userDevice.getDeviceId(), userDevice.getPermissions());
+                }
+
+                runOnUiThread(() -> {
+                    devicesContainer.removeAllViews();
+                    LayoutInflater inflater = LayoutInflater.from(this);
+
+                    for (Device device : allDevices) {
+                        String permissions = devicePermissionsMap.get(device.getId());
+
+                        if (permissions != null) {
+                            View deviceView = inflater.inflate(R.layout.itemdevicelightgate, devicesContainer, false);
+
+                            TextView deviceNameTextView = deviceView.findViewById(R.id.deviceNameTextView);
+                            TextView deviceStatusTextView = deviceView.findViewById(R.id.deviceStatusTextView);
+                            Switch deviceSwitch = deviceView.findViewById(R.id.deviceSwitch);
+
+                            deviceNameTextView.setText(device.getName());
+                            deviceStatusTextView.setText("Status: CLOSE");
+                            deviceSwitch.setChecked(false);
+
+                            // Store views in the maps for later updates
+                            deviceStatusTextViewMap.put(device.getId(), deviceStatusTextView);
+                            deviceSwitchMap.put(device.getId(), deviceSwitch);
+
+                            if ("read".equals(permissions)) {
+                                deviceSwitch.setEnabled(false);
+                                deviceSwitch.setOnCheckedChangeListener(null);
+                            } else if ("control".equals(permissions)) {
+                                deviceSwitch.setEnabled(true);
+                                deviceSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                                    updateDeviceStatus(device.getId(), isChecked);
+                                    checkAllDeviceStatusAndUpdateMainSwitch();
+                                });
+                            } else {
+                                deviceSwitch.setEnabled(false);
+                                deviceSwitch.setOnCheckedChangeListener(null);
+                            }
+                            devicesContainer.addView(deviceView);
+                        }
+                    }
+                });
+            } else {
+                runOnUiThread(() -> {
+                    devicesContainer.removeAllViews();
+                    LayoutInflater inflater = LayoutInflater.from(this);
+                    for (Device device : devices) {
+                        View deviceView = inflater.inflate(R.layout.itemdevicelightgate, devicesContainer, false);
+
+                        TextView deviceNameTextView = deviceView.findViewById(R.id.deviceNameTextView);
+                        TextView deviceStatusTextView = deviceView.findViewById(R.id.deviceStatusTextView);
+                        Switch deviceSwitch = deviceView.findViewById(R.id.deviceSwitch);
+
+                        deviceNameTextView.setText(device.getName());
+                        deviceStatusTextView.setText("Status: CLOSE");
+                        deviceSwitch.setChecked(false);
+
+                        // Store views in the maps for later updates
+                        deviceStatusTextViewMap.put(device.getId(), deviceStatusTextView);
+                        deviceSwitchMap.put(device.getId(), deviceSwitch);
+
+                        deviceSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                            updateDeviceStatus(device.getId(), isChecked);
+                            checkAllDeviceStatusAndUpdateMainSwitch();
+                        });
+
+                        devicesContainer.addView(deviceView);
+                    }
+                });
+            }
+        });
     }
+
+
 
     private void updateDeviceStatus(int deviceId, boolean isOn) {
         new Thread(() -> {

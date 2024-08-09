@@ -87,6 +87,7 @@ public class AppInitializer {
             guest.mqttUser = "Guest";
             guest.mqttPassword = "Guest1234";
             guest.brokerID = broker1Id;
+            guest.managerUserId= userDao.getUserIdByUsername("user");
             userDao.insert(guest);
         }
     }

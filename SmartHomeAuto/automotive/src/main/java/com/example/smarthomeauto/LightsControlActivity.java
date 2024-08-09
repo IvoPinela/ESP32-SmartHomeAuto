@@ -22,6 +22,8 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class LightsControlActivity extends AppCompatActivity implements MqttHandler.MessageListener {
 
@@ -74,6 +76,11 @@ public class LightsControlActivity extends AppCompatActivity implements MqttHand
         mqttManager = new MqttManager(this, userId);
         // Initialize MQTT connection
         initializeMqtt();
+
+        if ("guest".equals(userRole)) {
+            LinearLayout statusContainer = findViewById(R.id.statusContainer);
+            statusContainer.setVisibility(View.GONE);
+        }
 
         switchLightControl.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
             @Override
@@ -225,41 +232,99 @@ public class LightsControlActivity extends AppCompatActivity implements MqttHand
     }
 
     private void loadAndDisplayDevices() {
-        new Thread(() -> {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
             AppDatabase db = AppDatabase.getDatabase(this);
             DeviceDao deviceDao = db.deviceDao();
             DeviceTypeDao deviceTypeDao = db.deviceTypeDao();
+            UserDeviceDao userDeviceDao = db.userDeviceDao();
 
-            int lightDeviceTypeId = deviceTypeDao.getIdByName("light");
-            List<Device> devices = deviceDao.getDevicesByTypeAndUser(lightDeviceTypeId, userId);
+            // Fetch device type ID for 'gate'
+            int LightDeviceTypeId = deviceTypeDao.getIdByName("light");
 
-            runOnUiThread(() -> {
-                devicesContainer.removeAllViews();
-                LayoutInflater inflater = LayoutInflater.from(this);
-                for (Device device : devices) {
-                    View deviceView = inflater.inflate(R.layout.itemdevicelightgate, devicesContainer, false);
+            // List of all devices based on type
+            List<Device> allDevices = deviceDao.getDevicesByType(LightDeviceTypeId);
 
-                    TextView deviceNameTextView = deviceView.findViewById(R.id.deviceNameTextView);
-                    TextView deviceStatusTextView = deviceView.findViewById(R.id.deviceStatusTextView);
-                    Switch deviceSwitch = deviceView.findViewById(R.id.deviceSwitch);
+            // List of devices for the current user
+            List<Device> devices = deviceDao.getDevicesByTypeAndUser(LightDeviceTypeId, userId);
 
-                    deviceNameTextView.setText(device.getName());
-                    deviceStatusTextView.setText("Status: OFF");
-                    deviceSwitch.setChecked(false);
-
-                    deviceStatusTextViewMap.put(device.getId(), deviceStatusTextView);
-                    deviceSwitchMap.put(device.getId(), deviceSwitch);
-
-                    deviceSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                        updateDeviceStatus(device.getId(), isChecked);
-                        checkAllDeviceStatusAndUpdateMainSwitch();
-                    });
-
-                    devicesContainer.addView(deviceView);
+            if ("guest".equals(userRole)) {
+                List<UserDevice> userDevices = userDeviceDao.getDevicesByUserId(userId);
+                Map<Integer, String> devicePermissionsMap = new HashMap<>();
+                for (UserDevice userDevice : userDevices) {
+                    devicePermissionsMap.put(userDevice.getDeviceId(), userDevice.getPermissions());
                 }
-            });
-        }).start();
+
+                runOnUiThread(() -> {
+                    devicesContainer.removeAllViews();
+                    LayoutInflater inflater = LayoutInflater.from(this);
+
+                    for (Device device : allDevices) {
+                        String permissions = devicePermissionsMap.get(device.getId());
+
+                        if (permissions != null) {
+                            View deviceView = inflater.inflate(R.layout.itemdevicelightgate, devicesContainer, false);
+
+                            TextView deviceNameTextView = deviceView.findViewById(R.id.deviceNameTextView);
+                            TextView deviceStatusTextView = deviceView.findViewById(R.id.deviceStatusTextView);
+                            Switch deviceSwitch = deviceView.findViewById(R.id.deviceSwitch);
+
+                            deviceNameTextView.setText(device.getName());
+                            deviceStatusTextView.setText("Status: CLOSE");
+                            deviceSwitch.setChecked(false);
+
+                            // Store views in the maps for later updates
+                            deviceStatusTextViewMap.put(device.getId(), deviceStatusTextView);
+                            deviceSwitchMap.put(device.getId(), deviceSwitch);
+
+                            if ("read".equals(permissions)) {
+                                deviceSwitch.setEnabled(false);
+                                deviceSwitch.setOnCheckedChangeListener(null);
+                            } else if ("control".equals(permissions)) {
+                                deviceSwitch.setEnabled(true);
+                                deviceSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                                    updateDeviceStatus(device.getId(), isChecked);
+                                    checkAllDeviceStatusAndUpdateMainSwitch();
+                                });
+                            } else {
+                                deviceSwitch.setEnabled(false);
+                                deviceSwitch.setOnCheckedChangeListener(null);
+                            }
+                            devicesContainer.addView(deviceView);
+                        }
+                    }
+                });
+            } else {
+                runOnUiThread(() -> {
+                    devicesContainer.removeAllViews();
+                    LayoutInflater inflater = LayoutInflater.from(this);
+                    for (Device device : devices) {
+                        View deviceView = inflater.inflate(R.layout.itemdevicelightgate, devicesContainer, false);
+
+                        TextView deviceNameTextView = deviceView.findViewById(R.id.deviceNameTextView);
+                        TextView deviceStatusTextView = deviceView.findViewById(R.id.deviceStatusTextView);
+                        Switch deviceSwitch = deviceView.findViewById(R.id.deviceSwitch);
+
+                        deviceNameTextView.setText(device.getName());
+                        deviceStatusTextView.setText("Status: CLOSE");
+                        deviceSwitch.setChecked(false);
+
+                        // Store views in the maps for later updates
+                        deviceStatusTextViewMap.put(device.getId(), deviceStatusTextView);
+                        deviceSwitchMap.put(device.getId(), deviceSwitch);
+
+                        deviceSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                            updateDeviceStatus(device.getId(), isChecked);
+                            checkAllDeviceStatusAndUpdateMainSwitch();
+                        });
+
+                        devicesContainer.addView(deviceView);
+                    }
+                });
+            }
+        });
     }
+
 
     private void updateDeviceStatus(int deviceId, boolean isOn) {
         new Thread(() -> {

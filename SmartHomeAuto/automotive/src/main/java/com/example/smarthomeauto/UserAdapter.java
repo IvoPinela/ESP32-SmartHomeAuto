@@ -45,15 +45,15 @@ public class UserAdapter extends ArrayAdapter<User> {
         TextView textViewBrokerURL = convertView.findViewById(R.id.textViewBrokerId);
 
         if (user != null) {
-            textViewUsername.setText("Username: " + user.username);
-            textViewRole.setText("Role: " + user.role);
-            textViewMqttUser.setText("MQTT User: " + (user.mqttUser != null ? user.mqttUser : "N/A"));
-            textViewMqttPassword.setText("MQTT Password: " + (user.mqttPassword != null ? user.mqttPassword : "N/A"));
+            textViewUsername.setText("Username: " + user.Username);
+            textViewRole.setText("Role: " + user.Role);
+            textViewMqttUser.setText("MQTT User: " + (user.MqttUser != null ? user.MqttUser : "N/A"));
+            textViewMqttPassword.setText("MQTT Password: " + (user.MqttPassword != null ? user.MqttPassword : "N/A"));
 
             // Fetch manager user info
             new Thread(() -> {
-                User managerUser = user.managerUserId != null ? userDao.getUserById(user.managerUserId) : null;
-                String managerUserName = (managerUser != null) ? managerUser.username : "N/A";
+                User managerUser = user.ManagerUserId != null ? userDao.getUserById(user.ManagerUserId) : null;
+                String managerUserName = (managerUser != null) ? managerUser.Username : "N/A";
                 ((Activity) getContext()).runOnUiThread(() -> {
                     textViewManagerUserName.setText("Manager: " + managerUserName);
                 });
@@ -61,8 +61,8 @@ public class UserAdapter extends ArrayAdapter<User> {
 
             // Fetch broker info
             new Thread(() -> {
-                Broker broker = user.brokerID != null ? brokerDao.getBrokerById(user.brokerID) : null;
-                String brokerURL = (broker != null) ? broker.ClusterURL + ":" + broker.PORT : "N/A";
+                Broker broker = user.UserBrokerID != null ? brokerDao.getBrokerById(user.UserBrokerID) : null;
+                String brokerURL = (broker != null) ? broker.ClusterUrl + ":" + broker.Port : "N/A";
                 ((Activity) getContext()).runOnUiThread(() -> {
                     textViewBrokerURL.setText("Broker: " + brokerURL);
                 });
@@ -70,12 +70,12 @@ public class UserAdapter extends ArrayAdapter<User> {
 
             // Determine if the item needs to be highlighted
             boolean isHighlighted = false;
-            if ("user".equals(user.role)) {
+            if ("user".equals(user.Role)) {
                 // Highlight if mqttUser, mqttPassword, or brokerID is null
-                isHighlighted = user.mqttUser == null || user.mqttPassword == null || user.brokerID == null;
-            } else if ("guest".equals(user.role)) {
+                isHighlighted = user.MqttUser == null || user.MqttPassword == null || user.UserBrokerID == null;
+            } else if ("guest".equals(user.Role)) {
                 // Highlight if mqttUser, mqttPassword, managerUserId, or brokerID is null
-                isHighlighted = user.mqttUser == null || user.mqttPassword == null || user.managerUserId == null || user.brokerID == null;
+                isHighlighted = user.MqttUser == null || user.MqttPassword == null || user.ManagerUserId == null || user.UserBrokerID == null;
             }
 
             // Set background color
@@ -98,8 +98,8 @@ public class UserAdapter extends ArrayAdapter<User> {
             convertView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorSelectedItem));
         } else {
             // Keep the previously set background color if it was highlighted
-            if (user != null && ("user".equals(user.role) || "guest".equals(user.role)) &&
-                    (user.mqttUser == null || user.mqttPassword == null || (user.managerUserId == null && "guest".equals(user.role)) || user.brokerID == null)) {
+            if (user != null && ("user".equals(user.Role) || "guest".equals(user.Role)) &&
+                    (user.MqttUser == null || user.MqttPassword == null || (user.ManagerUserId == null && "guest".equals(user.Role)) || user.UserBrokerID == null)) {
                 convertView.setBackgroundColor(Color.YELLOW);
             } else {
                 convertView.setBackgroundColor(Color.WHITE);

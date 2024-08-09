@@ -50,7 +50,7 @@ public class EditDevicesUserListActivity extends AppCompatActivity {
             mqttManager = new MqttManager(this, creatorUserId);
 
             if (device != null) {
-                deviceId = device.id;
+                deviceId = device.DevicesID;
                 // Initialize views and load device data
                 editTextDeviceName = findViewById(R.id.editTextDeviceName);
                 spinnerDeviceType = findViewById(R.id.spinnerDeviceType);
@@ -93,7 +93,7 @@ public class EditDevicesUserListActivity extends AppCompatActivity {
 
     private void loadDeviceData(Device device) {
         // Initialize views and populate data
-        editTextDeviceName.setText(device.name);
+        editTextDeviceName.setText(device.DeviceName);
         new Thread(() -> {
             List<DeviceType> deviceTypes = deviceTypeDao.getAllDeviceTypes();
             runOnUiThread(() -> {
@@ -102,7 +102,7 @@ public class EditDevicesUserListActivity extends AppCompatActivity {
                 spinnerDeviceType.setAdapter(adapter);
                 for (int i = 0; i < spinnerDeviceType.getCount(); i++) {
                     DeviceType deviceType = (DeviceType) spinnerDeviceType.getItemAtPosition(i);
-                    if (deviceType.id == device.deviceTypeId) {
+                    if (deviceType.DeviceTypeID == device.TypeId) {
                         spinnerDeviceType.setSelection(i);
                         break;
                     }
@@ -126,7 +126,7 @@ public class EditDevicesUserListActivity extends AppCompatActivity {
         }
 
         DeviceType selectedDeviceType = (DeviceType) spinnerDeviceType.getSelectedItem();
-        int deviceTypeId = selectedDeviceType != null ? selectedDeviceType.id : -1;
+        int deviceTypeId = selectedDeviceType != null ? selectedDeviceType.DeviceTypeID : -1;
 
         if (deviceTypeId == -1) {
             showAlert("Please select a device type");
@@ -134,17 +134,17 @@ public class EditDevicesUserListActivity extends AppCompatActivity {
         }
 
         // Generate topic using mqttPrincipalTopic and device name
-        String topic = selectedDeviceType.mqttPrincipalTopic + "/" + name.toLowerCase().replace(" ", "");
+        String topic = selectedDeviceType.MqttPrincipalTopic + "/" + name.toLowerCase().replace(" ", "");
 
         new Thread(() -> {
             Device existingDevice = deviceDao.getDeviceByNameAndUser(name, creatorUserId);
-            if (existingDevice != null && existingDevice.id != deviceId) {
+            if (existingDevice != null && existingDevice.DevicesID != deviceId) {
                 runOnUiThread(() -> {
                     showAlert("A device with the same name and creator user already exists!");
                 });
             } else {
                 Device updatedDevice = new Device(name, topic, null, null, deviceTypeId, creatorUserId);
-                updatedDevice.id = deviceId;  // Ensure ID is set for update
+                updatedDevice.DevicesID = deviceId;  // Ensure ID is set for update
                 deviceDao.update(updatedDevice);
                 runOnUiThread(() -> {
                     showAlert("Device updated!");

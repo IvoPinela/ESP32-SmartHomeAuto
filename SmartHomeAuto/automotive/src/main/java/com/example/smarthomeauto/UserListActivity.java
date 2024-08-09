@@ -107,7 +107,7 @@ public class UserListActivity extends AppCompatActivity {
         listViewUsers.setOnItemClickListener((parent, view, position, id) -> {
             selectedUser = userList.get(position);
             userAdapter.setSelectedPosition(position);
-            Snackbar.make(findViewById(android.R.id.content), "Selected: " + selectedUser.username, Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(android.R.id.content), "Selected: " + selectedUser.Username, Snackbar.LENGTH_SHORT).show();
         });
 
         setupSpinners();
@@ -148,7 +148,7 @@ public class UserListActivity extends AppCompatActivity {
             brokerList.add("All");
 
             for (Broker broker : brokers) {
-                brokerList.add(broker.ClusterURL + ":" + broker.PORT);
+                brokerList.add(broker.ClusterUrl + ":" + broker.Port);
             }
 
             runOnUiThread(() -> {
@@ -246,12 +246,12 @@ public class UserListActivity extends AppCompatActivity {
         for (User user : users) {
             boolean hasNullFields = false;
 
-            if ("guest".equals(user.role)) {
-                if (user.mqttUser == null || user.mqttPassword == null || user.managerUserId == null || user.brokerID == null) {
+            if ("guest".equals(user.Role)) {
+                if (user.MqttUser == null || user.MqttPassword == null || user.ManagerUserId == null || user.UserBrokerID == null) {
                     hasNullFields = true;
                 }
-            } else if ("user".equals(user.role)) {
-                if (user.mqttUser == null || user.mqttPassword == null || user.brokerID == null) {
+            } else if ("user".equals(user.Role)) {
+                if (user.MqttUser == null || user.MqttPassword == null || user.UserBrokerID == null) {
                     hasNullFields = true;
                 }
             } else {
@@ -268,7 +268,7 @@ public class UserListActivity extends AppCompatActivity {
     private List<User> filterByUserType(List<User> users) {
         List<User> result = new ArrayList<>();
         for (User user : users) {
-            if ("user".equals(user.role) || "guest".equals(user.role)) {
+            if ("user".equals(user.Role) || "guest".equals(user.Role)) {
                 result.add(user);
             }
         }

@@ -99,7 +99,7 @@ public class DeviceListActivity extends AppCompatActivity {
         listViewDevices.setOnItemClickListener((parent, view, position, id) -> {
             selectedDevice = deviceList.get(position);
             deviceAdapter.setSelectedPosition(position);
-            Snackbar.make(findViewById(android.R.id.content), "Selected: " + selectedDevice.name, Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(android.R.id.content), "Selected: " + selectedDevice.DeviceName, Snackbar.LENGTH_SHORT).show();
         });
 
         switchFilterMissingMQTT.setOnCheckedChangeListener((buttonView, isChecked) -> filterDevices());
@@ -114,7 +114,7 @@ public class DeviceListActivity extends AppCompatActivity {
             deviceTypeList = deviceTypeDao.getAllDeviceTypes();
             runOnUiThread(() -> {
                 DeviceType allTypes = new DeviceType("All", "All");
-                allTypes.id = -1;
+                allTypes.DeviceTypeID = -1;
                 deviceTypeList.add(0, allTypes);
 
                 ArrayAdapter<DeviceType> spinnerAdapter = new ArrayAdapter<>(DeviceListActivity.this, android.R.layout.simple_spinner_item, deviceTypeList);
@@ -183,7 +183,7 @@ public class DeviceListActivity extends AppCompatActivity {
         String queryName = searchViewName.getQuery().toString().trim();
         String queryUser = searchViewUser.getQuery().toString().trim();
         DeviceType selectedType = (DeviceType) spinnerDeviceType.getSelectedItem();
-        Integer deviceTypeId = (selectedType != null && selectedType.id != -1) ? selectedType.id : null;
+        Integer deviceTypeId = (selectedType != null && selectedType.DeviceTypeID != -1) ? selectedType.DeviceTypeID : null;
 
         boolean filterMissingMQTT = switchFilterMissingMQTT.isChecked();
 
@@ -195,8 +195,8 @@ public class DeviceListActivity extends AppCompatActivity {
 
             // Se o filtro de campos MQTT vazios estiver ativado, aplica esse filtro adicional
             if (filterMissingMQTT) {
-                filteredDevices.removeIf(device -> device.mqttUser != null && !device.mqttUser.isEmpty() &&
-                        device.mqttPassword != null && !device.mqttPassword.isEmpty());
+                filteredDevices.removeIf(device -> device.MqttUser != null && !device.MqttUser.isEmpty() &&
+                        device.MqttPassword != null && !device.MqttPassword.isEmpty());
             }
 
             runOnUiThread(() -> {

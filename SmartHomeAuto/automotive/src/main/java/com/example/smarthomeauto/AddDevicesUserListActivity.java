@@ -1,11 +1,6 @@
 package com.example.smarthomeauto;
 
-import android.Manifest;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,11 +11,7 @@ import android.widget.Spinner;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.room.Room;
-
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
@@ -102,7 +93,7 @@ public class AddDevicesUserListActivity extends AppCompatActivity {
 
         DeviceType selectedDeviceType = (DeviceType) spinnerDeviceType.getSelectedItem();
 
-        int deviceTypeId = selectedDeviceType != null ? selectedDeviceType.id : -1;
+        int deviceTypeId = selectedDeviceType != null ? selectedDeviceType.DeviceTypeID : -1;
 
         if (deviceTypeId == -1) {
             showAlert("Please select a device type");
@@ -110,7 +101,7 @@ public class AddDevicesUserListActivity extends AppCompatActivity {
         }
 
         // Generate topic using mqttPrincipalTopic and device name
-        String topic = selectedDeviceType.mqttPrincipalTopic + "/" + name.toLowerCase().replace(" ", "");
+        String topic = selectedDeviceType.MqttPrincipalTopic + "/" + name.toLowerCase().replace(" ", "");
 
         new Thread(() -> {
             // Check for duplicate devices with the same name and creator user

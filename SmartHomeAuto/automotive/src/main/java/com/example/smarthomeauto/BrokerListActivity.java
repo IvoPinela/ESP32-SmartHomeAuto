@@ -3,8 +3,6 @@ package com.example.smarthomeauto;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -86,7 +84,7 @@ public class BrokerListActivity extends AppCompatActivity {
         listViewBrokers.setOnItemClickListener((parent, view, position, id) -> {
             selectedBroker = brokerList.get(position);
             brokerAdapter.setSelectedPosition(position);
-            Snackbar.make(findViewById(android.R.id.content), "Selected: " + selectedBroker.ClusterURL, Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(android.R.id.content), "Selected: " + selectedBroker.ClusterUrl, Snackbar.LENGTH_SHORT).show();
         });
 
         setupSearchView();

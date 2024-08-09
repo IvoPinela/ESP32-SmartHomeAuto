@@ -6,22 +6,21 @@ import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
-import java.util.List;
 
 @Entity(
         tableName = "users",
         foreignKeys = {
                 @ForeignKey(
                         entity = User.class,
-                        parentColumns = "id",
-                        childColumns = "managerUserId",
+                        parentColumns = "UserID",
+                        childColumns = "ManagerUserId",
                         onDelete = ForeignKey.SET_NULL,
                         onUpdate = ForeignKey.NO_ACTION
                 ),
                 @ForeignKey(
                         entity = Broker.class,
-                        parentColumns = "PK_BrokerID",
-                        childColumns = "brokerID",
+                        parentColumns = "BrokerID",
+                        childColumns = "UserBrokerID",
                         onDelete = ForeignKey.SET_NULL,
                         onUpdate = ForeignKey.NO_ACTION
                 )
@@ -31,35 +30,35 @@ import java.util.List;
 
 public class User implements Serializable{
     @PrimaryKey(autoGenerate = true)
-    public int id;
+    public int UserID;
 
     @NonNull
-    public String username;
+    public String Username;
 
     @NonNull
-    public String password;
+    public String Password;
 
     @NonNull
-    public String role;
+    public String Role;
 
-    public String mqttUser;
-    public String mqttPassword;
-    public Integer managerUserId;
-    public Integer brokerID;
+    public String MqttUser;
+    public String MqttPassword;
+    public Integer ManagerUserId;
+    public Integer UserBrokerID;
 
     public User() {}
 
     public User(String username, String password, String role, String mqttUser, String mqttPassword, Integer managerUserId, Integer brokerID) {
-        this.username = username;
-        this.password = password;
-        this.role = role;
-        this.mqttUser = mqttUser;
-        this.mqttPassword = mqttPassword;
-        this.managerUserId = managerUserId;
-        this.brokerID = brokerID;
+        this.Username = username;
+        this.Password = password;
+        this.Role = role;
+        this.MqttUser = mqttUser;
+        this.MqttPassword = mqttPassword;
+        this.ManagerUserId = managerUserId;
+        this.UserBrokerID = brokerID;
     }
     @Override
     public String toString() {
-        return username;
+        return Username;
     }
 }

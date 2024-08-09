@@ -22,94 +22,94 @@ public interface DeviceDao {
     @Query("SELECT * FROM devices ")
     List<Device> getAllDevices();
 
-    @Query("SELECT * FROM devices WHERE name = :deviceName AND creatorUserId = :creatorUserId")
+    @Query("SELECT * FROM devices WHERE DeviceName = :deviceName AND CreatorUserId = :creatorUserId")
     Device getDeviceByNameAndUser(String deviceName, int creatorUserId);
 
-    @Query("SELECT * FROM devices WHERE name = :deviceName AND creatorUserId = :creatorUserId AND id != :deviceId")
+    @Query("SELECT * FROM devices WHERE DeviceName = :deviceName AND CreatorUserId = :creatorUserId AND DevicesID != :deviceId")
     Device getDeviceByNameAndUserExceptId(String deviceName, int creatorUserId, int deviceId);
 
-    @Query("SELECT * FROM devices WHERE id = :deviceId")
+    @Query("SELECT * FROM devices WHERE DevicesID = :deviceId")
     Device getDeviceById(int deviceId);
 
-    @Query("SELECT * FROM devices WHERE name LIKE :deviceName")
+    @Query("SELECT * FROM devices WHERE DeviceName LIKE :deviceName")
     List<Device> getDevicesByName(String deviceName);
 
-    @Query("SELECT * FROM devices WHERE deviceTypeId = :deviceTypeId")
+    @Query("SELECT * FROM devices WHERE TypeId = :deviceTypeId")
     List<Device> getDevicesByType(int deviceTypeId);
 
-    @Query("SELECT * FROM devices WHERE creatorUserId IN (SELECT id FROM users WHERE username LIKE '%' || :creatorName || '%') AND deviceTypeId = :deviceTypeId")
+    @Query("SELECT * FROM devices WHERE CreatorUserId IN (SELECT DevicesID FROM users WHERE Username LIKE '%' || :creatorName || '%') AND TypeId = :deviceTypeId")
     List<Device> searchDevicesByCreatorNameAndType(String creatorName, Integer deviceTypeId);
 
-    @Query("SELECT * FROM devices WHERE creatorUserId IN (SELECT id FROM users WHERE username LIKE '%' || :creatorName || '%')")
+    @Query("SELECT * FROM devices WHERE CreatorUserId IN (SELECT DevicesID FROM users WHERE Username LIKE '%' || :creatorName || '%')")
     List<Device> getDevicesByCreatorName(String creatorName);
 
     @Query("SELECT d.* " +
             "FROM devices d " +
-            "INNER JOIN users u ON d.creatorUserId = u.id " +
-            "INNER JOIN device_types dt ON d.deviceTypeId = dt.id " +
-            "WHERE (:deviceName IS NULL OR d.name LIKE '%' || :deviceName || '%') " +
-            "AND (:deviceTypeId IS NULL OR d.deviceTypeId = :deviceTypeId) " +
-            "AND (:creatorName IS NULL OR u.username LIKE '%' || :creatorName || '%')")
+            "INNER JOIN users u ON d.CreatorUserId = u.UserID " +
+            "INNER JOIN device_types dt ON d.TypeId = dt.DeviceTypeID " +
+            "WHERE (:deviceName IS NULL OR d.DeviceName LIKE '%' || :deviceName || '%') " +
+            "AND (:deviceTypeId IS NULL OR d.TypeId = :deviceTypeId) " +
+            "AND (:creatorName IS NULL OR u.Username LIKE '%' || :creatorName || '%')")
     List<Device> searchDevices2(String deviceName, Integer deviceTypeId, String creatorName);
     @Query(
             "SELECT d.* " +
                     "FROM devices d " +
-                    "INNER JOIN device_types dt ON d.deviceTypeId = dt.id " +
-                    "WHERE (:deviceName IS NULL OR d.name LIKE '%' || :deviceName || '%') " +
-                    "AND (:deviceTypeId IS NULL OR d.deviceTypeId = :deviceTypeId)"
+                    "INNER JOIN device_types dt ON d.TypeId = dt.DeviceTypeID " +
+                    "WHERE (:deviceName IS NULL OR d.DeviceName LIKE '%' || :deviceName || '%') " +
+                    "AND (:deviceTypeId IS NULL OR d.TypeId = :deviceTypeId)"
     )
     List<Device> searchDevices(String deviceName, Integer deviceTypeId);
 
     @Query("SELECT * FROM devices " +
-            "WHERE (mqttUser IS NULL OR mqttUser = '') " +
-            "AND (mqttPassword IS NULL OR mqttPassword = '')")
+            "WHERE (MqttUser IS NULL OR MqttUser = '') " +
+            "AND (MqttPassword IS NULL OR MqttPassword = '')")
     List<Device> searchDevicesWithMissingMQTT();
 
     @Query("SELECT * FROM devices WHERE " +
-            "(:name IS NULL OR name LIKE '%' || :name || '%') " +
-            "AND (:deviceTypeId IS NULL OR deviceTypeId = :deviceTypeId) " +
-            "AND (:user IS NULL OR creatorUserId IN (SELECT id FROM users WHERE username LIKE '%' || :user || '%'))")
+            "(:name IS NULL OR DeviceName LIKE '%' || :name || '%') " +
+            "AND (:deviceTypeId IS NULL OR TypeId = :deviceTypeId) " +
+            "AND (:user IS NULL OR CreatorUserId IN (SELECT DevicesID FROM users WHERE Username LIKE '%' || :user || '%'))")
     List<Device> searchDevices(String name, Integer deviceTypeId, String user);
 
     @Query("SELECT * FROM devices WHERE " +
-            "(:name IS NULL OR name LIKE '%' || :name || '%') " +
-            "AND (:deviceTypeId IS NULL OR deviceTypeId = :deviceTypeId) " +
-            "AND (:user IS NULL OR creatorUserId IN (SELECT id FROM users WHERE username LIKE '%' || :user || '%'))")
+            "(:name IS NULL OR DeviceName LIKE '%' || :name || '%') " +
+            "AND (:deviceTypeId IS NULL OR TypeId = :deviceTypeId) " +
+            "AND (:user IS NULL OR CreatorUserId IN (SELECT DevicesID FROM users WHERE Username LIKE '%' || :user || '%'))")
     List<Device> searchDevicesWithFilter(String name, Integer deviceTypeId, String user);
 
-    @Query("SELECT * FROM devices WHERE creatorUserId = :creatorUserId AND name LIKE '%' || :name || '%' AND (:deviceTypeId IS NULL OR deviceTypeId = :deviceTypeId)")
+    @Query("SELECT * FROM devices WHERE CreatorUserId = :creatorUserId AND DeviceName LIKE '%' || :name || '%' AND (:deviceTypeId IS NULL OR TypeId = :deviceTypeId)")
     List<Device> searchDevicesByCreatorIdAndFilters(int creatorUserId, String name, Integer deviceTypeId);
 
-    @Query("SELECT * FROM devices WHERE creatorUserId = :userId")
+    @Query("SELECT * FROM devices WHERE CreatorUserId = :userId")
     List<Device> getDevicesByUserId(int userId);
 
-    @Query("SELECT * FROM devices WHERE deviceTypeId = :deviceTypeId AND creatorUserId = :userId")
+    @Query("SELECT * FROM devices WHERE TypeId = :deviceTypeId AND CreatorUserId = :userId")
     List<Device> getDevicesByTypeAndUser(int deviceTypeId, int userId);
 
-    @Query("SELECT mqttTopic FROM devices WHERE id = :deviceId")
+    @Query("SELECT MqttSubTopic FROM devices WHERE DevicesID = :deviceId")
     String getTopicById(int deviceId);
 
 
-    @Query("SELECT id FROM devices WHERE mqttTopic = :topic")
+    @Query("SELECT DevicesID FROM devices WHERE MqttSubTopic = :topic")
     int getDeviceIdByTopic(String topic);
 
 
-    @Query("SELECT id FROM devices WHERE name = :Name")
+    @Query("SELECT DevicesID FROM devices WHERE DeviceName = :Name")
     int   getDeviceIdByName(String Name);
 
-    @Query("SELECT * FROM devices WHERE id IN (:deviceIds)")
+    @Query("SELECT * FROM devices WHERE DevicesID IN (:deviceIds)")
     List<Device> getDevicesByIds(List<Integer> deviceIds);
 
-    @Query("SELECT * FROM devices WHERE creatorUserId = :userId")
+    @Query("SELECT * FROM devices WHERE CreatorUserId = :userId")
     List<Device> getAllDevicesForUser(int userId);
 
-    @Query("SELECT * FROM devices WHERE creatorUserId = :userId AND id NOT IN (SELECT deviceId FROM user_devices WHERE userId = :guestId)")
+    @Query("SELECT * FROM devices WHERE CreatorUserId = :userId AND DevicesID NOT IN (SELECT PermissionDeviceId FROM user_devices WHERE PermissionUserID = :guestId)")
     List<Device> getAvailableDevicesForUserExcludingGuest(int userId, int guestId);
 
 
-    @Query("SELECT * FROM devices WHERE creatorUserId = :creatorUserId AND name LIKE '%' || :name || '%' AND (:deviceTypeId IS NULL OR deviceTypeId = :deviceTypeId)AND id NOT IN (SELECT deviceId FROM user_devices WHERE userId = :guestId)")
+    @Query("SELECT * FROM devices WHERE CreatorUserId = :creatorUserId AND DeviceName LIKE '%' || :name || '%' AND (:deviceTypeId IS NULL OR TypeId = :deviceTypeId)AND DevicesID NOT IN (SELECT PermissionDeviceId FROM user_devices WHERE PermissionUserID = :guestId)")
     List<Device> searchDevicesByCreatorIdAndFilters2(int creatorUserId, String name, Integer deviceTypeId,int guestId);
 
-    @Query("SELECT name FROM devices WHERE id IN (:deviceId)")
+    @Query("SELECT DeviceName FROM devices WHERE DevicesID IN (:deviceId)")
     String getDeviceNameById(int deviceId);
 }

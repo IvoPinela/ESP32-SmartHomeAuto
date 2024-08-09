@@ -8,17 +8,17 @@ import java.io.Serializable;
 @Entity(tableName = "broker")
 public class Broker implements Serializable {
     @PrimaryKey(autoGenerate = true)
-    public int PK_BrokerID;
+    public int BrokerID;
 
-    public String ClusterURL;
-    public int PORT;
+    public String ClusterUrl;
+    public int Port;
 
     public Broker() {
     }
 
     public Broker(String clusterURL, int port) {
-        this.ClusterURL = clusterURL;
-        this.PORT = port;
+        this.ClusterUrl = clusterURL;
+        this.Port = port;
     }
 }
 

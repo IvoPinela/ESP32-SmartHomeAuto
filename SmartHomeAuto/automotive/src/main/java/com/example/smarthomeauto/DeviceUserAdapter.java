@@ -43,11 +43,11 @@ public class DeviceUserAdapter extends ArrayAdapter<UserDevice> {
 
         if (userDevice != null) {
             executorService.execute(() -> {
-                Device device = deviceDao.getDeviceById(userDevice.getDeviceId());
-                String deviceTypeName = deviceTypeDao.getDeviceTypeNameById(device.getDeviceTypeId());
+                Device device = deviceDao.getDeviceById(userDevice.getPermissionDeviceId());
+                String deviceTypeName = deviceTypeDao.getDeviceTypeNameById(device.getTypeId());
 
                 ((Activity) getContext()).runOnUiThread(() -> {
-                    textViewName.setText("Name: " + device.getName());
+                    textViewName.setText("Name: " + device.getDeviceName());
                     textViewDeviceType.setText("Device Type: " + deviceTypeName);
                     textViewPermission.setText("Permission: " + userDevice.getPermissions());
                 });

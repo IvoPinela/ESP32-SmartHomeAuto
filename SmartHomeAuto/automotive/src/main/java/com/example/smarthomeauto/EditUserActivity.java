@@ -73,9 +73,9 @@ public class EditUserActivity extends Activity {
         if (intent.hasExtra("user")) {
             user = (User) intent.getSerializableExtra("user");
             formTitle.setText("Edit User");
-            editTextUsername.setText(user.username);
-            editTextMqttUser.setText(user.mqttUser);
-            editTextMqttPassword.setText(user.mqttPassword);
+            editTextUsername.setText(user.Username);
+            editTextMqttUser.setText(user.MqttUser);
+            editTextMqttPassword.setText(user.MqttPassword);
 
             // Manter password invisível
             passwordLabel.setVisibility(View.GONE);
@@ -121,7 +121,7 @@ public class EditUserActivity extends Activity {
                 }
 
                 if (user != null) {
-                    spinnerRole.setSelection(getRoleIndex(user.role));
+                    spinnerRole.setSelection(getRoleIndex(user.Role));
                 }
             }
 
@@ -177,7 +177,7 @@ public class EditUserActivity extends Activity {
 
         if (user != null) {
             for (int i = 0; i < spinnerRole.getCount(); i++) {
-                if (user.role.equals(spinnerRole.getItemAtPosition(i))) {
+                if (user.Role.equals(spinnerRole.getItemAtPosition(i))) {
                     spinnerRole.setSelection(i);
                     break;
                 }
@@ -190,8 +190,8 @@ public class EditUserActivity extends Activity {
             List<User> managers = userDao.getAllUsers();
             List<String> managerUsernames = new ArrayList<>();
             for (User user : managers) {
-                if ("manager".equals(user.role)) {
-                    managerUsernames.add(user.username);
+                if ("manager".equals(user.Role)) {
+                    managerUsernames.add(user.Username);
                 }
             }
             runOnUiThread(() -> {
@@ -199,14 +199,14 @@ public class EditUserActivity extends Activity {
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinnerManagerUserId.setAdapter(adapter);
 
-                if (user != null && user.managerUserId != null) {
+                if (user != null && user.ManagerUserId != null) {
                     for (int i = 0; i < spinnerManagerUserId.getCount(); i++) {
                         final int index = i;
                         String username = (String) spinnerManagerUserId.getItemAtPosition(index);
                         new Thread(() -> {
                             User managerUser = userDao.getUserByUsername(username);
                             runOnUiThread(() -> {
-                                if (managerUser != null && managerUser.id == user.managerUserId) {
+                                if (managerUser != null && managerUser.UserID == user.ManagerUserId) {
                                     spinnerManagerUserId.setSelection(index);
                                 }
                             });
@@ -222,8 +222,8 @@ public class EditUserActivity extends Activity {
             List<User> users = userDao.getAllUsers();
             List<String> userUsernames = new ArrayList<>();
             for (User user : users) {
-                if ("user".equals(user.role)) {
-                    userUsernames.add(user.username);
+                if ("user".equals(user.Role)) {
+                    userUsernames.add(user.Username);
                 }
             }
             runOnUiThread(() -> {
@@ -231,14 +231,14 @@ public class EditUserActivity extends Activity {
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinnerManagerUserId.setAdapter(adapter);
 
-                if (user != null && user.managerUserId != null) {
+                if (user != null && user.ManagerUserId != null) {
                     for (int i = 0; i < spinnerManagerUserId.getCount(); i++) {
                         final int index = i;
                         String username = (String) spinnerManagerUserId.getItemAtPosition(index);
                         new Thread(() -> {
                             User managerUser = userDao.getUserByUsername(username);
                             runOnUiThread(() -> {
-                                if (managerUser != null && managerUser.id == user.managerUserId) {
+                                if (managerUser != null && managerUser.UserID == user.ManagerUserId) {
                                     spinnerManagerUserId.setSelection(index);
                                 }
                             });
@@ -254,7 +254,7 @@ public class EditUserActivity extends Activity {
             List<Broker> brokers = brokerDao.getAllBrokers();
             List<String> brokerDescriptions = new ArrayList<>();
             for (Broker broker : brokers) {
-                String description = broker.ClusterURL + ":" + broker.PORT;
+                String description = broker.ClusterUrl + ":" + broker.Port;
                 brokerDescriptions.add(description);
             }
             runOnUiThread(() -> {
@@ -262,7 +262,7 @@ public class EditUserActivity extends Activity {
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinnerBrokerId.setAdapter(adapter);
 
-                if (user != null && user.brokerID != null) {
+                if (user != null && user.UserBrokerID != null) {
                     for (int i = 0; i < spinnerBrokerId.getCount(); i++) {
                         final int index = i;
                         String description = (String) spinnerBrokerId.getItemAtPosition(index);
@@ -279,7 +279,7 @@ public class EditUserActivity extends Activity {
                             new Thread(() -> {
                                 Broker broker = brokerDao.getBrokerByUrlAndPort(brokerURL, brokerPort);
                                 runOnUiThread(() -> {
-                                    if (broker != null && broker.PK_BrokerID == user.brokerID) {
+                                    if (broker != null && broker.BrokerID == user.UserBrokerID) {
                                         spinnerBrokerId.setSelection(index);
                                     }
                                 });
@@ -345,14 +345,14 @@ public class EditUserActivity extends Activity {
         int finalBrokerPort = brokerPort;
         new Thread(() -> {
             User existingUser = userDao.getUserByUsername(username);
-            if (existingUser != null && (user == null || existingUser.id != user.id)) {
+            if (existingUser != null && (user == null || existingUser.UserID != user.UserID)) {
                 runOnUiThread(() -> showAlert("A user with the same username already exists!"));
             } else {
                 User managerUser = ("guest".equals(role)) ? userDao.getUserByUsername(selectedManagerUsername) : null;
-                Integer managerUserId = ("guest".equals(role)) ? (managerUser != null ? managerUser.id : null) : null;
+                Integer managerUserId = ("guest".equals(role)) ? (managerUser != null ? managerUser.UserID : null) : null;
 
                 Broker selectedBroker = ("admin".equals(role)) ? null : brokerDao.getBrokerByUrlAndPort(brokerURL, finalBrokerPort);
-                int brokerId = (selectedBroker != null) ? selectedBroker.PK_BrokerID : -1;
+                int brokerId = (selectedBroker != null) ? selectedBroker.BrokerID : -1;
 
                 if (brokerId == -1 && !"admin".equals(role)) {
                     runOnUiThread(() -> showAlert("Please select a broker"));
@@ -365,13 +365,13 @@ public class EditUserActivity extends Activity {
                 }
 
                 if (user != null) {
-                    user.username = username;
-                    user.password = password.isEmpty() ? user.password : password;
-                    user.mqttUser = "admin".equals(role) ? null : mqttUser;
-                    user.mqttPassword = "admin".equals(role) ? null : mqttPassword;
-                    user.role = role;
-                    user.managerUserId = ("guest".equals(role)) ? managerUserId : null;
-                    user.brokerID = ("admin".equals(role)) ? null : brokerId;
+                    user.Username = username;
+                    user.Password = password.isEmpty() ? user.Password : password;
+                    user.MqttUser = "admin".equals(role) ? null : mqttUser;
+                    user.MqttPassword = "admin".equals(role) ? null : mqttPassword;
+                    user.Role = role;
+                    user.ManagerUserId = ("guest".equals(role)) ? managerUserId : null;
+                    user.UserBrokerID = ("admin".equals(role)) ? null : brokerId;
 
                     userDao.update(user);
                 } else {

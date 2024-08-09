@@ -252,7 +252,7 @@ public class LightsControlActivity extends AppCompatActivity implements MqttHand
                 List<UserDevice> userDevices = userDeviceDao.getDevicesByUserId(userId);
                 Map<Integer, String> devicePermissionsMap = new HashMap<>();
                 for (UserDevice userDevice : userDevices) {
-                    devicePermissionsMap.put(userDevice.getDeviceId(), userDevice.getPermissions());
+                    devicePermissionsMap.put(userDevice.getPermissionDeviceId(), userDevice.getPermissions());
                 }
 
                 runOnUiThread(() -> {
@@ -260,7 +260,7 @@ public class LightsControlActivity extends AppCompatActivity implements MqttHand
                     LayoutInflater inflater = LayoutInflater.from(this);
 
                     for (Device device : allDevices) {
-                        String permissions = devicePermissionsMap.get(device.getId());
+                        String permissions = devicePermissionsMap.get(device.getDevicesID());
 
                         if (permissions != null) {
                             View deviceView = inflater.inflate(R.layout.itemdevicelightgate, devicesContainer, false);
@@ -269,13 +269,13 @@ public class LightsControlActivity extends AppCompatActivity implements MqttHand
                             TextView deviceStatusTextView = deviceView.findViewById(R.id.deviceStatusTextView);
                             Switch deviceSwitch = deviceView.findViewById(R.id.deviceSwitch);
 
-                            deviceNameTextView.setText(device.getName());
+                            deviceNameTextView.setText(device.getDeviceName());
                             deviceStatusTextView.setText("Status: CLOSE");
                             deviceSwitch.setChecked(false);
 
                             // Store views in the maps for later updates
-                            deviceStatusTextViewMap.put(device.getId(), deviceStatusTextView);
-                            deviceSwitchMap.put(device.getId(), deviceSwitch);
+                            deviceStatusTextViewMap.put(device.getDevicesID(), deviceStatusTextView);
+                            deviceSwitchMap.put(device.getDevicesID(), deviceSwitch);
 
                             if ("read".equals(permissions)) {
                                 deviceSwitch.setEnabled(false);
@@ -283,7 +283,7 @@ public class LightsControlActivity extends AppCompatActivity implements MqttHand
                             } else if ("control".equals(permissions)) {
                                 deviceSwitch.setEnabled(true);
                                 deviceSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                                    updateDeviceStatus(device.getId(), isChecked);
+                                    updateDeviceStatus(device.getDevicesID(), isChecked);
                                     checkAllDeviceStatusAndUpdateMainSwitch();
                                 });
                             } else {
@@ -305,16 +305,16 @@ public class LightsControlActivity extends AppCompatActivity implements MqttHand
                         TextView deviceStatusTextView = deviceView.findViewById(R.id.deviceStatusTextView);
                         Switch deviceSwitch = deviceView.findViewById(R.id.deviceSwitch);
 
-                        deviceNameTextView.setText(device.getName());
+                        deviceNameTextView.setText(device.getDeviceName());
                         deviceStatusTextView.setText("Status: CLOSE");
                         deviceSwitch.setChecked(false);
 
                         // Store views in the maps for later updates
-                        deviceStatusTextViewMap.put(device.getId(), deviceStatusTextView);
-                        deviceSwitchMap.put(device.getId(), deviceSwitch);
+                        deviceStatusTextViewMap.put(device.getDevicesID(), deviceStatusTextView);
+                        deviceSwitchMap.put(device.getDevicesID(), deviceSwitch);
 
                         deviceSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                            updateDeviceStatus(device.getId(), isChecked);
+                            updateDeviceStatus(device.getDevicesID(), isChecked);
                             checkAllDeviceStatusAndUpdateMainSwitch();
                         });
 

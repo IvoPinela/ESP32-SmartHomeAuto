@@ -1,6 +1,5 @@
 package com.example.smarthomeauto;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,7 +20,6 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class AddUserDeviceListActivity extends Activity {
 
@@ -107,7 +105,7 @@ public class AddUserDeviceListActivity extends Activity {
             selectedDevice = deviceAdapter.getItem(position);
             deviceAdapter.setSelectedPosition(position);
             if (selectedDevice != null) {
-                Snackbar.make(findViewById(android.R.id.content), "Selected: " + selectedDevice.name, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(android.R.id.content), "Selected: " + selectedDevice.DeviceName, Snackbar.LENGTH_SHORT).show();
             } else {
                 Snackbar.make(findViewById(android.R.id.content), "No device selected", Snackbar.LENGTH_SHORT).show();
             }
@@ -123,12 +121,12 @@ public class AddUserDeviceListActivity extends Activity {
 
                 Log.d(TAG, "Number of devices fetched: " + availableDevices.size());
                 for (Device device : availableDevices) {
-                    Log.d(TAG, "Device ID: " + device.id + ", Device Name: " + device.name);
+                    Log.d(TAG, "Device ID: " + device.DevicesID + ", Device Name: " + device.DeviceName);
                 }
 
                 runOnUiThread(() -> {
                     DeviceType allTypes = new DeviceType("All", "All");
-                    allTypes.id = -1;
+                    allTypes.DeviceTypeID = -1;
                     deviceTypeList.add(0, allTypes);
 
                     ArrayAdapter<DeviceType> deviceTypeAdapter = new ArrayAdapter<>(AddUserDeviceListActivity.this, android.R.layout.simple_spinner_item, deviceTypeList);
@@ -181,7 +179,7 @@ public class AddUserDeviceListActivity extends Activity {
     private void filterDevices() {
         String queryName = searchViewDevice.getQuery().toString().trim();
         DeviceType selectedType = (DeviceType) spinnerDeviceType.getSelectedItem();
-        Integer deviceTypeId = (selectedType != null && selectedType.id != -1) ? selectedType.id : null;
+        Integer deviceTypeId = (selectedType != null && selectedType.DeviceTypeID != -1) ? selectedType.DeviceTypeID : null;
 
         new Thread(() -> {
             List<Device> filteredDevices;
@@ -220,7 +218,7 @@ public class AddUserDeviceListActivity extends Activity {
             try {
                 for (Device device : selectedDevices) {
                     // Create a UserDevice entity for each selected device with the given permission
-                    UserDevice userDevice = new UserDevice(guestId, device.id, selectedPermission);
+                    UserDevice userDevice = new UserDevice(guestId, device.DevicesID, selectedPermission);
                     userDeviceDao.insert(userDevice); // Insert the new UserDevice into the database
                 }
                 runOnUiThread(() -> {

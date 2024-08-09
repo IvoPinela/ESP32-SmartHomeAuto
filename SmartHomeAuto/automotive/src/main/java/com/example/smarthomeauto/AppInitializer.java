@@ -45,49 +45,49 @@ public class AppInitializer {
 
         if (userDao.countUsersByUsername("admin") == 0) {
             User admin = new User();
-            admin.username = "admin";
-            admin.password = HashUtils.hashPassword("admin");
-            admin.role = "admin";
-            admin.mqttUser = null;
-            admin.mqttPassword = null;
-            admin.managerUserId = null;
-            admin.brokerID = null;
+            admin.Username = "admin";
+            admin.Password = HashUtils.hashPassword("admin");
+            admin.Role = "admin";
+            admin.MqttUser = null;
+            admin.MqttPassword = null;
+            admin.ManagerUserId = null;
+            admin.UserBrokerID = null;
             userDao.insert(admin);
         }
 
         if (userDao.countUsersByUsername("master") == 0) {
             User master = new User();
-            master.username = "master";
-            master.password = HashUtils.hashPassword("master");
-            master.role = "adminmaster";
-            master.mqttUser = null;
-            master.mqttPassword = null;
-            master.managerUserId = null;
-            master.brokerID = null;
+            master.Username = "master";
+            master.Password = HashUtils.hashPassword("master");
+            master.Role = "adminmaster";
+            master.MqttUser = null;
+            master.MqttPassword = null;
+            master.ManagerUserId = null;
+            master.UserBrokerID = null;
             userDao.insert(master);
         }
 
         if (userDao.countUsersByUsername("user") == 0) {
             User user = new User();
-            user.username = "user";
-            user.password = HashUtils.hashPassword("user");
-            user.role = "user";
-            user.mqttUser = "PublishTest";
-            user.mqttPassword = "Publish123";
-            user.managerUserId = null;
-            user.brokerID = broker1Id;
+            user.Username = "user";
+            user.Password = HashUtils.hashPassword("user");
+            user.Role = "user";
+            user.MqttUser = "PublishTest";
+            user.MqttPassword = "Publish123";
+            user.ManagerUserId = null;
+            user.UserBrokerID = broker1Id;
             userDao.insert(user);
         }
 
         if (userDao.countUsersByUsername("guest") == 0) {
             User guest = new User();
-            guest.username = "guest";
-            guest.password = HashUtils.hashPassword("guest");
-            guest.role = "guest";
-            guest.mqttUser = "Guest";
-            guest.mqttPassword = "Guest1234";
-            guest.brokerID = broker1Id;
-            guest.managerUserId= userDao.getUserIdByUsername("user");
+            guest.Username = "guest";
+            guest.Password = HashUtils.hashPassword("guest");
+            guest.Role = "guest";
+            guest.MqttUser = "Guest";
+            guest.MqttPassword = "Guest1234";
+            guest.UserBrokerID = broker1Id;
+            guest.ManagerUserId = userDao.getUserIdByUsername("user");
             userDao.insert(guest);
         }
     }
@@ -117,34 +117,34 @@ public class AppInitializer {
 
         if (deviceDao.getDevicesByName("Front Gate").isEmpty()) {
             Device gateDevice = new Device();
-            gateDevice.name = "Front Gate";
-            gateDevice.deviceTypeId = gateDeviceTypeId != null ? gateDeviceTypeId : 0;
-            gateDevice.creatorUserId = userId != null ? userId : 0;
-            gateDevice.mqttTopic = "home/gate/frontgate";
-            gateDevice.mqttUser = "Esp32Gate";
-            gateDevice.mqttPassword = "Esp32Gate";
+            gateDevice.DeviceName = "Front Gate";
+            gateDevice.TypeId = gateDeviceTypeId != null ? gateDeviceTypeId : 0;
+            gateDevice.CreatorUserId = userId != null ? userId : 0;
+            gateDevice.MqttSubTopic = "home/gate/frontgate";
+            gateDevice.MqttUser = "Esp32Gate";
+            gateDevice.MqttPassword = "Esp32Gate";
             deviceDao.insert(gateDevice);
         }
 
         if (deviceDao.getDevicesByName("Living Room").isEmpty()) {
             Device lightDevice = new Device();
-            lightDevice.name = "Living Room";
-            lightDevice.deviceTypeId = lightDeviceTypeId != null ? lightDeviceTypeId : 0;
-            lightDevice.creatorUserId = userId != null ? userId : 0;
-            lightDevice.mqttTopic = "home/light/livingroom";
-            lightDevice.mqttUser = "Esp32Light";
-            lightDevice.mqttPassword = "Esp32Light";
+            lightDevice.DeviceName = "Living Room";
+            lightDevice.TypeId = lightDeviceTypeId != null ? lightDeviceTypeId : 0;
+            lightDevice.CreatorUserId = userId != null ? userId : 0;
+            lightDevice.MqttSubTopic = "home/light/livingroom";
+            lightDevice.MqttUser = "Esp32Light";
+            lightDevice.MqttPassword = "Esp32Light";
             deviceDao.insert(lightDevice);
         }
 
         if (deviceDao.getDevicesByName("Garage").isEmpty()) {
             Device lightDevice = new Device();
-            lightDevice.name = "Garage";
-            lightDevice.deviceTypeId = lightDeviceTypeId != null ? lightDeviceTypeId : 0;
-            lightDevice.creatorUserId = userId != null ? userId : 0;
-            lightDevice.mqttTopic = "home/light/garage";
-            lightDevice.mqttUser = "";
-            lightDevice.mqttPassword = "";
+            lightDevice.DeviceName = "Garage";
+            lightDevice.TypeId = lightDeviceTypeId != null ? lightDeviceTypeId : 0;
+            lightDevice.CreatorUserId = userId != null ? userId : 0;
+            lightDevice.MqttSubTopic = "home/light/garage";
+            lightDevice.MqttUser = "";
+            lightDevice.MqttPassword = "";
             deviceDao.insert(lightDevice);
         }
     }

@@ -19,39 +19,39 @@ public interface UserDeviceDao {
     @Update
     void update(UserDevice userDevice);
 
-    @Query("SELECT * FROM user_devices WHERE userId = :userId")
+    @Query("SELECT * FROM user_devices WHERE PermissionUserID = :userId")
     List<UserDevice> getDevicesByUserId(int userId);
 
-    @Query("SELECT * FROM user_devices WHERE deviceId = :deviceId")
+    @Query("SELECT * FROM user_devices WHERE PermissionDeviceId = :deviceId")
     List<UserDevice> getUsersByDeviceId(int deviceId);
 
-    @Query("SELECT * FROM user_devices WHERE userId = :userId AND deviceId = :deviceId")
+    @Query("SELECT * FROM user_devices WHERE PermissionUserID = :userId AND PermissionDeviceId = :deviceId")
     UserDevice getUserDevice(int userId, int deviceId);
 
-    @Query("SELECT * FROM devices INNER JOIN user_devices ON devices.id = user_devices.deviceId WHERE user_devices.userId = :userId")
+    @Query("SELECT * FROM devices INNER JOIN user_devices ON devices.DevicesID = user_devices.PermissionDeviceId WHERE user_devices.PermissionUserID = :userId")
     List<Device> getDevicesForUser(int userId);
 
-    @Query("SELECT * FROM users INNER JOIN user_devices ON users.id = user_devices.userId WHERE user_devices.deviceId = :deviceId")
+    @Query("SELECT * FROM users INNER JOIN user_devices ON users.UserID = user_devices.PermissionUserID WHERE user_devices.PermissionDeviceId = :deviceId")
     List<User> getUsersForDevice(int deviceId);
 
-    @Query("SELECT deviceId FROM user_devices WHERE userId = :userId")
+    @Query("SELECT PermissionDeviceId FROM user_devices WHERE PermissionUserID = :userId")
     List<Integer> getReadableDeviceIdsByUserId(int userId);
 
-    @Query("SELECT deviceId FROM user_devices WHERE userId = :guestId")
+    @Query("SELECT PermissionDeviceId FROM user_devices WHERE PermissionUserID = :guestId")
     List<Integer> getDeviceIdsForGuest(int guestId);
 
 
     @Query("SELECT * FROM user_devices ud " +
-            "WHERE ud.userId = :guestId " +
+            "WHERE ud.PermissionUserID = :guestId " +
             "AND (:deviceName IS NULL OR EXISTS (" +
             "SELECT 1 FROM devices d " +
-            "WHERE d.id = ud.deviceId AND d.name LIKE '%' || :deviceName || '%')) " +
+            "WHERE d.DevicesID = ud.PermissionDeviceId AND d.DeviceName LIKE '%' || :deviceName || '%')) " +
             "AND (:deviceTypeId IS NULL OR EXISTS (" +
             "SELECT 1 FROM devices d " +
-            "WHERE d.id = ud.deviceId AND d.deviceTypeId = :deviceTypeId)) " +
+            "WHERE d.DevicesID = ud.PermissionDeviceId AND d.TypeId = :deviceTypeId)) " +
             "AND (:permissions IS NULL OR ud.permissions = :permissions)")
     List<UserDevice> getFilteredUserDevices(int guestId, String deviceName, Integer deviceTypeId, String permissions);
 
-    @Query("SELECT COUNT(*) FROM user_devices WHERE userId = :userId AND deviceId = :deviceId")
+    @Query("SELECT COUNT(*) FROM user_devices WHERE PermissionUserID = :userId AND PermissionDeviceId = :deviceId")
     int countUserDeviceAssociations(int userId, int deviceId);
 }

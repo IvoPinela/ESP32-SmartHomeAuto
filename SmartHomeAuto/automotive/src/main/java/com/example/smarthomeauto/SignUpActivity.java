@@ -3,7 +3,6 @@ package com.example.smarthomeauto;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -55,20 +54,20 @@ public class SignUpActivity extends AppCompatActivity {
                 } else {
                     // Create and insert the new user
                     User newUser = new User();
-                    newUser.username = username;
-                    newUser.password = HashUtils.hashPassword(password);
-                    newUser.role = "user";
-                    newUser.mqttUser = null;
-                    newUser.mqttPassword = null;
-                    newUser.managerUserId = null;
-                    newUser.brokerID = null;
+                    newUser.Username = username;
+                    newUser.Password = HashUtils.hashPassword(password);
+                    newUser.Role = "user";
+                    newUser.MqttUser = null;
+                    newUser.MqttPassword = null;
+                    newUser.ManagerUserId = null;
+                    newUser.UserBrokerID = null;
 
 
 
                     // Pass the user ID to the next activity
                     Intent intent = new Intent(SignUpActivity.this, UserActivity.class);
-                    intent.putExtra("USER_ID", newUser.id);
-                    intent.putExtra("USER_ROLE", newUser.role);
+                    intent.putExtra("USER_ID", newUser.UserID);
+                    intent.putExtra("USER_ROLE", newUser.Role);
                     runOnUiThread(() -> {
                         startActivity(intent);
                         finish(); // Close the sign-up activity

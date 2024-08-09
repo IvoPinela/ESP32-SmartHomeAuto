@@ -1,18 +1,15 @@
 package com.example.smarthomeauto;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.TextView;
 import java.util.ArrayList;
 
 
 import androidx.core.content.ContextCompat;
-import androidx.room.Room;
 
 import java.util.List;
 
@@ -37,7 +34,7 @@ public class GuestAdapter extends ArrayAdapter<User> {
         User guest = guestList.get(position);
 
         TextView textViewGuestName = convertView.findViewById(R.id.textViewUsername);
-        textViewGuestName.setText(guest.username);
+        textViewGuestName.setText(guest.Username);
 
 
         if (position == selectedPosition) {

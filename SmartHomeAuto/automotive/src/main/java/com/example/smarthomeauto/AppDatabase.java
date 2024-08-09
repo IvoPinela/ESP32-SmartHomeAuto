@@ -7,7 +7,7 @@ import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 import android.content.Context;
 
-@Database(entities = {User.class, Device.class, DeviceType.class, UserDevice.class, Broker.class}, version = 5, exportSchema = false)
+@Database(entities = {User.class, Device.class, DeviceType.class, UserDevice.class, Broker.class}, version = 6, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract UserDao userDao();
     public abstract DeviceDao deviceDao();
@@ -23,7 +23,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                     AppDatabase.class, "db_SmartHomeAuto")
-
+                            .fallbackToDestructiveMigration()
                             .addMigrations(
                                     MIGRATION_1_2,
                                     MIGRATION_2_3,
@@ -77,7 +77,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public static final Migration MIGRATION_3_4 = new Migration(3, 4) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
-            // Remove tabelas antigas
+
             database.execSQL("DROP TABLE IF EXISTS `user_devices`");
             database.execSQL("DROP TABLE IF EXISTS `devices`");
             database.execSQL("DROP TABLE IF EXISTS `users`");
@@ -85,8 +85,8 @@ public abstract class AppDatabase extends RoomDatabase {
             database.execSQL("DROP TABLE IF EXISTS `device_types`");
 
             database.execSQL("CREATE TABLE IF NOT EXISTS `device_types` (" +
-                    "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                    "`name` TEXT)");
+                    "`DeviceTypeID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "`DeviceTypeName` TEXT)");
 
             database.execSQL("CREATE TABLE IF NOT EXISTS `devices` (" +
                     "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
@@ -132,8 +132,69 @@ public abstract class AppDatabase extends RoomDatabase {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
 
-            database.execSQL("ALTER TABLE device_types ADD COLUMN mqttPrincipalTopic TEXT");
+            database.execSQL("ALTER TABLE device_types ADD COLUMN MqttPrincipalTopic TEXT");
         }
     };
 
+    public static final Migration MIGRATION_5_6 = new Migration(5, 6) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            // Remover as tabelas existentes
+            database.execSQL("DROP TABLE IF EXISTS `user_devices`");
+            database.execSQL("DROP TABLE IF EXISTS `devices`");
+            database.execSQL("DROP TABLE IF EXISTS `users`");
+            database.execSQL("DROP TABLE IF EXISTS `broker`");
+            database.execSQL("DROP TABLE IF EXISTS `device_types`");
+
+            // Criar a tabela 'device_types'
+            database.execSQL("CREATE TABLE IF NOT EXISTS `device_types` (" +
+                    "`DeviceTypeID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL CHECK(`DeviceTypeID` <= 99), " +
+                    "`DeviceTypeName` TEXT NOT NULL CHECK(LENGTH(`DeviceTypeName`) <= 60), " +
+                    "`MqttPrincipalTopic` TEXT CHECK(LENGTH(`MqttPrincipalTopic`) <= 40))");
+
+            // Criar a tabela 'devices'
+            database.execSQL("CREATE TABLE IF NOT EXISTS `devices` (" +
+                    "`DevicesID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL CHECK(`DevicesID` <= 9999999), " +
+                    "`DeviceName` TEXT NOT NULL CHECK(LENGTH(`DeviceName`) <= 60), " +
+                    "`MqttSubTopic` TEXT CHECK(LENGTH(`MqttSubTopic`) <= 60), " +
+                    "`MqttUser` TEXT CHECK(LENGTH(`MqttUser`) <= 40), " +
+                    "`MqttPassword` TEXT CHECK(LENGTH(`MqttPassword`) <= 40), " +
+                    "`TypeId` INTEGER NOT NULL CHECK(`TypeId` <= 99), " +
+                    "`CreatorUserId` INTEGER NOT NULL CHECK(`CreatorUserId` <= 999999), " +
+                    "FOREIGN KEY(`TypeId`) REFERENCES device_types(`DeviceTypeID`) ON DELETE CASCADE, " +
+                    "FOREIGN KEY(`CreatorUserId`) REFERENCES users(`UserID`) ON DELETE CASCADE)");
+
+            // Criar a tabela 'user_devices'
+            database.execSQL("CREATE TABLE IF NOT EXISTS `user_devices` (" +
+                    "`PermissionUserID` INTEGER NOT NULL CHECK(`PermissionUserID` <= 999999), " +
+                    "`PermissionDeviceId` INTEGER NOT NULL CHECK(`PermissionDeviceId` <= 9999999), " +
+                    "`permissions` TEXT CHECK(LENGTH(`permissions`) <= 50), " +
+                    "PRIMARY KEY(`PermissionUserID`, `PermissionDeviceId`), " +
+                    "FOREIGN KEY(`PermissionUserID`) REFERENCES users(`UserID`) ON DELETE CASCADE, " +
+                    "FOREIGN KEY(`PermissionDeviceId`) REFERENCES devices(`DevicesID`) ON DELETE CASCADE)");
+
+            // Criar a tabela 'broker'
+            database.execSQL("CREATE TABLE IF NOT EXISTS `broker` (" +
+                    "`BrokerID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL CHECK(`BrokerID` <= 999999), " +
+                    "`ClusterUrl` TEXT CHECK(LENGTH(`ClusterUrl`) <= 51), " +
+                    "`Port` INTEGER CHECK(`Port` >= 0 AND `Port` <= 9999))");
+
+            // Criar a tabela 'users'
+            database.execSQL("CREATE TABLE IF NOT EXISTS `users` (" +
+                    "`UserID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL CHECK(`UserID` <= 999999), " +
+                    "`Username` TEXT NOT NULL CHECK(LENGTH(`Username`) <= 60), " +
+                    "`Password` TEXT NOT NULL CHECK(LENGTH(`Password`) <= 60), " +
+                    "`Role` TEXT NOT NULL CHECK(LENGTH(`Role`) <= 30), " +
+                    "`MqttUser` TEXT CHECK(LENGTH(`MqttUser`) <= 40), " +
+                    "`MqttPassword` TEXT CHECK(LENGTH(`MqttPassword`) <= 40), " +
+                    "`ManagerUserId` INTEGER CHECK(`ManagerUserId` <= 999999), " +
+                    "`UserBrokerID` INTEGER CHECK(`UserBrokerID` <= 999999), " +
+                    "FOREIGN KEY(`ManagerUserId`) REFERENCES users(`UserID`) ON DELETE SET NULL, " +
+                    "FOREIGN KEY(`UserBrokerID`) REFERENCES broker(`BrokerID`) ON DELETE SET NULL)");
+
+            // Cria índices
+            database.execSQL("CREATE INDEX IF NOT EXISTS `index_users_ManagerUserId` ON `users`(`ManagerUserId`)");
+            database.execSQL("CREATE INDEX IF NOT EXISTS `index_users_UserBrokerID` ON `users`(`UserBrokerID`)");
+        }
+    };
 }

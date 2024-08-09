@@ -1,11 +1,9 @@
 package com.example.smarthomeauto;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,13 +15,10 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.room.Room;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -119,7 +114,7 @@ public class DevicesUserListActivity extends AppCompatActivity {
         listViewDevices.setOnItemClickListener((parent, view, position, id) -> {
             selectedDevice = deviceList.get(position);
             userDeviceAdapter.setSelectedPosition(position);
-            Snackbar.make(findViewById(android.R.id.content), "Selected: " + selectedDevice.name, Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(android.R.id.content), "Selected: " + selectedDevice.DeviceName, Snackbar.LENGTH_SHORT).show();
         });
 
         setupSpinner();
@@ -132,7 +127,7 @@ public class DevicesUserListActivity extends AppCompatActivity {
             deviceTypeList = deviceTypeDao.getAllDeviceTypes();
             runOnUiThread(() -> {
                 DeviceType allTypes = new DeviceType("All", "All");
-                allTypes.id = -1;
+                allTypes.DeviceTypeID = -1;
                 deviceTypeList.add(0, allTypes);
 
                 ArrayAdapter<DeviceType> spinnerAdapter = new ArrayAdapter<>(DevicesUserListActivity.this, android.R.layout.simple_spinner_item, deviceTypeList);
@@ -187,7 +182,7 @@ public class DevicesUserListActivity extends AppCompatActivity {
     private void filterDevices() {
         String queryName = searchViewName.getQuery().toString().trim();
         DeviceType selectedType = (DeviceType) spinnerDeviceType.getSelectedItem();
-        Integer deviceTypeId = (selectedType != null && selectedType.id != -1) ? selectedType.id : null;
+        Integer deviceTypeId = (selectedType != null && selectedType.DeviceTypeID != -1) ? selectedType.DeviceTypeID : null;
 
         new Thread(() -> {
             List<Device> filteredDevices;

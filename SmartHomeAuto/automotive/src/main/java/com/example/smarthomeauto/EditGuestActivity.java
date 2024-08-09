@@ -49,7 +49,7 @@ public class EditGuestActivity extends Activity {
         if (intent.hasExtra("user")) {
             guest = (User) intent.getSerializableExtra("user");
             textViewTitle.setText("Edit Guest");
-            editTextUsername.setText(guest.username);
+            editTextUsername.setText(guest.Username);
             editTextPassword.setText(""); // Mantém o campo vazio
         } else {
             textViewTitle.setText("Add Guest");
@@ -76,19 +76,19 @@ public class EditGuestActivity extends Activity {
 
         new Thread(() -> {
             User existingUser = userDao.getUserByUsername(username);
-            if (existingUser != null && (guest == null || existingUser.id != guest.id)) {
+            if (existingUser != null && (guest == null || existingUser.UserID != guest.UserID)) {
                 runOnUiThread(() -> Toast.makeText(EditGuestActivity.this, "A user with the same username already exists!", Toast.LENGTH_SHORT).show());
                 return;
             }
 
             if (guest != null) {
-                guest.username = username;
+                guest.Username = username;
 
                 if (!password.isEmpty()) {
-                    guest.password = HashUtils.hashPassword(password);
+                    guest.Password = HashUtils.hashPassword(password);
                 } else {
                     // Mantém a senha existente sem alteração
-                    guest.password = existingUser.password;
+                    guest.Password = existingUser.Password;
                 }
                 userDao.update(guest);
             } else {

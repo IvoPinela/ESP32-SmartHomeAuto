@@ -22,26 +22,26 @@ public interface DeviceTypeDao {
     @Query("SELECT * FROM device_types")
     List<DeviceType> getAllDeviceTypes();
 
-    @Query("SELECT * FROM device_types WHERE id = :typeId")
+    @Query("SELECT * FROM device_types WHERE DeviceTypeID = :typeId")
     DeviceType getDeviceTypeById(int typeId);
 
-    @Query("SELECT * FROM device_types WHERE name LIKE :typeName")
+    @Query("SELECT * FROM device_types WHERE DeviceTypeName LIKE :typeName")
     List<DeviceType> getDeviceTypesByName(String typeName);
 
 
-    @Query("SELECT COUNT(*) FROM device_types WHERE name = :name")
+    @Query("SELECT COUNT(*) FROM device_types WHERE DeviceTypeName = :name")
     int countDeviceTypesByName(String name);
 
-    @Query("SELECT name FROM device_types WHERE id = :deviceTypeId")
+    @Query("SELECT DeviceTypeName FROM device_types WHERE DeviceTypeID = :deviceTypeId")
     String getDeviceTypeNameById(int deviceTypeId);
 
-    @Query("SELECT id FROM device_types WHERE name = :deviceTypeName")
+    @Query("SELECT DeviceTypeID FROM device_types WHERE DeviceTypeName = :deviceTypeName")
     int getDeviceTypeIdByName(String deviceTypeName);
 
-    @Query("SELECT mqttPrincipalTopic FROM device_types WHERE id = :deviceTypeId")
+    @Query("SELECT MqttPrincipalTopic FROM device_types WHERE DeviceTypeID = :deviceTypeId")
     String getMqttPrincipalTopicById(int deviceTypeId);
 
-    @Query("SELECT id FROM device_types WHERE name LIKE :typeName")
+    @Query("SELECT DeviceTypeID FROM device_types WHERE DeviceTypeName LIKE :typeName")
     int getIdByName(String typeName);
 
 

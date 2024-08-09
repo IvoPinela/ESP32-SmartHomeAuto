@@ -15,7 +15,6 @@ import androidx.room.Room;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GuestListActivity extends AppCompatActivity {
@@ -71,7 +70,7 @@ public class GuestListActivity extends AppCompatActivity {
         buttonPermissions.setOnClickListener(v -> {
             if (selectedGuest != null) {
                 Intent intent2 = new Intent(GuestListActivity.this, DeviceUserListActivity.class);
-                intent2.putExtra("GUEST_ID", selectedGuest.id);
+                intent2.putExtra("GUEST_ID", selectedGuest.UserID);
                 intent2.putExtra("USER_ID", managerUserId);
                 intent2.putExtra("USER_ROLE", role);
                 startActivity(intent2);
@@ -104,7 +103,7 @@ public class GuestListActivity extends AppCompatActivity {
         listViewGuests.setOnItemClickListener((parent, view, position, id) -> {
             selectedGuest =  guestList.get(position);
             guestAdapter.setSelectedPosition(position);
-            Snackbar.make(findViewById(android.R.id.content), "Selected: " + selectedGuest.username, Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(android.R.id.content), "Selected: " + selectedGuest.Username, Snackbar.LENGTH_SHORT).show();
         });
 
         setupSearchView();
@@ -144,7 +143,7 @@ public class GuestListActivity extends AppCompatActivity {
 
             if (query != null && !query.isEmpty()) {
                 String searchQuery = "%" + query + "%";
-                allGuests.removeIf(user -> !user.username.toLowerCase().contains(query.toLowerCase()));
+                allGuests.removeIf(user -> !user.Username.toLowerCase().contains(query.toLowerCase()));
             }
             runOnUiThread(() -> {
                 guestAdapter.clear();

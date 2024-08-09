@@ -25,7 +25,7 @@ public class DeviceTypeAdapter extends ArrayAdapter<DeviceType> {
         DeviceType deviceType = getItem(position);
 
         if (deviceType != null) {
-            textView.setText(deviceType.name);
+            textView.setText(deviceType.DeviceTypeName);
         }
 
         return convertView;

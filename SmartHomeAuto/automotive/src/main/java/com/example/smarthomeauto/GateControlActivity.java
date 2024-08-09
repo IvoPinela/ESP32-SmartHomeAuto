@@ -1,16 +1,10 @@
 package com.example.smarthomeauto;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -23,9 +17,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.content.ContextCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -299,7 +290,7 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
                 List<UserDevice> userDevices = userDeviceDao.getDevicesByUserId(userId);
                 Map<Integer, String> devicePermissionsMap = new HashMap<>();
                 for (UserDevice userDevice : userDevices) {
-                    devicePermissionsMap.put(userDevice.getDeviceId(), userDevice.getPermissions());
+                    devicePermissionsMap.put(userDevice.getPermissionDeviceId(), userDevice.getPermissions());
                 }
 
                 runOnUiThread(() -> {
@@ -307,7 +298,7 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
                     LayoutInflater inflater = LayoutInflater.from(this);
 
                     for (Device device : allDevices) {
-                        String permissions = devicePermissionsMap.get(device.getId());
+                        String permissions = devicePermissionsMap.get(device.getDevicesID());
 
                         if (permissions != null) {
                             View deviceView = inflater.inflate(R.layout.itemdevicelightgate, devicesContainer, false);
@@ -316,13 +307,13 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
                             TextView deviceStatusTextView = deviceView.findViewById(R.id.deviceStatusTextView);
                             Switch deviceSwitch = deviceView.findViewById(R.id.deviceSwitch);
 
-                            deviceNameTextView.setText(device.getName());
+                            deviceNameTextView.setText(device.getDeviceName());
                             deviceStatusTextView.setText("Status: CLOSE");
                             deviceSwitch.setChecked(false);
 
                             // Store views in the maps for later updates
-                            deviceStatusTextViewMap.put(device.getId(), deviceStatusTextView);
-                            deviceSwitchMap.put(device.getId(), deviceSwitch);
+                            deviceStatusTextViewMap.put(device.getDevicesID(), deviceStatusTextView);
+                            deviceSwitchMap.put(device.getDevicesID(), deviceSwitch);
 
                             if ("read".equals(permissions)) {
                                 deviceSwitch.setEnabled(false);
@@ -330,7 +321,7 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
                             } else if ("control".equals(permissions)) {
                                 deviceSwitch.setEnabled(true);
                                 deviceSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                                    updateDeviceStatus(device.getId(), isChecked);
+                                    updateDeviceStatus(device.getDevicesID(), isChecked);
                                     checkAllDeviceStatusAndUpdateMainSwitch();
                                 });
                             } else {
@@ -352,16 +343,16 @@ public class GateControlActivity extends AppCompatActivity implements MqttHandle
                         TextView deviceStatusTextView = deviceView.findViewById(R.id.deviceStatusTextView);
                         Switch deviceSwitch = deviceView.findViewById(R.id.deviceSwitch);
 
-                        deviceNameTextView.setText(device.getName());
+                        deviceNameTextView.setText(device.getDeviceName());
                         deviceStatusTextView.setText("Status: CLOSE");
                         deviceSwitch.setChecked(false);
 
                         // Store views in the maps for later updates
-                        deviceStatusTextViewMap.put(device.getId(), deviceStatusTextView);
-                        deviceSwitchMap.put(device.getId(), deviceSwitch);
+                        deviceStatusTextViewMap.put(device.getDevicesID(), deviceStatusTextView);
+                        deviceSwitchMap.put(device.getDevicesID(), deviceSwitch);
 
                         deviceSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                            updateDeviceStatus(device.getId(), isChecked);
+                            updateDeviceStatus(device.getDevicesID(), isChecked);
                             checkAllDeviceStatusAndUpdateMainSwitch();
                         });
 

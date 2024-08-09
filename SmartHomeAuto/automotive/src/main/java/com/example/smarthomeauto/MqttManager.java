@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
-import android.view.View;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
@@ -114,9 +113,9 @@ public class MqttManager implements MqttHandler.MessageListener {
             if (userRole.equals("user")) {
                 List<Device> devices = deviceDao.getDevicesByUserId(UserId);
                 for (Device device : devices) {
-                    String deviceTopic = device.getMqttTopic();
+                    String deviceTopic = device.getMqttSubTopic();
                     mqttHandler.subscribe(deviceTopic);
-                    String principalTopic = deviceTypeDao.getMqttPrincipalTopicById(device.deviceTypeId);
+                    String principalTopic = deviceTypeDao.getMqttPrincipalTopicById(device.TypeId);
                     subscribedTopics.add(deviceTopic);
                     if (principalTopic != null) {
                         if (!subscribedTopics.contains(principalTopic)) {
@@ -132,7 +131,7 @@ public class MqttManager implements MqttHandler.MessageListener {
                 for (int deviceId : deviceIds) {
                     Device device = deviceDao.getDeviceById(deviceId);
                     if (device != null) {
-                        String deviceTopic = device.getMqttTopic();
+                        String deviceTopic = device.getMqttSubTopic();
                         mqttHandler.subscribe(deviceTopic);
                         subscribedTopics.add(deviceTopic);
                         Log.d(TAG, "Subscribing to device topic: " + deviceTopic);

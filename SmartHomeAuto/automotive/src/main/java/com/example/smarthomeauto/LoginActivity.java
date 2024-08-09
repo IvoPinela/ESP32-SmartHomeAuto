@@ -49,16 +49,16 @@ public class LoginActivity extends AppCompatActivity {
                 User user = db.userDao().getUserByCredentials(username, HashUtils.hashPassword(password));
 
                 if (user != null) {
-                    Log.d("login", "User found: " + user.username);
-                    Log.d("login", "User role: " + user.role);
+                    Log.d("login", "User found: " + user.Username);
+                    Log.d("login", "User role: " + user.Role);
 
                     // Reset attempts on successful login
                     loginAttempts = 0;
 
                     Intent intent;
-                    if ("admin".equals(user.role) || "adminmaster".equals(user.role)) {
+                    if ("admin".equals(user.Role) || "adminmaster".equals(user.Role)) {
                         intent = new Intent(LoginActivity.this, AdminActivity.class);
-                    } else if ("user".equals(user.role)||("guest".equals(user.role))) {
+                    } else if ("user".equals(user.Role)||("guest".equals(user.Role))) {
                         intent = new Intent(LoginActivity.this, UserActivity.class);
                     } else {
                         Log.d("login", "Unknown user role");
@@ -66,8 +66,8 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                     // Pass both the user ID and role to the next activity
-                    intent.putExtra("USER_ID", user.id);
-                    intent.putExtra("USER_ROLE", user.role);
+                    intent.putExtra("USER_ID", user.UserID);
+                    intent.putExtra("USER_ROLE", user.Role);
                     startActivity(intent);
                 } else {
                     loginAttempts++;

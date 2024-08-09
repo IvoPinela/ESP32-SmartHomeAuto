@@ -65,10 +65,10 @@ public class EditDeviceActivity extends Activity {
         if (intent.hasExtra("device")) {
             device = (Device) intent.getSerializableExtra("device");
             formTitle.setText("Edit Device");
-            editTextDeviceName.setText(device.name);
-            editTextMqttTopic.setText(device.mqttTopic);
-            editTextMqttUser.setText(device.mqttUser);
-            editTextMqttPassword.setText(device.mqttPassword);
+            editTextDeviceName.setText(device.DeviceName);
+            editTextMqttTopic.setText(device.MqttSubTopic);
+            editTextMqttUser.setText(device.MqttUser);
+            editTextMqttPassword.setText(device.MqttPassword);
         } else {
             formTitle.setText("Add New Device");
         }
@@ -95,7 +95,7 @@ public class EditDeviceActivity extends Activity {
                 spinnerDeviceType.setAdapter(adapter);
 
                 if (device != null) {
-                    setSpinnerSelection(device.deviceTypeId);
+                    setSpinnerSelection(device.TypeId);
                 }
             });
         }).start();
@@ -107,7 +107,7 @@ public class EditDeviceActivity extends Activity {
             runOnUiThread(() -> {
                 List<User> filteredUsers = new ArrayList<>();
                 for (User user : userList) {
-                    if ("user".equals(user.role)) {
+                    if ("user".equals(user.Role)) {
                         filteredUsers.add(user);
                     }
                 }
@@ -116,7 +116,7 @@ public class EditDeviceActivity extends Activity {
                 spinnerCreatorUser.setAdapter(adapter);
 
                 if (device != null) {
-                    setSpinnerCreatorUserSelection(device.creatorUserId);
+                    setSpinnerCreatorUserSelection(device.CreatorUserId);
                 }
             });
         }).start();
@@ -125,7 +125,7 @@ public class EditDeviceActivity extends Activity {
     private void setSpinnerSelection(int deviceTypeId) {
         for (int i = 0; i < spinnerDeviceType.getCount(); i++) {
             DeviceType type = (DeviceType) spinnerDeviceType.getItemAtPosition(i);
-            if (type.id == deviceTypeId) {
+            if (type.DeviceTypeID == deviceTypeId) {
                 spinnerDeviceType.setSelection(i);
                 break;
             }
@@ -135,7 +135,7 @@ public class EditDeviceActivity extends Activity {
     private void setSpinnerCreatorUserSelection(int creatorUserId) {
         for (int i = 0; i < spinnerCreatorUser.getCount(); i++) {
             User user = (User) spinnerCreatorUser.getItemAtPosition(i);
-            if (user.id == creatorUserId) {
+            if (user.UserID == creatorUserId) {
                 spinnerCreatorUser.setSelection(i);
                 break;
             }
@@ -194,22 +194,22 @@ public class EditDeviceActivity extends Activity {
         }
 
         new Thread(() -> {
-            int deviceTypeId = selectedDeviceType.id;
-            int creatorUserId = selectedCreatorUser.id; // Get creator user ID
+            int deviceTypeId = selectedDeviceType.DeviceTypeID;
+            int creatorUserId = selectedCreatorUser.UserID; // Get creator user ID
 
-            Device existingDevice = deviceDao.getDeviceByNameAndUserExceptId(name, creatorUserId, device != null ? device.id : -1);
+            Device existingDevice = deviceDao.getDeviceByNameAndUserExceptId(name, creatorUserId, device != null ? device.DevicesID : -1);
             if (existingDevice != null) {
                 runOnUiThread(() -> {
                     showAlert("A device with the same name and creator user already exists!");
                 });
             } else {
                 if (device != null) {
-                    device.name = name;
-                    device.mqttTopic = topic;
-                    device.mqttUser = user;
-                    device.mqttPassword = password;
-                    device.deviceTypeId = deviceTypeId;
-                    device.creatorUserId = creatorUserId; // Update creator user ID
+                    device.DeviceName = name;
+                    device.MqttSubTopic = topic;
+                    device.MqttUser = user;
+                    device.MqttPassword = password;
+                    device.TypeId = deviceTypeId;
+                    device.CreatorUserId = creatorUserId; // Update creator user ID
 
                     // Update device in the database
                     deviceDao.update(device);

@@ -3,12 +3,10 @@ package com.example.smarthomeauto;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -83,7 +81,7 @@ public class AddDeviceActivity extends AppCompatActivity {
             List<User> users = userDao.getAllUsers();
             List<User> filteredUsers = new ArrayList<>();
             for (User user : users) {
-                if ("user".equals(user.role)) {
+                if ("user".equals(user.Role)) {
                     filteredUsers.add(user);
                 }
             }
@@ -95,7 +93,7 @@ public class AddDeviceActivity extends AppCompatActivity {
                 if (specificUserId != -1) {
                     for (int i = 0; i < spinnerCreatorUser.getCount(); i++) {
                         User user = (User) spinnerCreatorUser.getItemAtPosition(i);
-                        if (user.id == specificUserId) {
+                        if (user.UserID == specificUserId) {
                             spinnerCreatorUser.setSelection(i);
                             break;
                         }
@@ -138,8 +136,8 @@ public class AddDeviceActivity extends AppCompatActivity {
         DeviceType selectedDeviceType = (DeviceType) spinnerDeviceType.getSelectedItem();
         User selectedUser = (User) spinnerCreatorUser.getSelectedItem();
 
-        int deviceTypeId = selectedDeviceType != null ? selectedDeviceType.id : -1;
-        int creatorUserId = selectedUser != null ? selectedUser.id : -1;
+        int deviceTypeId = selectedDeviceType != null ? selectedDeviceType.DeviceTypeID : -1;
+        int creatorUserId = selectedUser != null ? selectedUser.UserID : -1;
 
         if (deviceTypeId == -1) {
             showAlert("Please select a device type");

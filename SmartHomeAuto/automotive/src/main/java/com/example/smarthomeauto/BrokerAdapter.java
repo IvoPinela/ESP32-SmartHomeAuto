@@ -31,8 +31,8 @@ public class BrokerAdapter extends ArrayAdapter<Broker> {
         TextView textViewPort = convertView.findViewById(R.id.textViewPort);
 
         if (broker != null) {
-            textViewClusterURL.setText("Cluster URL: " + broker.ClusterURL);
-            textViewPort.setText("Port: " + broker.PORT);
+            textViewClusterURL.setText("Cluster URL: " + broker.ClusterUrl);
+            textViewPort.setText("Port: " + broker.Port);
         }
 
         // Highlight selected item

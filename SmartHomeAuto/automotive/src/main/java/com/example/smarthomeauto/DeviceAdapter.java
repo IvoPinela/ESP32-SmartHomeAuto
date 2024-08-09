@@ -44,13 +44,13 @@ public class DeviceAdapter extends ArrayAdapter<Device> {
         TextView textViewMqttPassword = convertView.findViewById(R.id.textViewMqttPassword);
 
         if (device != null) {
-            textViewName.setText("Name: " + device.name);
-            textViewTopic.setText("MQTT Topic: " + device.mqttTopic);
-            textViewMqttUser.setText("MQTT User: " + device.mqttUser);
-            textViewMqttPassword.setText("MQTT Password: " + device.mqttPassword);
+            textViewName.setText("Name: " + device.DeviceName);
+            textViewTopic.setText("MQTT Topic: " + device.MqttSubTopic);
+            textViewMqttUser.setText("MQTT User: " + device.MqttUser);
+            textViewMqttPassword.setText("MQTT Password: " + device.MqttPassword);
 
             new Thread(() -> {
-                String deviceTypeName = deviceTypeDao.getDeviceTypeNameById(device.deviceTypeId);
+                String deviceTypeName = deviceTypeDao.getDeviceTypeNameById(device.TypeId);
                 if (deviceTypeName == null) {
                     deviceTypeName = "Unknown";
                 }
@@ -61,8 +61,8 @@ public class DeviceAdapter extends ArrayAdapter<Device> {
             }).start();
 
             new Thread(() -> {
-                User creatorUser = userDao.getUserById(device.creatorUserId);
-                final String creatorUserName = (creatorUser != null) ? creatorUser.username : "Unknown";
+                User creatorUser = userDao.getUserById(device.CreatorUserId);
+                final String creatorUserName = (creatorUser != null) ? creatorUser.Username : "Unknown";
                 ((Activity) getContext()).runOnUiThread(() -> {
                     textViewUser.setText("Creator User: " + creatorUserName);
                 });
@@ -73,7 +73,7 @@ public class DeviceAdapter extends ArrayAdapter<Device> {
         int backgroundColor;
         if (position == selectedPosition) {
             backgroundColor = ContextCompat.getColor(getContext(), R.color.colorSelectedItem);
-        } else if (device != null && (device.mqttUser == null || device.mqttUser.isEmpty() || device.mqttPassword == null || device.mqttPassword.isEmpty())) {
+        } else if (device != null && (device.MqttUser == null || device.MqttUser.isEmpty() || device.MqttPassword == null || device.MqttPassword.isEmpty())) {
             backgroundColor = Color.YELLOW;
         } else {
             backgroundColor = ContextCompat.getColor(getContext(), android.R.color.white);

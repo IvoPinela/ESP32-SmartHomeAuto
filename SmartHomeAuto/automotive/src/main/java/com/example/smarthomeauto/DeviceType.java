@@ -6,27 +6,27 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "device_types")
 public class DeviceType {
     @PrimaryKey(autoGenerate = true)
-    public int id;
+    public int DeviceTypeID;
 
-    public String name; // e.g., "light", "gate"
-    public String mqttPrincipalTopic;
+    public String DeviceTypeName; // e.g., "light", "gate"
+    public String MqttPrincipalTopic;
 
 
     public DeviceType() {
     }
 
     public DeviceType(String name, String mqttTopic) {
-        this.name = name;
-        this.mqttPrincipalTopic = mqttTopic;
+        this.DeviceTypeName = name;
+        this.MqttPrincipalTopic = mqttTopic;
     }
 
     @Override
     public String toString() {
-        return name;
+        return DeviceTypeName;
     }
 
-    public int getId() {
-        return  id;
+    public int getDeviceTypeID() {
+        return DeviceTypeID;
     }
 
 }

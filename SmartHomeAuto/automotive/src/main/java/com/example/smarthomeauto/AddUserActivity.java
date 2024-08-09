@@ -157,8 +157,8 @@ public class AddUserActivity extends AppCompatActivity {
             List<User> managers = userDao.getAllUsers();
             List<String> managerUsernames = new ArrayList<>();
             for (User user : managers) {
-                if ("manager".equals(user.role)) {
-                    managerUsernames.add(user.username);
+                if ("manager".equals(user.Role)) {
+                    managerUsernames.add(user.Username);
                 }
             }
             runOnUiThread(() -> {
@@ -170,7 +170,7 @@ public class AddUserActivity extends AppCompatActivity {
                     for (int i = 0; i < spinnerManagerUserId.getCount(); i++) {
                         String username = (String) spinnerManagerUserId.getItemAtPosition(i);
                         User user = userDao.getUserByUsername(username);
-                        if (user != null && user.id == specificUserId) {
+                        if (user != null && user.UserID == specificUserId) {
                             spinnerManagerUserId.setSelection(i);
                             break;
                         }
@@ -185,8 +185,8 @@ public class AddUserActivity extends AppCompatActivity {
             List<User> users = userDao.getAllUsers();
             List<String> userUsernames = new ArrayList<>();
             for (User user : users) {
-                if ("user".equals(user.role)) {
-                    userUsernames.add(user.username);
+                if ("user".equals(user.Role)) {
+                    userUsernames.add(user.Username);
                 }
             }
             runOnUiThread(() -> {
@@ -198,7 +198,7 @@ public class AddUserActivity extends AppCompatActivity {
                     for (int i = 0; i < spinnerManagerUserId.getCount(); i++) {
                         String username = (String) spinnerManagerUserId.getItemAtPosition(i);
                         User user = userDao.getUserByUsername(username);
-                        if (user != null && user.id == specificUserId) {
+                        if (user != null && user.UserID == specificUserId) {
                             spinnerManagerUserId.setSelection(i);
                             break;
                         }
@@ -213,7 +213,7 @@ public class AddUserActivity extends AppCompatActivity {
             List<Broker> brokers = brokerDao.getAllBrokers();
             List<String> brokerDescriptions = new ArrayList<>();
             for (Broker broker : brokers) {
-                String description = broker.ClusterURL + ":" + broker.PORT;
+                String description = broker.ClusterUrl + ":" + broker.Port;
                 brokerDescriptions.add(description);
             }
             runOnUiThread(() -> {
@@ -295,12 +295,12 @@ public class AddUserActivity extends AppCompatActivity {
                 runOnUiThread(() -> showAlert("A user with the same username already exists!"));
             } else {
                 User managerUser = userDao.getUserByUsername(selectedManagerUsername);
-                Integer managerUserId = ("user".equals(role) || "admin".equals(role)) ? null : (managerUser != null ? managerUser.id : null);
+                Integer managerUserId = ("user".equals(role) || "admin".equals(role)) ? null : (managerUser != null ? managerUser.UserID : null);
 
                 int brokerId = -1;
                 if (brokerURL != null && finalBrokerPort != -1) {
                     Broker selectedBroker = brokerDao.getBrokerByUrlAndPort(brokerURL, finalBrokerPort);
-                    brokerId = (selectedBroker != null) ? selectedBroker.PK_BrokerID : -1;
+                    brokerId = (selectedBroker != null) ? selectedBroker.BrokerID : -1;
                 }
 
                 if (brokerId == -1 && !"admin".equals(role)) {

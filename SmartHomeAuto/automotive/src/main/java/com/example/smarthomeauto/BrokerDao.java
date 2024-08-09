@@ -23,31 +23,31 @@ public interface BrokerDao {
     @Query("SELECT * FROM broker")
     List<Broker> getAllBrokers();
 
-    @Query("SELECT * FROM broker WHERE PK_BrokerID = :brokerId")
+    @Query("SELECT * FROM broker WHERE BrokerID = :brokerId")
     Broker getBrokerById(int brokerId);
 
     @Query("SELECT COUNT(*) FROM broker")
     int countBrokers();
 
-    @Query("SELECT PK_BrokerID FROM broker WHERE ClusterURL = :clusterURL")
+    @Query("SELECT BrokerID FROM broker WHERE ClusterUrl = :clusterURL")
     int getBrokerIdByUrl(String clusterURL);
-    @Query("SELECT * FROM broker WHERE PORT = :port")
+    @Query("SELECT * FROM broker WHERE Port = :port")
     List<Broker> getBrokersByPort(int port);
 
-    @Query("SELECT * FROM broker WHERE ClusterURL LIKE '%' || :query || '%'")
+    @Query("SELECT * FROM broker WHERE ClusterUrl LIKE '%' || :query || '%'")
     List<Broker> searchBrokers(String query);
 
-    @Query("SELECT * FROM broker WHERE ClusterURL = :clusterURL AND PORT = :port")
+    @Query("SELECT * FROM broker WHERE ClusterUrl = :clusterURL AND Port = :port")
     Broker getBrokerByUrlAndPort(String clusterURL, int port);
 
-    @Query("SELECT * FROM broker WHERE ClusterURL = :clusterURL AND PORT = :port AND PK_BrokerID != :id")
+    @Query("SELECT * FROM broker WHERE ClusterUrl = :clusterURL AND Port = :port AND BrokerID != :id")
     Broker getBrokerByUrlAndPortExcludingId(String clusterURL, int port, int id);
 
-    @Query("SELECT * FROM broker WHERE ClusterURL = :url LIMIT 1")
+    @Query("SELECT * FROM broker WHERE ClusterUrl = :url LIMIT 1")
     Broker getBrokerByUrl(String url);
 
-    @Query("SELECT ClusterURL FROM broker WHERE PK_BrokerID = :brokerId")
+    @Query("SELECT ClusterUrl FROM broker WHERE BrokerID = :brokerId")
     String getClusterURLById(int brokerId);
-    @Query("SELECT PORT FROM broker WHERE PK_BrokerID = :brokerId")
+    @Query("SELECT Port FROM broker WHERE BrokerID = :brokerId")
     int getPORTById(int brokerId);
 }

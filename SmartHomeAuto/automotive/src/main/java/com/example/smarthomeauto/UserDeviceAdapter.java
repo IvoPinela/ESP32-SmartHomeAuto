@@ -35,11 +35,11 @@ public class UserDeviceAdapter extends ArrayAdapter<Device> {
         TextView textViewDeviceType = convertView.findViewById(R.id.textViewDeviceType);
 
         if (device != null) {
-            textViewName.setText("Name: " + device.name);
+            textViewName.setText("Name: " + device.DeviceName);
 
             if (deviceTypeDao != null) {
                 new Thread(() -> {
-                    String deviceTypeName = deviceTypeDao.getDeviceTypeNameById(device.deviceTypeId);
+                    String deviceTypeName = deviceTypeDao.getDeviceTypeNameById(device.TypeId);
                     ((Activity) getContext()).runOnUiThread(() -> {
                         textViewDeviceType.setText("Device Type: " + deviceTypeName);
                     });

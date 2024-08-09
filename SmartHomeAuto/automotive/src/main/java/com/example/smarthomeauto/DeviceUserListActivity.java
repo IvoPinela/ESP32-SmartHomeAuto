@@ -1,9 +1,6 @@
 package com.example.smarthomeauto;
 
-import static android.content.ContentValues.TAG;
-
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -118,19 +115,19 @@ public class DeviceUserListActivity extends AppCompatActivity {
                     AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "db_SmartHomeAuto").build();
                     DeviceDao deviceDao = db.deviceDao();
 
-                    String deviceName = deviceDao.getDeviceNameById(selectedDevice.getDeviceId());
-                    Device device = deviceDao.getDeviceById(selectedDevice.getDeviceId());
+                    String deviceName = deviceDao.getDeviceNameById(selectedDevice.getPermissionDeviceId());
+                    Device device = deviceDao.getDeviceById(selectedDevice.getPermissionDeviceId());
 
                     DeviceTypeDao deviceTypeDao = db.deviceTypeDao();
 
                     if (device != null) {
 
 
-                        int deviceTypeId = device.getDeviceTypeId();
+                        int deviceTypeId = device.getTypeId();
                         String deviceTypeName = deviceTypeDao.getDeviceTypeNameById(deviceTypeId);
 
                         Intent editIntent = new Intent(DeviceUserListActivity.this, EditUserDeviceListActivity.class);
-                        editIntent.putExtra("DEVICE_ID", selectedDevice.getDeviceId());
+                        editIntent.putExtra("DEVICE_ID", selectedDevice.getPermissionDeviceId());
                         editIntent.putExtra("DEVICE_NAME", deviceName);
                         editIntent.putExtra("DEVICE_TYPE", deviceTypeName);
                         editIntent.putExtra("DEVICE_PERMISSION", selectedDevice.getPermissions());
@@ -175,7 +172,7 @@ public class DeviceUserListActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 DeviceType selectedDeviceType = (DeviceType) parent.getItemAtPosition(position);
 
-                selectedDeviceTypeId = "All".equals(selectedDeviceType.name) ? null : selectedDeviceType.getId();
+                selectedDeviceTypeId = "All".equals(selectedDeviceType.DeviceTypeName) ? null : selectedDeviceType.getDeviceTypeID();
                 filterDevices(((SearchView) findViewById(R.id.searchViewName)).getQuery().toString());
             }
 
@@ -222,7 +219,7 @@ public class DeviceUserListActivity extends AppCompatActivity {
             deviceUserAdapter.setSelectedPosition(position);
 
             UserDevice selectedDevice = (UserDevice) parent.getItemAtPosition(position);
-            int deviceId = selectedDevice.getDeviceId();
+            int deviceId = selectedDevice.getPermissionDeviceId();
 
             Log.d("DeviceUserListActivity", "Selected position: " + position);
             Log.d("DeviceUserListActivity", "Selected device: " + selectedDevice);

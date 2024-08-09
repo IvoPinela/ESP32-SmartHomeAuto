@@ -29,7 +29,7 @@ public class DeviceLightGateAdapter extends RecyclerView.Adapter<DeviceLightGate
         this.listener = listener;
         // Initialize device state map
         for (Device device : devices) {
-            deviceStateMap.put(device.getMqttTopic(), false); // Default state
+            deviceStateMap.put(device.getMqttSubTopic(), false); // Default state
         }
     }
 
@@ -43,16 +43,16 @@ public class DeviceLightGateAdapter extends RecyclerView.Adapter<DeviceLightGate
     @Override
     public void onBindViewHolder(@NonNull DeviceViewHolder holder, int position) {
         Device device = devices.get(position);
-        holder.deviceNameTextView.setText(device.getName());
-        holder.deviceStatusTextView.setText("Status: " + (deviceStateMap.getOrDefault(device.getMqttTopic(), false) ? "ON" : "OFF"));
+        holder.deviceNameTextView.setText(device.getDeviceName());
+        holder.deviceStatusTextView.setText("Status: " + (deviceStateMap.getOrDefault(device.getMqttSubTopic(), false) ? "ON" : "OFF"));
 
         holder.deviceSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            listener.onDeviceSwitchChanged(device.getMqttTopic(), isChecked);
+            listener.onDeviceSwitchChanged(device.getMqttSubTopic(), isChecked);
             // Optional: Update device state map if needed here
         });
 
         // Set switch state based on device state map
-        holder.deviceSwitch.setChecked(deviceStateMap.getOrDefault(device.getMqttTopic(), false));
+        holder.deviceSwitch.setChecked(deviceStateMap.getOrDefault(device.getMqttSubTopic(), false));
     }
 
     @Override
@@ -65,7 +65,7 @@ public class DeviceLightGateAdapter extends RecyclerView.Adapter<DeviceLightGate
         // Find the position of the device and notify adapter
         for (int i = 0; i < devices.size(); i++) {
             Device device = devices.get(i);
-            if (device.getMqttTopic().equals(topic)) {
+            if (device.getMqttSubTopic().equals(topic)) {
                 notifyItemChanged(i);
                 break;
             }

@@ -47,8 +47,8 @@ public class EditBrokerActivity extends Activity {
         if (intent.hasExtra("broker")) {
             broker = (Broker) intent.getSerializableExtra("broker");
             formTitle.setText("Edit Broker");
-            editTextClusterURL.setText(broker.ClusterURL);
-            editTextPort.setText(String.valueOf(broker.PORT));
+            editTextClusterURL.setText(broker.ClusterUrl);
+            editTextPort.setText(String.valueOf(broker.Port));
         } else {
             formTitle.setText("Add New Broker");
         }
@@ -93,15 +93,15 @@ public class EditBrokerActivity extends Activity {
         new Thread(() -> {
             if (broker != null) {
                 // Check for duplicate brokers excluding the one being edited
-                Broker existingBroker = brokerDao.getBrokerByUrlAndPortExcludingId(clusterURL, port, broker.PK_BrokerID);
+                Broker existingBroker = brokerDao.getBrokerByUrlAndPortExcludingId(clusterURL, port, broker.BrokerID);
                 if (existingBroker != null) {
                     runOnUiThread(() -> {
                         showAlert("Broker with the same Cluster URL and Port already exists!");
                     });
                 } else {
                     // Update the existing broker
-                    broker.ClusterURL = clusterURL;
-                    broker.PORT = port;
+                    broker.ClusterUrl = clusterURL;
+                    broker.Port = port;
 
                     brokerDao.update(broker);
                     runOnUiThread(() -> {

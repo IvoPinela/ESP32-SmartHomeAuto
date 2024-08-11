@@ -305,13 +305,22 @@ public class EditUserActivity extends Activity {
         if (username.isEmpty()) {
             editTextUsername.setError("Username is required");
             hasError = true;
+        }else if (username.length() > 60) {
+            editTextUsername.setError("Username must be 60 characters or less");
+            hasError = true;
         }
         if (mqttUser.isEmpty() && !"admin".equals(role)) {
             editTextMqttUser.setError("MQTT user is required");
             hasError = true;
+        }else if (mqttUser.length() > 40  && !"admin".equals(role)) {
+            editTextMqttUser.setError("MQTT user must be 40 characters or less");
+            hasError = true;
         }
         if (mqttPassword.isEmpty() && !"admin".equals(role)) {
             editTextMqttPassword.setError("MQTT password is required");
+            hasError = true;
+        }else if (mqttPassword.length() > 40  && !"admin".equals(role)) {
+            editTextMqttPassword.setError("MQTT password must be 40 characters or less");
             hasError = true;
         }
         if (role == null || role.isEmpty()) {

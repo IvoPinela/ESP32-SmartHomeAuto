@@ -85,7 +85,10 @@ public class AddDevicesUserListActivity extends AppCompatActivity {
         if (name.isEmpty()) {
             editTextDeviceName.setError("Device name is required");
             hasError = true;
-        }
+        } else if (name.length() > 60) { 
+        editTextDeviceName.setError("Device name must be 60 characters or less");
+        hasError = true;
+    }
 
         if (hasError) {
             return;

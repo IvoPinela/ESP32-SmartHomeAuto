@@ -235,6 +235,9 @@ public class AddUserActivity extends AppCompatActivity {
         if (username.isEmpty()) {
             editTextUsername.setError("Username is required");
             hasError = true;
+        } else if (username.length() > 60) {
+            editTextUsername.setError("Username must be 60 characters or less");
+            hasError = true;
         }
         if (role == null || role.isEmpty()) {
             showAlert("Role is required");
@@ -244,13 +247,22 @@ public class AddUserActivity extends AppCompatActivity {
             if (password.isEmpty()) {
                 editTextPassword.setError("Password is required");
                 hasError = true;
+            } else if (password.length() > 60) {
+                editTextPassword.setError("Password must be 60 characters or less");
+                hasError = true;
             }
             if (mqttUser.isEmpty()) {
                 editTextMqttUser.setError("MQTT user is required");
                 hasError = true;
+            } else if (mqttUser.length() > 40) {
+                editTextMqttUser.setError("MQTT user must be 40 characters or less");
+                hasError = true;
             }
             if (mqttPassword.isEmpty()) {
                 editTextMqttPassword.setError("MQTT password is required");
+                hasError = true;
+            } else if (mqttPassword.length() > 40) {
+                editTextMqttPassword.setError("MQTT password must be 40 characters or less");
                 hasError = true;
             }
         }

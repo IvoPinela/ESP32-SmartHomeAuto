@@ -76,7 +76,7 @@ public class AddGuestActivity extends AppCompatActivity {
         if (password.isEmpty()) {
             editTextPassword.setError("Password is required");
             hasError = true;
-        } else if (password.length() > 60) { 
+        } else if (password.length() > 60) {
             editTextPassword.setError("Password must be 60 characters or less");
             hasError = true;
         }

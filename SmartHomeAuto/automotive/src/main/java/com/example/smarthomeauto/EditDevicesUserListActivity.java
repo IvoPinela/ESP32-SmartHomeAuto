@@ -115,9 +115,11 @@ public class EditDevicesUserListActivity extends AppCompatActivity {
         boolean hasError = false;
         String name = editTextDeviceName.getText().toString().trim();
 
-        // Validate fields
         if (name.isEmpty()) {
             editTextDeviceName.setError("Device name is required");
+            hasError = true;
+        } else if (name.length() > 60) {
+            editTextDeviceName.setError("Device name must be 60 characters or less");
             hasError = true;
         }
 

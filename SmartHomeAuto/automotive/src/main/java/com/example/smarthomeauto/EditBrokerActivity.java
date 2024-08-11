@@ -68,25 +68,32 @@ public class EditBrokerActivity extends Activity {
 
         boolean hasError = false;
 
-        // Validate fields
         if (clusterURL.isEmpty()) {
             editTextClusterURL.setError("Cluster URL is required");
             hasError = true;
-        }
-        if (portString.isEmpty()) {
-            editTextPort.setError("Port is required");
+        } else if (clusterURL.length() > 51) {
+            editTextClusterURL.setError("Cluster URL must be 51 characters or less");
             hasError = true;
         }
 
-        if (hasError) {
-            return;
-        }
-
         int port;
-        try {
-            port = Integer.parseInt(portString);
-        } catch (NumberFormatException e) {
-            editTextPort.setError("Invalid port number");
+        port = Integer.parseInt(portString);
+        if (portString.isEmpty()) {
+            editTextPort.setError("Port is required");
+            hasError = true;
+        } else {
+
+            try {
+                if (port < 1000 || port > 9999) {
+                    editTextPort.setError("Port must be between 1000 and 9999");
+                    hasError = true;
+                }
+            } catch (NumberFormatException e) {
+                editTextPort.setError("Invalid port number");
+                hasError = true;
+            }
+        }
+        if (hasError) {
             return;
         }
 

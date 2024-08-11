@@ -111,21 +111,35 @@ public class AddDeviceActivity extends AppCompatActivity {
         String user = editTextMqttUser.getText().toString().trim();
         String password = editTextMqttPassword.getText().toString().trim();
 
-        // Validate fields
         if (name.isEmpty()) {
             editTextDeviceName.setError("Device name is required");
             hasError = true;
+        } else if (name.length() > 60) {
+            editTextDeviceName.setError("Device name must be 60 characters or less");
+            hasError = true;
         }
+
         if (topic.isEmpty()) {
             editTextMqttTopic.setError("MQTT topic is required");
             hasError = true;
+        } else if (topic.length() > 60) {
+            editTextMqttTopic.setError("MQTT topic must be 60 characters or less");
+            hasError = true;
         }
+
         if (user.isEmpty()) {
             editTextMqttUser.setError("MQTT user is required");
             hasError = true;
+        } else if (user.length() > 40) {
+            editTextMqttUser.setError("MQTT user must be 40 characters or less");
+            hasError = true;
         }
+
         if (password.isEmpty()) {
             editTextMqttPassword.setError("MQTT password is required");
+            hasError = true;
+        } else if (password.length() > 40) {
+            editTextMqttPassword.setError("MQTT password must be 40 characters or less");
             hasError = true;
         }
 

@@ -63,12 +63,21 @@ public class AddGuestActivity extends AppCompatActivity {
         String username = editTextUsername.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
 
+        // Validate username
         if (username.isEmpty()) {
             editTextUsername.setError("Username is required");
             hasError = true;
+        } else if (username.length() > 60) {
+            editTextUsername.setError("Username must be 60 characters or less");
+            hasError = true;
         }
+
+        // Validate password
         if (password.isEmpty()) {
             editTextPassword.setError("Password is required");
+            hasError = true;
+        } else if (password.length() > 60) { 
+            editTextPassword.setError("Password must be 60 characters or less");
             hasError = true;
         }
 

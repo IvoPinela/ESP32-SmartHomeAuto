@@ -112,4 +112,14 @@ public interface DeviceDao {
 
     @Query("SELECT DeviceName FROM devices WHERE DevicesID IN (:deviceId)")
     String getDeviceNameById(int deviceId);
+
+    @Query("SELECT d.* FROM devices d " +
+            "INNER JOIN users u ON d.CreatorUserId = u.UserID " +
+            "WHERE (:name IS NULL OR d.DeviceName LIKE '%' || :name || '%') " +
+            "AND (:deviceTypeId IS NULL OR d.TypeId = :deviceTypeId) " +
+            "AND (:username IS NULL OR u.Username LIKE '%' || :username || '%') " +
+            "AND (:filterMissingMQTT = 0 OR (d.MqttUser IS NULL OR d.MqttUser = '') " +
+            "AND (d.MqttPassword IS NULL OR d.MqttPassword = ''))")
+    List<Device> searchDevices(String name, Integer deviceTypeId, String username, boolean filterMissingMQTT);
+
 }

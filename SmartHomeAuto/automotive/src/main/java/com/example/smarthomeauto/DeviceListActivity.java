@@ -178,7 +178,7 @@ public class DeviceListActivity extends AppCompatActivity {
             });
         }).start();
     }
-
+/*
     private void filterDevices() {
         String queryName = searchViewName.getQuery().toString().trim();
         String queryUser = searchViewUser.getQuery().toString().trim();
@@ -190,14 +190,33 @@ public class DeviceListActivity extends AppCompatActivity {
         new Thread(() -> {
             List<Device> filteredDevices;
 
-            // Aplica filtros principais
             filteredDevices = deviceDao.searchDevices(queryName, deviceTypeId, queryUser);
 
-            // Se o filtro de campos MQTT vazios estiver ativado, aplica esse filtro adicional
+
             if (filterMissingMQTT) {
                 filteredDevices.removeIf(device -> device.MqttUser != null && !device.MqttUser.isEmpty() &&
                         device.MqttPassword != null && !device.MqttPassword.isEmpty());
             }
+
+            runOnUiThread(() -> {
+                deviceAdapter.clear();
+                deviceAdapter.addAll(filteredDevices);
+                deviceAdapter.notifyDataSetChanged();
+                textViewDeviceCount.setText("Number of Devices: " + filteredDevices.size());
+            });
+        }).start();
+    }*/
+
+    private void filterDevices() {
+        String queryName = searchViewName.getQuery().toString().trim();
+        String queryUser = searchViewUser.getQuery().toString().trim(); // Username do criador
+        DeviceType selectedType = (DeviceType) spinnerDeviceType.getSelectedItem();
+        Integer deviceTypeId = (selectedType != null && selectedType.DeviceTypeID != -1) ? selectedType.DeviceTypeID : null;
+
+        boolean filterMissingMQTT = switchFilterMissingMQTT.isChecked();
+
+        new Thread(() -> {
+            List<Device> filteredDevices = deviceDao.searchDevices(queryName, deviceTypeId, queryUser, filterMissingMQTT);
 
             runOnUiThread(() -> {
                 deviceAdapter.clear();

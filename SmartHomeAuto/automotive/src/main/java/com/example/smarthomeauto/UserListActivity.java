@@ -192,7 +192,7 @@ public class UserListActivity extends AppCompatActivity {
         new Thread(() -> {
             List<User> users;
             if ("adminmaster".equals(userRole)) {
-                users = userDao.getAllUsers(); // Method to get all users including admins
+                users = userDao.getAllUsers();
             } else {
                 users = userDao.getAllUsersExcludingAdmin();
             }
@@ -205,7 +205,7 @@ public class UserListActivity extends AppCompatActivity {
     }
 
     private void filterUsers() {
-        // Obter as informações do filtro
+
         String queryUsername = searchViewUsername.getQuery().toString().trim();
         String selectedType = (String) spinnerUserType.getSelectedItem();
         String userType = "All".equals(selectedType) ? null : selectedType;
@@ -216,7 +216,6 @@ public class UserListActivity extends AppCompatActivity {
         new Thread(() -> {
             List<User> filteredUsers;
 
-            // Aplicar os filtros principais
             if ("adminmaster".equals(userRole)) {
                 filteredUsers = userDao.searchUsers(queryUsername, userType, broker);
             } else if ("admin".equals(userRole)) {
@@ -225,7 +224,7 @@ public class UserListActivity extends AppCompatActivity {
                 filteredUsers = userDao.searchUsers(queryUsername, userType, broker);
             }
 
-            // Aplicar o filtro de campos nulos baseado no estado do Switch
+
             if (showNullFieldsOnly) {
                 filteredUsers = filterUsersWithNullFields(filteredUsers, userType);
                 filteredUsers = filterByUserType(filteredUsers);

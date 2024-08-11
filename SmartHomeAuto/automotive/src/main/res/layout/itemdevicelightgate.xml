@@ -3,30 +3,30 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="8dp"
-    android:background="@android:color/darker_gray"
-    android:layout_marginBottom="8dp"
+    android:padding="@dimen/item_padding"
+    android:background="@drawable/background_dark"
+    android:layout_marginBottom="@dimen/layout_margin_bottom"
     android:gravity="center_vertical">
 
     <TextView
         android:id="@+id/deviceNameTextView"
-        android:layout_width="120dp"
+        android:layout_width="179dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/text_margin_small"
         android:gravity="center"
-        android:text="Device Name"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
-        android:layout_marginEnd="4dp"/>
+        android:text="@string/device_name_label"
+        android:textColor="@color/white"
+        android:textSize="@dimen/body_item_text_size" />
 
     <TextView
         android:id="@+id/deviceStatusTextView"
         android:layout_width="183dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="@dimen/text_margin_medium"
         android:gravity="center"
-        android:text="Status: Unknown"
-        android:textColor="@android:color/white"
-        android:textSize="16sp" />
+        android:text="@string/device_status_unknown"
+        android:textColor="@color/white"
+        android:textSize="@dimen/body_item_text_size" />
 
     <Switch
         android:id="@+id/deviceSwitch"

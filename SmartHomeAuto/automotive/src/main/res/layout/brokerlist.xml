@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:padding="@dimen/layout_padding"
     android:background="@android:color/black">
 
     <!-- Cabeçalho -->
@@ -14,23 +14,23 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:background="@android:color/darker_gray"
-        android:padding="8dp">
+        android:padding="@dimen/header_padding">
 
         <Button
             android:id="@+id/buttonBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Back"
+            android:text="@string/back_button_text"
             android:textColor="@android:color/white"
-            android:background="#424242"
+            android:background="@color/darkgray"
             android:layout_alignParentStart="true"/>
 
         <TextView
             android:id="@+id/headerTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Brokers List"
-            android:textSize="18sp"
+            android:text="@string/header_title_text_Broker"
+            android:textSize="@dimen/header_title_text_size"
             android:textStyle="bold"
             android:textColor="@android:color/white"
             android:layout_centerHorizontal="true"
@@ -42,10 +42,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="@dimen/image_button_margin_end"
             android:background="@android:color/transparent"
             android:src="@drawable/baseline_edit_24"
             app:tint="@android:color/white"
+            android:contentDescription="@string/edit_button_content_desc"
             tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
         <ImageButton
@@ -57,6 +58,7 @@
             android:background="@android:color/transparent"
             android:src="@drawable/baseline_delete_24"
             app:tint="@android:color/white"
+            android:contentDescription="@string/delete_button_content_desc"
             tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
     </RelativeLayout>
 
@@ -65,8 +67,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/headerLayout"
-        android:layout_marginTop="16dp"
-        android:queryHint="Search by Cluster URL"
+        android:layout_marginTop="@dimen/search_view_margin_top"
+        android:queryHint="@string/search_by_cluster_url_hint"
         android:background="@android:color/white"/>
 
     <!-- TextView for Displaying Broker Count -->
@@ -75,9 +77,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/searchViewClusterURL"
-        android:layout_marginTop="16dp"
-        android:text="Number of Brokers: 0"
-        android:textSize="16sp"
+        android:layout_marginTop="@dimen/broker_count_margin_top"
+        android:text="@string/broker_count_text"
+        android:textSize="@dimen/broker_count_text_size"
         android:textColor="@android:color/white" />
 
     <ListView
@@ -88,19 +90,19 @@
         android:layout_above="@id/buttonAddBroker"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="@dimen/list_view_margin_top"
+        android:layout_marginBottom="@dimen/list_view_margin_bottom"
         android:background="@android:color/white"/>
 
     <Button
         android:id="@+id/buttonAddBroker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Broker"
+        android:text="@string/add_broker_button_text"
         android:textColor="@android:color/white"
         android:background="@drawable/soft_blue_gradient"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginEnd="@dimen/button_margin_end"
+        android:layout_marginBottom="@dimen/button_margin_bottom"/>
 </RelativeLayout>

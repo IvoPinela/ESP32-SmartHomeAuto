@@ -1,15 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- App Info -->
     <string name="app_name">SmartHomeAuto</string>
     <string name="menu_title">Smart Home Control</string>
+
+    <!-- Buttons and Controls -->
     <string name="button_lights">Control Lights</string>
     <string name="button_gate">Control Gate</string>
-    <string name="lights_control_title">Lights Control</string>
-    <string name="light_status_text">Light Status: OFF</string>
     <string name="toggle_light_button">Toggle Light</string>
     <string name="back_to_menu_button">Back to Menu</string>
+    <string name="toggle_gate_button">Toggle Gate</string>
+
+    <!-- Lights and Gate Control -->
+    <string name="lights_control_title">Lights Control</string>
+    <string name="light_status_text">Light Status: OFF</string>
     <string name="gate_control_title">Gate Control</string>
     <string name="gate_status_text">Gate Status: Closed</string>
-    <string name="toggle_gate_button">Toggle Gate</string>
+
+    <!-- User and Broker Management -->
     <string name="log_off">Log Off</string>
     <string name="add_new_device">Add New Device</string>
     <string name="device_name">Device Name:</string>
@@ -29,6 +38,7 @@
     <string name="save_broker">Save Broker</string>
     <string name="back">Back</string>
 
+    <!-- User Information -->
     <string name="textViewUsername">Username</string>
     <string name="textViewRole">Role:</string>
     <string name="textViewMqttUser">MQTT User:</string>
@@ -50,6 +60,146 @@
     <string name="hintUsername">Enter username</string>
     <string name="hintMqttUser">Enter MQTT user</string>
     <string name="hintMqttPassword">Enter MQTT password</string>
-    <string name="add_guest">add new guest</string>
+    <string name="add_guest">Add New Guest</string>
+
+    <!-- User List -->
+    <string name="header_title">Users List</string>
+    <string name="button_back">Back</string>
+    <string name="search_hint">Search by username</string>
+    <string name="switch_filter_null_fields">Show Users that need to be edited</string>
+    <string name="user_count">Number of Users: 0</string>
+    <string name="button_add_user">Add User</string>
+
+    <!-- Permissions -->
+    <string name="search_hint_name">Search by name</string>
+    <string name="permissions_count">Number of Permissions: 0</string>
+    <string name="button_add_permissions">Add Permissions</string>
+    <string name="header_title_permission">Permissions List</string>
+
+
+    <string name="header_title_guest_list">Guest List</string>
+    <string name="search_hint_username">Search by username</string>
+    <string name="user_countGuest">Number of Guests: 0</string>
+    <string name="button_add_guest">Add Guest</string>
+
+
+    <string name="form_title_edit_permission">Edit Permission</string>
+    <string name="label_device_name">Device Name:</string>
+    <string name="label_device_type">Device Type:</string>
+    <string name="label_permissions">Permissions:</string>
+    <string name="button_save">Save</string>
+    <string name="button_cancel">Cancel</string>
+
+
+    <string name="form_title">Edit Permission</string>
+    <string name="device_name_label">Device Name:</string>
+    <string name="sample_device_name">Sample Device Name</string>
+    <string name="device_type_label">Device Type:</string>
+    <string name="sample_device_type">Sample Device Type</string>
+    <string name="save_button">Save</string>
+    <string name="cancel_button">Cancel</string>
+
+
+    <string name="back_button_text">Back</string>
+    <string name="header_title_text">Devices List</string>
+    <string name="edit_button_content_desc">Edit</string>
+    <string name="delete_button_content_desc">Delete</string>
+    <string name="search_view_hint">Search by name</string>
+    <string name="device_count_text">Number of Devices: 0</string>
+    <string name="add_device_button_text">Add Device</string>
+
+    <string name="search_by_name_hint">Search by name</string>
+    <string name="search_by_user_hint">Search by user</string>
+    <string name="switch_text">Show Devices that need to be update</string>
+
+
+
+    <string name="header_title_text_Broker">Brokers List</string>
+    <string name="search_by_cluster_url_hint">Search by Cluster URL</string>
+    <string name="broker_count_text">Number of Brokers: 0</string>
+    <string name="add_broker_button_text">Add Broker</string>
+
+    <string name="admin_screen_title">Admin Screen</string>
+    <string name="log_off_button_text">Log Off</string>
+    <string name="show_devices_button_text">Show Devices</string>
+    <string name="show_brokers_button_text">Show Brokers</string>
+    <string name="show_users_button_text">Show Users</string>
+
+    <string name="sign_up_title">Sign Up</string>
+    <string name="username_hint">Username</string>
+    <string name="password_hint">Password</string>
+    <string name="sign_up_button">Sign Up</string>
+    <string name="back_to_login_button">Back to Login</string>
+
+
+
+    <string name="header_title_addPermission">Select Devices and Permissions</string>
+    <string name="search_label">Search Device:</string>
+    <string name="search_hint_device_name">Search by device name</string>
+    <string name="device_count">Number of Devices: 0</string>
+    <string name="permission_label">Permission:</string>
+    <string name="button_add_permission">Add Permission</string>
+
+
+    <string name="device_name_hint">Enter device name</string>
+
+    <string name="save_button_device">Save Device</string>
+
+
+    <string name="add_new_user">Add New User</string>
+
+    <string name="username_label">Username:</string>
+    <string name="password_label">Password:</string>
+    <string name="mqtt_user_label">MQTT User:</string>
+    <string name="mqtt_user_hint">Enter MQTT user</string>
+    <string name="mqtt_password_label">MQTT Password:</string>
+    <string name="mqtt_password_hint">Enter MQTT password</string>
+    <string name="role_label">Role:</string>
+    <string name="manager_user_id_label">Manager User ID:</string>
+    <string name="broker_id_label">Broker ID:</string>
+    <string name="save_user_button">Save User</string>
+    <string name="back_button">Back</string>
+
+    <string name="title_text">Login</string>
+    <string name="hint_username">Username</string>
+    <string name="hint_password">Password</string>
+    <string name="button_login">Login</string>
+    <string name="button_sign_up">Sign Up</string>
+
+
+    <string name="form_title_add_new_device">Add New Device</string>
+
+    <string name="hint_device_name">Enter device name</string>
+    <string name="label_mqtt_topic">MQTT Topic:</string>
+    <string name="hint_mqtt_topic">Enter MQTT topic</string>
+    <string name="label_mqtt_user">MQTT User:</string>
+    <string name="hint_mqtt_user">Enter MQTT user</string>
+    <string name="label_mqtt_password">MQTT Password:</string>
+    <string name="hint_mqtt_password">Enter MQTT password</string>
+
+    <string name="label_creator_user">Creator User:</string>
+    <string name="button_save_device">Save Device</string>
+
+    <string name="title_add_new_broker">Add New Broker</string>
+    <string name="label_cluster_url">Cluster URL:</string>
+    <string name="hint_cluster_url">Enter cluster URL</string>
+    <string name="label_port">Port:</string>
+    <string name="hint_port">Enter port</string>
+    <string name="button_save_broker">Save Broker</string>
+
+    <string name="title_add_new_user">Add New User</string>
+    <string name="label_username">Username:</string>
+    <string name="label_password">Password:</string>
+    <string name="button_save_user">Save User</string>
+
+    <string name="device_type">Device Type:</string>
+    <string name="creator_user">Creator User:</string>
+    <string name="mqtt_user">MQTT User:</string>
+    <string name="mqtt_password">MQTT Password:</string>
+    <string name="device_name_living_room">Device Name: Living Room Light</string>
+    <string name="device_type_light">Device Type: Light</string>
+    <string name="device_status_unknown">Status: Unknown</string>
+    <string name="username_example">Username: Example</string>
+
 
 </resources>

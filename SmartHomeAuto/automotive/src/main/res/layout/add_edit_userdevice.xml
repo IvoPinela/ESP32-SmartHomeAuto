@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:padding="@dimen/layout_padding"
     android:background="@color/background_color">
 
     <!-- Title of the Form -->
@@ -10,85 +10,105 @@
         android:id="@+id/formTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add New Device"
-        android:textSize="24sp"
+        android:text="@string/add_new_device"
+        android:textSize="@dimen/form_title_text_size"
         android:textStyle="bold"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="24dp"
-        android:textColor="@color/white"/>
+        android:layout_marginBottom="@dimen/margin_bottom_large2"
+        android:textColor="@color/white"
+        android:layout_centerHorizontal="true"/>
 
-    <!-- Device Name Label -->
-    <TextView
-        android:id="@+id/labelDeviceName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Device Name:"
-        android:textSize="16sp"
-        android:layout_alignParentStart="true"
+    <!-- Frame Layout for Form Content -->
+    <FrameLayout
+        android:layout_width="1421dp"
+        android:layout_height="288dp"
+        android:layout_above="@id/buttonSaveDevice"
         android:layout_below="@id/formTitle"
-        android:layout_marginTop="16dp"
-        android:textColor="@color/white"/>
+        android:layout_marginBottom="347dp"
+        android:background="@drawable/soft_blue_gradient">
 
-    <!-- Device Name Input Field -->
-    <EditText
-        android:id="@+id/editTextDeviceName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/labelDeviceName"
-        android:layout_marginTop="8dp"
-        android:hint="Enter device name"
-        android:minHeight="48dp"
-        android:textSize="16sp"
-        android:textColor="@color/black"
-        android:textColorHint="@color/darkgray"
-        android:background="@drawable/edittext_background"/>
 
-    <!-- Device Type Label -->
-    <TextView
-        android:id="@+id/labelDeviceType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Device Type:"
-        android:textSize="16sp"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/editTextDeviceName"
-        android:layout_marginTop="16dp"
-        android:textColor="@color/white"/>
+        <!-- Inner Layout for Form Content -->
+        <RelativeLayout
+            android:layout_width="1396dp"
+            android:layout_height="wrap_content">
 
-    <!-- Device Type Spinner -->
-    <Spinner
-        android:id="@+id/spinnerDeviceType"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/labelDeviceType"
-        android:layout_marginTop="8dp"
-        android:minHeight="48dp"
-        android:background="@drawable/spinner_background"/>
+            <!-- Device Name Label -->
+            <TextView
+                android:id="@+id/labelDeviceName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="@dimen/margin_top_medium"
+                android:text="@string/device_name_label"
+                android:textColor="@color/black"
+                android:textSize="@dimen/label_text_size" />
+
+            <!-- Device Name Input Field -->
+            <EditText
+                android:id="@+id/editTextDeviceName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/labelDeviceName"
+                android:layout_marginTop="@dimen/margin_bottom_small"
+                android:background="@drawable/edittext_background"
+                android:hint="@string/device_name_hint"
+                android:minHeight="@dimen/edittext_min_height"
+                android:textColor="@color/black"
+                android:textColorHint="@color/darkgray"
+                android:textSize="@dimen/edittext_text_size" />
+
+            <!-- Device Type Label -->
+            <TextView
+                android:id="@+id/labelDeviceType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/editTextDeviceName"
+                android:layout_marginTop="@dimen/margin_bottom_medium"
+                android:text="@string/device_type_label"
+                android:textColor="@color/black"
+                android:textSize="@dimen/label_text_size" />
+
+            <!-- Device Type Spinner -->
+            <Spinner
+                android:id="@+id/spinnerDeviceType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/labelDeviceType"
+                android:layout_marginTop="@dimen/margin_bottom_small"
+                android:background="@drawable/spinner_background"
+                android:minHeight="@dimen/spinner_min_height" />
+        </RelativeLayout>
+    </FrameLayout>
 
     <!-- Save Device Button -->
     <Button
         android:id="@+id/buttonSaveDevice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save Device"
-        android:textSize="18sp"
+        android:text="@string/save_button_device"
+        android:textSize="@dimen/button_text_size"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="@dimen/margin_bottom_medium"
         android:background="@drawable/soft_blue_gradient"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white"
+        android:paddingHorizontal="@dimen/button_padding_horizontal"
+        android:paddingVertical="@dimen/button_padding_vertical"/>
 
     <!-- Back Button -->
     <Button
         android:id="@+id/buttonBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Back"
-        android:textSize="18sp"
+        android:text="@string/back_button"
+        android:textSize="@dimen/button_text_size"
         android:layout_alignParentBottom="true"
         android:layout_toStartOf="@id/buttonSaveDevice"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginEnd="@dimen/margin_end"
+        android:layout_marginTop="@dimen/margin_bottom_medium"
         android:background="@color/darkgray"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white"
+        android:paddingHorizontal="@dimen/button_padding_horizontal"
+        android:paddingVertical="@dimen/button_padding_vertical"/>
 </RelativeLayout>

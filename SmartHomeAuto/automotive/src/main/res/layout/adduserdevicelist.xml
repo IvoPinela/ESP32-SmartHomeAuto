@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:padding="@dimen/layout_padding"
     android:background="@android:color/black">
 
     <!-- Header Layout -->
@@ -12,13 +13,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:background="@android:color/darker_gray"
-        android:padding="8dp">
+        android:padding="@dimen/header_padding">
 
         <Button
             android:id="@+id/buttonBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Back"
+            android:text="@string/button_back"
             android:textColor="@android:color/white"
             android:background="@color/darkgray"
             android:layout_alignParentStart="true" />
@@ -27,8 +28,8 @@
             android:id="@+id/headerTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Select Devices and Permissions"
-            android:textSize="18sp"
+            android:text="@string/header_title_addPermission"
+            android:textSize="@dimen/header_text_size"
             android:textStyle="bold"
             android:textColor="@android:color/white"
             android:layout_centerHorizontal="true"
@@ -41,9 +42,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/headerLayout"
-        android:layout_marginTop="24dp"
-        android:text="Device Type:"
-        android:textSize="16sp"
+        android:layout_marginTop="@dimen/margin_top_large"
+        android:text="@string/device_type_label"
+        android:textSize="@dimen/label_text_size"
         android:textColor="@android:color/white" />
 
     <Spinner
@@ -51,9 +52,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewDeviceTypeLabel"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/margin_top_medium"
         android:background="@android:color/white"
-        android:minHeight="48dp" />
+        android:minHeight="@dimen/spinner_min_height" />
 
     <!-- Search View with Label -->
     <TextView
@@ -61,9 +62,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/spinnerDeviceType"
-        android:layout_marginTop="24dp"
-        android:text="Search Device:"
-        android:textSize="16sp"
+        android:layout_marginTop="@dimen/margin_top_large"
+        android:text="@string/search_label"
+        android:textSize="@dimen/label_text_size"
         android:textColor="@android:color/white" />
 
     <SearchView
@@ -71,8 +72,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewSearchLabel"
-        android:layout_marginTop="8dp"
-        android:queryHint="Search by device name"
+        android:layout_marginTop="@dimen/margin_top_medium"
+        android:queryHint="@string/search_hint_device_name"
         android:background="@android:color/white" />
 
     <!-- Device Count TextView -->
@@ -81,50 +82,51 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/searchViewDevice"
-        android:layout_marginTop="24dp"
-        android:text="Number of Devices: 0"
-        android:textSize="16sp"
+        android:layout_marginTop="@dimen/margin_top_large"
+        android:text="@string/device_count"
+        android:textSize="@dimen/label_text_size"
         android:textColor="@android:color/white" />
 
     <!-- Device ListView -->
-
-    <!-- Permission Spinner with Label -->
     <ListView
         android:id="@+id/listViewDevices"
         android:layout_width="wrap_content"
-        android:layout_height="274dp"
+        android:layout_height="@dimen/list_height"
         android:layout_below="@id/textViewDeviceCount"
-        android:layout_marginTop="37dp"
+        android:layout_marginTop="@dimen/device_list_margin_top"
         android:background="@android:color/white"
         android:choiceMode="multipleChoice" />
 
+    <!-- Permission Spinner with Label -->
     <TextView
         android:id="@+id/textViewPermissionsLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/listViewDevices"
-        android:layout_marginTop="24dp"
-        android:text="Permission:"
+        android:layout_marginTop="@dimen/margin_top_large"
+        android:text="@string/permission_label"
         android:textColor="@android:color/white"
-        android:textSize="16sp" />
+        android:textSize="@dimen/label_text_size" />
 
     <Spinner
         android:id="@+id/spinnerPermissions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewPermissionsLabel"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/margin_top_medium"
         android:background="@android:color/white"
-        android:minHeight="48dp" />
+        android:minHeight="@dimen/spinner_min_height"
+        tools:ignore="TouchTargetSizeCheck" />
 
+    <!-- Add Permission Button -->
     <Button
         android:id="@+id/buttonAddDevices"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Permission"
+        android:text="@string/button_add_permission"
         android:background="@drawable/soft_blue_gradient"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="@dimen/button_margin_bottom"
         android:textColor="@android:color/white" />
 </RelativeLayout>

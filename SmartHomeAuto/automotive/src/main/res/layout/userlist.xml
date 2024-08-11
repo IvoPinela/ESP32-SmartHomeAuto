@@ -14,13 +14,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:background="@android:color/darker_gray"
-        android:padding="8dp">
+        android:padding="@dimen/header_padding">
 
         <Button
             android:id="@+id/buttonBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Back"
+            android:text="@string/button_back"
             android:textColor="@android:color/white"
             android:background="@color/darkgray" />
 
@@ -28,7 +28,7 @@
             android:id="@+id/headerTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Users List"
+            android:text="@string/header_title"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@android:color/white"
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="@dimen/button_margin_end"
             android:background="@android:color/transparent"
             android:src="@drawable/baseline_edit_24"
             app:tint="@android:color/white"
@@ -65,8 +65,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/headerLayout"
-        android:layout_marginTop="16dp"
-        android:minHeight="48dp"
+        android:layout_marginTop="@dimen/search_view_margin_top"
+        android:minHeight="@dimen/spinner_min_height"
         android:background="@android:color/white" />
 
     <!-- Broker Spinner -->
@@ -75,8 +75,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/spinnerUserRole"
-        android:layout_marginTop="16dp"
-        android:minHeight="48dp"
+        android:layout_marginTop="@dimen/search_view_margin_top"
+        android:minHeight="@dimen/spinner_min_height"
         android:background="@android:color/white" />
 
     <!-- Search View -->
@@ -85,8 +85,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/spinnerBroker"
-        android:layout_marginTop="16dp"
-        android:queryHint="Search by username"
+        android:layout_marginTop="@dimen/search_view_margin_top"
+        android:queryHint="@string/search_hint"
         android:background="@android:color/white" />
 
     <!-- Switch for Null Fields -->
@@ -95,9 +95,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/searchViewUsername"
-        android:layout_marginTop="16dp"
-        android:minHeight="48dp"
-        android:text="Show Users with Null Fields"
+        android:layout_marginTop="@dimen/switch_margin_top"
+        android:minHeight="@dimen/spinner_min_height"
+        android:text="@string/switch_filter_null_fields"
         android:textColor="@android:color/white" />
 
     <!-- TextView for Displaying User Count -->
@@ -106,8 +106,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/switchFilterNullFields"
-        android:layout_marginTop="16dp"
-        android:text="Number of Users: 0"
+        android:layout_marginTop="@dimen/user_count_margin_top"
+        android:text="@string/user_count"
         android:textSize="16sp"
         android:textColor="@android:color/white" />
 
@@ -120,8 +120,8 @@
         android:layout_above="@id/buttonAddUser"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="@dimen/list_view_margin_top"
+        android:layout_marginBottom="@dimen/list_view_margin_bottom"
         android:background="@android:color/white" />
 
     <!-- Add User Button -->
@@ -129,11 +129,11 @@
         android:id="@+id/buttonAddUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add User"
+        android:text="@string/button_add_user"
         android:background="@drawable/soft_blue_gradient"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="@dimen/button_margin_end"
         android:textColor="@android:color/white"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="@dimen/button_margin_bottom" />
 </RelativeLayout>

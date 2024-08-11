@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:padding="@dimen/margin_bottom_medium"
     android:background="@color/background_color">
 
     <TextView
         android:id="@+id/formTitleUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add New User"
-        android:textSize="24sp"
+        android:text="@string/add_new_user"
+        android:textSize="@dimen/form_title_text_size"
         android:textStyle="bold"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="@dimen/margin_bottom_large"
         android:textColor="@color/white"/>
 
     <TextView
         android:id="@+id/labelUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Username:"
-        android:textSize="16sp"
+        android:text="@string/username_label"
+        android:textSize="@dimen/label_text_size"
         android:layout_alignParentStart="true"
         android:layout_below="@id/formTitleUser"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/margin_top_medium"
         android:textColor="@color/white"/>
 
     <EditText
@@ -32,10 +33,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/labelUsername"
-        android:layout_marginTop="8dp"
-        android:hint="Enter username"
-        android:minHeight="48dp"
-        android:textSize="16sp"
+        android:layout_marginTop="@dimen/margin_bottom_small"
+        android:hint="@string/username_hint"
+        android:minHeight="@dimen/edittext_min_height"
+        android:textSize="@dimen/edittext_text_size"
         android:textColor="@color/black"
         android:textColorHint="@color/darkgray"
         android:background="@drawable/edittext_background"/>
@@ -44,11 +45,11 @@
         android:id="@+id/labelPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Password:"
-        android:textSize="16sp"
+        android:text="@string/password_label"
+        android:textSize="@dimen/label_text_size"
         android:layout_alignParentStart="true"
         android:layout_below="@id/editTextUsername"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/margin_top_medium"
         android:textColor="@color/white"/>
 
     <EditText
@@ -56,11 +57,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/labelPassword"
-        android:layout_marginTop="8dp"
-        android:hint="Enter password"
+        android:layout_marginTop="@dimen/margin_bottom_small"
+        android:hint="@string/password_hint"
         android:inputType="textPassword"
-        android:minHeight="48dp"
-        android:textSize="16sp"
+        android:minHeight="@dimen/edittext_min_height"
+        android:textSize="@dimen/edittext_text_size"
         android:textColor="@color/black"
         android:textColorHint="@color/darkgray"
         android:background="@drawable/edittext_background"/>
@@ -69,11 +70,11 @@
         android:id="@+id/labelMqttUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="MQTT User:"
-        android:textSize="16sp"
+        android:text="@string/mqtt_user_label"
+        android:textSize="@dimen/label_text_size"
         android:layout_alignParentStart="true"
         android:layout_below="@id/editTextPassword"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/margin_top_medium"
         android:textColor="@color/white"/>
 
     <EditText
@@ -81,10 +82,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/labelMqttUser"
-        android:layout_marginTop="8dp"
-        android:hint="Enter MQTT user"
-        android:minHeight="48dp"
-        android:textSize="16sp"
+        android:layout_marginTop="@dimen/margin_bottom_small"
+        android:hint="@string/mqtt_user_hint"
+        android:minHeight="@dimen/edittext_min_height"
+        android:textSize="@dimen/edittext_text_size"
         android:textColor="@color/black"
         android:textColorHint="@color/darkgray"
         android:background="@drawable/edittext_background"/>
@@ -93,11 +94,11 @@
         android:id="@+id/labelMqttPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="MQTT Password:"
-        android:textSize="16sp"
+        android:text="@string/mqtt_password_label"
+        android:textSize="@dimen/label_text_size"
         android:layout_alignParentStart="true"
         android:layout_below="@id/editTextMqttUser"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/margin_top_medium"
         android:textColor="@color/white"/>
 
     <EditText
@@ -105,11 +106,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/labelMqttPassword"
-        android:layout_marginTop="8dp"
-        android:hint="Enter MQTT password"
+        android:layout_marginTop="@dimen/margin_bottom_small"
+        android:hint="@string/mqtt_password_hint"
         android:inputType="textPassword"
-        android:minHeight="48dp"
-        android:textSize="16sp"
+        android:minHeight="@dimen/edittext_min_height"
+        android:textSize="@dimen/edittext_text_size"
         android:textColor="@color/white"
         android:textColorHint="@color/darkgray"
         android:background="@drawable/edittext_background"/>
@@ -118,11 +119,11 @@
         android:id="@+id/labelRole"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Role:"
-        android:textSize="16sp"
+        android:text="@string/role_label"
+        android:textSize="@dimen/label_text_size"
         android:layout_alignParentStart="true"
         android:layout_below="@id/editTextMqttPassword"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/margin_top_medium"
         android:textColor="@color/white"/>
 
     <Spinner
@@ -130,19 +131,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/labelRole"
-        android:layout_marginTop="8dp"
-        android:minHeight="48dp"
+        android:layout_marginTop="@dimen/margin_bottom_small"
+        android:minHeight="@dimen/edittext_min_height"
         android:background="@drawable/spinner_background"/>
 
     <TextView
         android:id="@+id/labelManagerUserId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Manager User ID:"
-        android:textSize="16sp"
+        android:text="@string/manager_user_id_label"
+        android:textSize="@dimen/label_text_size"
         android:layout_alignParentStart="true"
         android:layout_below="@id/spinnerRole"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/margin_top_medium"
         android:textColor="@color/white"/>
 
     <Spinner
@@ -150,19 +151,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/labelManagerUserId"
-        android:layout_marginTop="8dp"
-        android:minHeight="48dp"
+        android:layout_marginTop="@dimen/margin_bottom_small"
+        android:minHeight="@dimen/edittext_min_height"
         android:background="@drawable/spinner_background"/>
 
     <TextView
         android:id="@+id/labelBrokerId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Broker ID:"
-        android:textSize="16sp"
+        android:text="@string/broker_id_label"
+        android:textSize="@dimen/label_text_size"
         android:layout_alignParentStart="true"
         android:layout_below="@id/spinnerManagerUserId"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/margin_top_medium"
         android:textColor="@color/white"/>
 
     <Spinner
@@ -170,19 +171,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/labelBrokerId"
-        android:layout_marginTop="8dp"
-        android:minHeight="48dp"
-        android:background="@drawable/spinner_background"/>
+        android:layout_marginTop="@dimen/margin_bottom_small"
+        android:background="@drawable/spinner_background"
+        android:minHeight="@dimen/edittext_min_height"
+        tools:ignore="TouchTargetSizeCheck" />
 
     <Button
         android:id="@+id/buttonSaveUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save User"
-        android:textSize="18sp"
+        android:text="@string/save_user_button"
+        android:textSize="@dimen/button_text_size"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="@dimen/margin_bottom_large"
         android:background="@drawable/soft_blue_gradient"
         android:textColor="@color/white"/>
 
@@ -190,12 +192,12 @@
         android:id="@+id/buttonBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Back"
-        android:textSize="18sp"
+        android:text="@string/back_button"
+        android:textSize="@dimen/button_text_size"
         android:layout_alignParentBottom="true"
         android:layout_toStartOf="@id/buttonSaveUser"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginEnd="@dimen/margin_end"
+        android:layout_marginTop="@dimen/margin_bottom_large"
         android:background="@color/darkgray"
         android:textColor="@color/white"/>
 </RelativeLayout>

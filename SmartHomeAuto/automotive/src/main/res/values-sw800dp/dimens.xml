@@ -8,4 +8,128 @@
     <dimen name="margin_bottom_large" tools:ignore="MissingDefaultResource">30dp</dimen>
     <dimen name="margin_bottom_medium" tools:ignore="MissingDefaultResource">20dp</dimen>
     <dimen name="margin_bottom_small" tools:ignore="MissingDefaultResource">10dp</dimen>
+
+    <dimen name="header_padding" tools:ignore="MissingDefaultResource">8dp</dimen>
+    <dimen name="spinner_min_height" tools:ignore="MissingDefaultResource">48dp</dimen>
+    <dimen name="search_view_margin_top" tools:ignore="MissingDefaultResource">16dp</dimen>
+    <dimen name="switch_margin_top" tools:ignore="MissingDefaultResource">16dp</dimen>
+    <dimen name="user_count_margin_top" tools:ignore="MissingDefaultResource">16dp</dimen>
+    <dimen name="list_view_margin_top" tools:ignore="MissingDefaultResource">16dp</dimen>
+    <dimen name="list_view_margin_bottom" tools:ignore="MissingDefaultResource">16dp</dimen>
+    <dimen name="button_margin_end" tools:ignore="MissingDefaultResource">16dp</dimen>
+    <dimen name="button_margin_bottom" tools:ignore="MissingDefaultResource">16dp</dimen>
+
+    <dimen name="button_height" tools:ignore="MissingDefaultResource">120dp</dimen>
+
+    <dimen name="layout_padding" tools:ignore="MissingDefaultResource">16dp</dimen>
+    <dimen name="spinner_margin_top" tools:ignore="MissingDefaultResource">16dp</dimen>
+    <dimen name="device_count_margin_top" tools:ignore="MissingDefaultResource">16dp</dimen>
+    <dimen name="header_title_text_size" tools:ignore="MissingDefaultResource">18sp</dimen>
+    <dimen name="device_count_text_size" tools:ignore="MissingDefaultResource">16sp</dimen>
+
+    <dimen name="margin_top_medium" tools:ignore="MissingDefaultResource">16dp</dimen>
+
+    <dimen name="status_container_padding" tools:ignore="MissingDefaultResource">24dp</dimen>
+    <dimen name="button_margin_top" tools:ignore="MissingDefaultResource">16dp</dimen>
+
+    <dimen name="switch_min_width" tools:ignore="MissingDefaultResource">48dp</dimen>
+    <dimen name="switch_min_height" tools:ignore="MissingDefaultResource">48dp</dimen>
+
+    <dimen name="elevation_title" tools:ignore="MissingDefaultResource">4dp</dimen>
+    <dimen name="elevation_status_container" tools:ignore="MissingDefaultResource">6dp</dimen>
+
+    <dimen name="button_margin" tools:ignore="MissingDefaultResource">16dp</dimen>
+    <dimen name="button_height2"  tools:ignore="MissingDefaultResource">65dp</dimen>
+
+    <dimen name="form_title_text_size" tools:ignore="MissingDefaultResource">36sp</dimen>
+    <dimen name="label_text_size" tools:ignore="MissingDefaultResource">20sp</dimen>
+    <dimen name="display_text_size" tools:ignore="MissingDefaultResource">24sp</dimen>
+    <dimen name="button_text_size" tools:ignore="MissingDefaultResource">20sp</dimen>
+
+    <dimen name="button_padding_horizontal" tools:ignore="MissingDefaultResource">24dp</dimen>
+    <dimen name="button_padding_vertical" tools:ignore="MissingDefaultResource">12dp</dimen>
+
+    <dimen name="margin_bottom_large2"  tools:ignore="MissingDefaultResource">32dp</dimen>
+    <dimen name="margin_end" tools:ignore="MissingDefaultResource">16dp</dimen>
+
+    <dimen name="broker_count_text_size" tools:ignore="MissingDefaultResource">16sp</dimen>
+    <dimen name="image_button_margin_end"  tools:ignore="MissingDefaultResource">8dp</dimen>
+
+    <dimen name="broker_count_margin_top"  tools:ignore="MissingDefaultResource">16dp</dimen>
+
+    <dimen name="title_margin_top"  tools:ignore="MissingDefaultResource">72dp</dimen>
+    <dimen name="container_padding"  tools:ignore="MissingDefaultResource">24dp</dimen>
+    <dimen name="title_text_size"  tools:ignore="MissingDefaultResource">60sp</dimen>
+
+    <dimen name="container_width"  tools:ignore="MissingDefaultResource">650dp</dimen>
+    <dimen name="button_width"  tools:ignore="MissingDefaultResource">350dp</dimen>
+    <dimen name="button_height3" tools:ignore="MissingDefaultResource">70dp</dimen>
+
+    <dimen name="frame_width" tools:ignore="MissingDefaultResource">1396dp</dimen>
+    <dimen name="frame_height" tools:ignore="MissingDefaultResource">333dp</dimen>
+    <dimen name="inner_frame_width" tools:ignore="MissingDefaultResource">1237dp</dimen>
+    <dimen name="element_min_height" tools:ignore="MissingDefaultResource">60dp</dimen>
+    <dimen name="frame_margin_top" tools:ignore="MissingDefaultResource">47dp</dimen>
+    <dimen name="element_margin_bottom" tools:ignore="MissingDefaultResource">12dp</dimen>
+    <dimen name="element_margin_top" tools:ignore="MissingDefaultResource">8dp</dimen>
+
+    <dimen name="input_text_size" tools:ignore="MissingDefaultResource">20sp</dimen>
+
+
+    <dimen name="margin_top_large" tools:ignore="MissingDefaultResource">24dp</dimen>
+    <dimen name="device_list_margin_top" tools:ignore="MissingDefaultResource">37dp</dimen>
+    <dimen name="list_height" tools:ignore="MissingDefaultResource">274dp</dimen>
+    <dimen name="header_text_size" tools:ignore="MissingDefaultResource">18sp</dimen>
+    <dimen name="edittext_text_size" tools:ignore="MissingDefaultResource">16sp</dimen>
+
+    <dimen name="frame_width_edit_deviice_user" tools:ignore="MissingDefaultResource">1395dp</dimen>
+    <dimen name="frame_height_edit_device_user" tools:ignore="MissingDefaultResource">295dp</dimen>
+    <dimen name="frame_margin_bottom_edit_device_use" tools:ignore="MissingDefaultResource">340dp</dimen>
+
+    <dimen name="edittext_min_height" tools:ignore="MissingDefaultResource">48dp</dimen>
+
+    <dimen name="frame_width_edit_device_user" tools:ignore="MissingDefaultResource">1276dp</dimen>
+    <dimen name="frame_height_edit_device_user2" tools:ignore="MissingDefaultResource">241dp</dimen>
+    <dimen name="frame_margin_bottom_edit_device_user2" tools:ignore="MissingDefaultResource">420dp</dimen>
+
+
+    <dimen name="title_text_size_login" tools:ignore="MissingDefaultResource">60sp</dimen>
+    <dimen name="title_margin_start" tools:ignore="MissingDefaultResource">43dp</dimen>
+    <dimen name="title_margin_end" tools:ignore="MissingDefaultResource">117dp</dimen>
+    <dimen name="frame_width_login" tools:ignore="MissingDefaultResource">1400dp</dimen>
+    <dimen name="frame_height_login" tools:ignore="MissingDefaultResource">364dp</dimen>
+    <dimen name="inner_frame_width_login" tools:ignore="MissingDefaultResource">1217dp</dimen>
+    <dimen name="inner_frame_padding" tools:ignore="MissingDefaultResource">24dp</dimen>
+    <dimen name="edittext_min_height_login" tools:ignore="MissingDefaultResource">60dp</dimen>
+    <dimen name="edittext_text_size_login" tools:ignore="MissingDefaultResource">20sp</dimen>
+    <dimen name="button_min_height" tools:ignore="MissingDefaultResource">60dp</dimen>
+    <dimen name="margin_between_fields" tools:ignore="MissingDefaultResource">12dp</dimen>
+
+    <!-- Title -->
+
+    <dimen name="form_title_margin_bottom" tools:ignore="MissingDefaultResource">24dp</dimen>
+
+    <!-- Labels and Inputs -->
+
+    <dimen name="input_min_height" tools:ignore="MissingDefaultResource">48dp</dimen>
+
+    <dimen name="margin_top_between_fields" tools:ignore="MissingDefaultResource">16dp</dimen>
+    <dimen name="margin_top_between_edittexts" tools:ignore="MissingDefaultResource">8dp</dimen>
+
+    <dimen name="activity_padding"  tools:ignore="MissingDefaultResource">16dp</dimen>
+    <dimen name="label_margin_top" tools:ignore="MissingDefaultResource">16dp</dimen>
+    <dimen name="edittext_margin_top" tools:ignore="MissingDefaultResource">8dp</dimen>
+
+    <dimen name="layout_margin_bottom" tools:ignore="MissingDefaultResource">8dp</dimen>
+    <dimen name="layout_margin_top" tools:ignore="MissingDefaultResource">8dp</dimen>
+    <dimen name="layout_margin_start" tools:ignore="MissingDefaultResource">16dp</dimen>
+    <dimen name="layout_margin_end" tools:ignore="MissingDefaultResource">16dp</dimen>
+    <dimen name="title_item_text_size" tools:ignore="MissingDefaultResource">20sp</dimen>
+    <dimen name="body_item_text_size" tools:ignore="MissingDefaultResource">20sp</dimen>
+    <dimen name="elevation" tools:ignore="MissingDefaultResource">4dp</dimen>
+    <dimen name="text_margin_bottom" tools:ignore="MissingDefaultResource">12dp</dimen>
+    <dimen name="text_margin_small" tools:ignore="MissingDefaultResource">8dp</dimen>
+    <dimen name="item_padding" tools:ignore="MissingDefaultResource">8dp</dimen>
+    <dimen name="text_margin_medium" tools:ignore="MissingDefaultResource">8dp</dimen>
+    <dimen name="text_margin_end" tools:ignore="MissingDefaultResource">16dp</dimen>
 </resources>

@@ -68,13 +68,22 @@ public class EditGuestActivity extends Activity {
     private void saveGuest() {
         String username = editTextUsername.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
+        boolean hasError = false;
 
+        // Validate username
         if (username.isEmpty()) {
             editTextUsername.setError("Username is required");
-            return;
+            hasError = true;
+        } else if (username.length() > 60) {
+            editTextUsername.setError("Username must be 60 characters or less");
+            hasError = true;
         }
 
-        new Thread(() -> {
+
+        if (hasError) {
+            return;
+        }
+            new Thread(() -> {
             User existingUser = userDao.getUserByUsername(username);
             if (existingUser != null && (guest == null || existingUser.UserID != guest.UserID)) {
                 runOnUiThread(() -> Toast.makeText(EditGuestActivity.this, "A user with the same username already exists!", Toast.LENGTH_SHORT).show());
@@ -85,9 +94,14 @@ public class EditGuestActivity extends Activity {
                 guest.Username = username;
 
                 if (!password.isEmpty()) {
+
+                    if (password.length() > 60) {
+                        editTextPassword.setError("Password must be 60 characters or less");
+                       return;
+                    }
                     guest.Password = HashUtils.hashPassword(password);
+
                 } else {
-                    // Mantém a senha existente sem alteração
                     guest.Password = existingUser.Password;
                 }
                 userDao.update(guest);
@@ -97,6 +111,9 @@ public class EditGuestActivity extends Activity {
                 guest = new User(username, hashedPassword, null, null, null, managerUserId, brokerId);
                 userDao.insert(guest);
             }
+
+
+
 
             runOnUiThread(() -> {
                 Toast.makeText(EditGuestActivity.this, "Guest saved!", Toast.LENGTH_SHORT).show();

@@ -111,7 +111,7 @@
         android:inputType="textPassword"
         android:minHeight="@dimen/edittext_min_height"
         android:textSize="@dimen/edittext_text_size"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textColorHint="@color/darkgray"
         android:background="@drawable/edittext_background"/>
 

@@ -16,6 +16,8 @@ public class SignUpActivity extends AppCompatActivity {
 
     private AppDatabase db;
     private ExecutorService executorService;
+    private UserDao userDao;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +64,7 @@ public class SignUpActivity extends AppCompatActivity {
                     newUser.ManagerUserId = null;
                     newUser.UserBrokerID = null;
 
-
+                    userDao.insert(newUser);
 
                     // Pass the user ID to the next activity
                     Intent intent = new Intent(SignUpActivity.this, UserActivity.class);

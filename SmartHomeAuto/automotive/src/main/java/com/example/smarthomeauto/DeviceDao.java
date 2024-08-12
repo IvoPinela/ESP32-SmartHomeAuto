@@ -122,4 +122,7 @@ public interface DeviceDao {
             "AND (d.MqttPassword IS NULL OR d.MqttPassword = ''))")
     List<Device> searchDevices(String name, Integer deviceTypeId, String username, boolean filterMissingMQTT);
 
+    @Query("SELECT COUNT(*) FROM user_devices WHERE PermissionDeviceId = :deviceId")
+    int countPermissionsForDevice(int deviceId);
+
 }

@@ -226,8 +226,9 @@ public class AddUserDeviceListActivity extends Activity {
                     intent.putExtra("USER_ID", userId);
                     intent.putExtra("GUEST_ID", guestId);
                     intent.putExtra("USER_ROLE", role);
-                    setResult(RESULT_OK, intent);
+
                     finish();
+                    startActivity(intent);
                 });
             } catch (Exception e) {
                 Log.e(TAG, "Error adding devices", e);

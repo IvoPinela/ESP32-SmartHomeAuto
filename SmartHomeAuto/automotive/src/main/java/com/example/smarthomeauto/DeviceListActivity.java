@@ -3,6 +3,7 @@ package com.example.smarthomeauto;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -227,14 +228,29 @@ public class DeviceListActivity extends AppCompatActivity {
         }).start();
     }
 
-
     private void showDeleteConfirmationDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle("Delete Device")
-                .setMessage("Are you sure you want to delete this device?")
-                .setPositiveButton("Delete", (dialog, which) -> deleteDevice())
-                .setNegativeButton("Cancel", null)
-                .show();
+        new Thread(() -> {
+            int permissionCount = deviceDao.countPermissionsForDevice(selectedDevice.DevicesID);
+
+            runOnUiThread(() -> {
+                if (permissionCount > 0) {
+                    new AlertDialog.Builder(DeviceListActivity.this)
+                            .setTitle("Cannot Delete Device")
+                            .setMessage("This device is currently associated with permissions and cannot be deleted.")
+                            .setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss())
+                            .create()
+                            .show();
+                } else {
+                    // Criação e exibição do diálogo de confirmação na thread principal
+                    new AlertDialog.Builder(DeviceListActivity.this)
+                            .setTitle("Delete Device")
+                            .setMessage("Are you sure you want to delete this device?")
+                            .setPositiveButton("Delete", (dialog, which) -> deleteDevice())
+                            .setNegativeButton("Cancel", null)
+                            .show();
+                }
+            });
+        }).start();
     }
 
     private void deleteDevice() {

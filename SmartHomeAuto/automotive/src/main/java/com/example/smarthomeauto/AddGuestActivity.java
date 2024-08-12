@@ -91,7 +91,7 @@ public class AddGuestActivity extends AppCompatActivity {
                 runOnUiThread(() -> showAlert("A user with the same username already exists!"));
             } else {
                 String hashedPassword = HashUtils.hashPassword(password);
-                // Obtém o brokerID baseado no managerUserId, se necessário
+
                 int brokerId=-1;
                 if (managerUserId != -1) {
                      brokerId = userDao.getBrokerById(managerUserId);

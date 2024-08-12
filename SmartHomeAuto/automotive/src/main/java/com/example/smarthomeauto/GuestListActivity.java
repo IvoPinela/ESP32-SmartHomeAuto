@@ -99,7 +99,6 @@ public class GuestListActivity extends AppCompatActivity {
                 Snackbar.make(findViewById(android.R.id.content), "No guest selected", Snackbar.LENGTH_SHORT).show();
             }
         });
-
         listViewGuests.setOnItemClickListener((parent, view, position, id) -> {
             selectedGuest =  guestList.get(position);
             guestAdapter.setSelectedPosition(position);
@@ -153,15 +152,41 @@ public class GuestListActivity extends AppCompatActivity {
             });
         }).start();
     }
-
+/*
     private void showDeleteConfirmationDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Delete Guest")
                 .setMessage("Are you sure you want to delete this guest?")
                 .setPositiveButton("Delete", (dialog, which) -> deleteGuest())
                 .setNegativeButton("Cancel", null)
-                .show();
+            */
+
+    private void showDeleteConfirmationDialog() {
+        new Thread(() -> {
+            List<UserDevice> userDevices = userDao.getUserDevicesByUserId(selectedGuest.UserID);
+
+            runOnUiThread(() -> {
+                if (!userDevices.isEmpty()) {
+                    new AlertDialog.Builder( GuestListActivity.this)
+                            .setTitle("Cannot Delete User")
+                            .setMessage("This user is currently associated with permissions and cannot be deleted.")
+                            .setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss())
+                            .create()
+                            .show();
+                } else {
+                    new AlertDialog.Builder(this)
+                            .setTitle("Delete Guest")
+                            .setMessage("Are you sure you want to delete this guest?")
+                            .setPositiveButton("Delete", (dialog, which) -> deleteGuest())
+                            .setNegativeButton("Cancel", null)
+                            .show();
+                }
+            });
+        }).start();
     }
+
+
+
 
     private void deleteGuest() {
         if (selectedGuest != null) {

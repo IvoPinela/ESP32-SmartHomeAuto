@@ -105,7 +105,7 @@ public class DevicesUserListActivity extends AppCompatActivity {
 
         buttonDelete.setOnClickListener(v -> {
             if (selectedDevice != null) {
-                showDeleteConfirmationDialog();
+                        showDeleteConfirmationDialog();
             } else {
                 Snackbar.make(findViewById(android.R.id.content), "No device selected", Snackbar.LENGTH_SHORT).show();
             }
@@ -200,12 +200,28 @@ public class DevicesUserListActivity extends AppCompatActivity {
     }
 
     private void showDeleteConfirmationDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle("Delete Device")
-                .setMessage("Are you sure you want to delete this device?")
-                .setPositiveButton("Delete", (dialog, which) -> deleteDevice())
-                .setNegativeButton("Cancel", null)
-                .show();
+        new Thread(() -> {
+            int permissionCount = deviceDao.countPermissionsForDevice(selectedDevice.DevicesID);
+
+            runOnUiThread(() -> {
+                if (permissionCount > 0) {
+                    new AlertDialog.Builder(DevicesUserListActivity.this)
+                            .setTitle("Cannot Delete Device")
+                            .setMessage("This device is currently associated with permissions and cannot be deleted.")
+                            .setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss())
+                            .create()
+                            .show();
+                } else {
+                    // Criação e exibição do diálogo de confirmação na thread principal
+                    new AlertDialog.Builder(DevicesUserListActivity.this)
+                            .setTitle("Delete Device")
+                            .setMessage("Are you sure you want to delete this device?")
+                            .setPositiveButton("Delete", (dialog, which) -> deleteDevice())
+                            .setNegativeButton("Cancel", null)
+                            .show();
+                }
+            });
+        }).start();
     }
 
     private void deleteDevice() {

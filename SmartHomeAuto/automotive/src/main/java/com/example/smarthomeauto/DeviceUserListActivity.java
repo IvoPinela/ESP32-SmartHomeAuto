@@ -75,7 +75,11 @@ public class DeviceUserListActivity extends AppCompatActivity {
         loadPermissions();
         loadDevices(guestId);
     }
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadDevices(guestId);
+    }
     private void initializeViews() {
         listViewDevices = findViewById(R.id.listViewDevices);
         textViewDeviceCount = findViewById(R.id.textViewDeviceCount);

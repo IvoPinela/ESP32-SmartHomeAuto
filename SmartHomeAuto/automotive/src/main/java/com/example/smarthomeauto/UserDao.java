@@ -100,4 +100,8 @@ public interface UserDao {
 
     @Query("SELECT * FROM user_devices WHERE PermissionUserID = :userId")
     List<UserDevice> getUserDevicesByUserId(int userId);
+
+
+    @Query("SELECT COUNT(*) FROM users WHERE Role = 'user' AND UserBrokerID = :brokerId")
+    int countUsersWithRoleUserByBrokerId(int brokerId);
 }

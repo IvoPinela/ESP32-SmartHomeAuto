@@ -133,18 +133,53 @@ public class BrokerListActivity extends AppCompatActivity {
     }
 
     private void showDeleteConfirmationDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle("Delete Broker")
-                .setMessage("Are you sure you want to delete this broker?")
-                .setPositiveButton("Delete", (dialog, which) -> deleteBroker())
-                .setNegativeButton("Cancel", null)
+        new Thread(() -> {
+            // Check for associated users or other entities
+            int associatedUsersCount = brokerDao.countUsersAssociatedWithBroker(selectedBroker.BrokerID);
+
+            // Log the information about the associated users
+            Log.d("BrokerListActivity", "Broker ID: " + selectedBroker.BrokerID + ", Associated Users Count: " + associatedUsersCount);
+
+            runOnUiThread(() -> {
+                if (associatedUsersCount > 0) {
+                    // Show a dialog if the broker cannot be deleted
+                    showAlertDialog("Cannot Delete Broker", "This broker is associated with users and cannot be deleted.");
+                } else {
+                    // Show confirmation dialog if the broker can be deleted
+                   new AlertDialog.Builder(BrokerListActivity.this)
+                            .setTitle("Confirm Deletion")
+                            .setMessage("Are you sure you want to delete this broker?")
+                            .setPositiveButton("Yes", (dialog, which) -> {
+                                new Thread(() -> {
+                                    brokerDao.delete(selectedBroker); // Perform the deletion
+                                    runOnUiThread(() -> {
+                                        Snackbar.make(findViewById(android.R.id.content), "Broker deleted", Snackbar.LENGTH_SHORT).show();
+                                        loadBrokers(); // Reload the broker list
+                                        selectedBroker = null; // Clear the selection
+                                    });
+                                }).start();
+                            })
+                            .setNegativeButton("No", null)
+                            .show();
+                }
+            });
+        }).start();
+    }
+
+    // Utility method to show alert dialogs
+    private void showAlertDialog(String title, String message) {
+        new AlertDialog.Builder(BrokerListActivity.this)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("OK", null)
                 .show();
     }
+
 
     private void deleteBroker() {
         if (selectedBroker != null) {
             new Thread(() -> {
-                brokerDao.delete(selectedBroker); // Método fictício
+                brokerDao.delete(selectedBroker);
                 runOnUiThread(() -> {
                     Snackbar.make(findViewById(android.R.id.content), "Broker deleted", Snackbar.LENGTH_SHORT).show();
                     loadBrokers();

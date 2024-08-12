@@ -48,6 +48,10 @@ public interface BrokerDao {
 
     @Query("SELECT ClusterUrl FROM broker WHERE BrokerID = :brokerId")
     String getClusterURLById(int brokerId);
+
     @Query("SELECT Port FROM broker WHERE BrokerID = :brokerId")
     int getPORTById(int brokerId);
+
+    @Query("SELECT COUNT(*) FROM users WHERE UserBrokerID = :brokerId")
+    int countUsersAssociatedWithBroker(int brokerId);
 }

@@ -95,4 +95,9 @@ public interface UserDao {
     @Query("SELECT Role FROM Users WHERE UserID = :userId")
     String getRoleById(int userId);
 
+    @Query("SELECT * FROM devices WHERE CreatorUserId = :userId")
+    List<Device> getDevicesByUserId(int userId);
+
+    @Query("SELECT * FROM user_devices WHERE PermissionUserID = :userId")
+    List<UserDevice> getUserDevicesByUserId(int userId);
 }

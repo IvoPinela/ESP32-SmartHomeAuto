@@ -275,24 +275,45 @@ public class UserListActivity extends AppCompatActivity {
     }
 
     private void showDeleteConfirmationDialog() {
+        new Thread(() -> {
+
+            List<User> usersManaged = userDao.getUsersByManagerId(selectedUser.UserID);
+            List<Device> devicesCreated = userDao.getDevicesByUserId(selectedUser.UserID);
+            List<UserDevice> userDevices = userDao.getUserDevicesByUserId(selectedUser.UserID);
+
+            if (!usersManaged.isEmpty()) {
+                runOnUiThread(() -> showAlertDialog("Cannot Delete User", "This user is a manager of other users and cannot be deleted."));
+            } else if (!devicesCreated.isEmpty()) {
+                runOnUiThread(() -> showAlertDialog("Cannot Delete User", "This user is associated with devices and cannot be deleted."));
+            } else if (!userDevices.isEmpty()) {
+                runOnUiThread(() -> showAlertDialog("Cannot Delete User", "This user has permissions associated with devices and cannot be deleted."));
+            } else {
+                runOnUiThread(() -> new AlertDialog.Builder(UserListActivity.this)
+                        .setTitle("Confirm Deletion")
+                        .setMessage("Are you sure you want to delete this user?")
+                        .setPositiveButton("Yes", (dialog, which) -> {
+                            new Thread(() -> {
+                                userDao.delete(selectedUser);
+                                runOnUiThread(() -> {
+                                    userList.remove(selectedUser);
+                                    userAdapter.notifyDataSetChanged();
+                                    selectedUser = null;
+                                    showAlertDialog("User Deleted", "The user has been successfully deleted.");
+                                });
+                            }).start();
+                        })
+                        .setNegativeButton("No", null)
+                        .show());
+            }
+        }).start();
+    }
+    private void showAlertDialog(String title, String message) {
         new AlertDialog.Builder(UserListActivity.this)
-                .setTitle("Confirm Deletion")
-                .setMessage("Are you sure you want to delete this user?")
-                .setPositiveButton("Yes", (dialog, which) -> {
-                    new Thread(() -> {
-                        userDao.delete(selectedUser);
-                        runOnUiThread(() -> {
-                            userList.remove(selectedUser);
-                            userAdapter.notifyDataSetChanged();
-                            selectedUser = null;
-                            Snackbar.make(findViewById(android.R.id.content), "User deleted", Snackbar.LENGTH_SHORT).show();
-                        });
-                    }).start();
-                })
-                .setNegativeButton("No", null)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("OK", null)
                 .show();
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

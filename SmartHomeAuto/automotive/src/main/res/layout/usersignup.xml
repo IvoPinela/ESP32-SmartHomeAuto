@@ -19,15 +19,15 @@
         android:textStyle="bold" />
 
     <FrameLayout
-        android:layout_width="1393dp"
-        android:layout_height="359dp"
+        android:layout_width="1392dp"
+        android:layout_height="384dp"
         android:layout_below="@id/title"
         android:layout_centerVertical="true"
         android:layout_marginTop="@dimen/frame_margin_top">
 
         <FrameLayout
             android:layout_width="@dimen/inner_frame_width"
-            android:layout_height="match_parent"
+            android:layout_height="375dp"
             android:layout_gravity="center"
             android:background="@drawable/soft_blue_gradient"
             android:padding="@dimen/container_padding">
@@ -74,13 +74,13 @@
                 <Button
                     android:id="@+id/buttonBackToLogin"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:layout_below="@id/buttonSignUp"
                     android:layout_marginTop="14dp"
-                    android:background="@color/white"
+                    android:background="@color/darkgray"
                     android:minHeight="@dimen/element_min_height"
                     android:text="@string/back_to_login_button"
-                    android:textColor="@android:color/black"
+                    android:textColor="@android:color/white"
                     android:textSize="@dimen/button_text_size" />
 
             </RelativeLayout>

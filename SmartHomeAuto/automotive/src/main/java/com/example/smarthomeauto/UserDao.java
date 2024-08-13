@@ -104,4 +104,7 @@ public interface UserDao {
 
     @Query("SELECT COUNT(*) FROM users WHERE Role = 'user' AND UserBrokerID = :brokerId")
     int countUsersWithRoleUserByBrokerId(int brokerId);
+
+    @Query("SELECT * FROM users WHERE UserBrokerID = :brokerId")
+    User getUserByBrokerId(int brokerId);
 }

@@ -126,6 +126,8 @@ public class UserActivity extends AppCompatActivity {
     private void enableButtons(boolean enabled) {
         buttonLights.setEnabled(enabled);
         buttonGate.setEnabled(enabled);
+        buttonAddGuest.setEnabled(enabled);
+        buttonCreateDevice.setEnabled(enabled);
     }
 
     private void showAccessDeniedDialog() {

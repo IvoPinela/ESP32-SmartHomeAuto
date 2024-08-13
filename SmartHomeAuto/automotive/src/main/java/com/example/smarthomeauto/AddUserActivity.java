@@ -320,14 +320,15 @@ public class AddUserActivity extends AppCompatActivity {
                     return;
                 }
 
-                int countUsersUsingBroker = userDao.countUsersWithRoleUserByBrokerId(brokerId);
-                Log.d("AddUserActivity", "Broker ID: " + brokerId + " is used by " + countUsersUsingBroker + " users with role 'user'.");
+                if("user".equals(role)) {
+                    int countUsersUsingBroker = userDao.countUsersWithRoleUserByBrokerId(brokerId);
+                    Log.d("AddUserActivity", "Broker ID: " + brokerId + " is used by " + countUsersUsingBroker + " users with role 'user'.");
 
-                if (countUsersUsingBroker > 0) {
-                    runOnUiThread(() -> showAlert("This broker is already in use by another user with the role 'user'. Please select a different broker."));
-                    return;
+                    if (countUsersUsingBroker > 0) {
+                        runOnUiThread(() -> showAlert("This broker is already in use by another user with the role 'user'. Please select a different broker."));
+                        return;
+                    }
                 }
-
                 String hashedPassword = HashUtils.hashPassword(password);
 
                 User newUser = new User(username, hashedPassword, role,

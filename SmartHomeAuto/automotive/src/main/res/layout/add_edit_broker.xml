@@ -101,10 +101,10 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/buttonSaveBroker"
                     android:layout_marginTop="@dimen/button_margin_top"
-                    android:background="@color/white"
+                    android:background="@color/darkgray"
                     android:minHeight="@dimen/button_min_height"
                     android:text="@string/button_back"
-                    android:textColor="@android:color/black"
+                    android:textColor="@android:color/white"
                     android:textSize="@dimen/button_text_size" />
 
             </RelativeLayout>

@@ -56,6 +56,8 @@ public class EditUserActivity extends Activity {
         TextView managerUserIdLabel = findViewById(R.id.labelManagerUserId);
         TextView brokerIdLabel = findViewById(R.id.labelBrokerId);
 
+
+
         editTextUsername = findViewById(R.id.editTextUsername);
         editTextPassword = findViewById(R.id.editTextPassword);
         editTextMqttUser = findViewById(R.id.editTextMqttUser);
@@ -65,6 +67,8 @@ public class EditUserActivity extends Activity {
         spinnerBrokerId = findViewById(R.id.spinnerBrokerId);
         buttonSaveUser = findViewById(R.id.buttonSaveUser);
         buttonBack = findViewById(R.id.buttonBack);
+
+        spinnerRole.setEnabled(false);
 
         AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "db_SmartHomeAuto").build();
         userDao = db.userDao();
@@ -81,10 +85,10 @@ public class EditUserActivity extends Activity {
             passwordLabel.setVisibility(View.GONE);
             editTextPassword.setVisibility(View.GONE);
         } else {
-            formTitle.setText("Add New User");
+            formTitle.setText("Edit User");
         }
 
-        // Carrega os dados para os spinners
+
         loadRoles();
         loadManagers();
         loadBrokers();
@@ -354,6 +358,8 @@ public class EditUserActivity extends Activity {
         int finalBrokerPort = brokerPort;
         new Thread(() -> {
             User existingUser = userDao.getUserByUsername(username);
+
+
             if (existingUser != null && (user == null || existingUser.UserID != user.UserID)) {
                 runOnUiThread(() -> showAlert("A user with the same username already exists!"));
             } else {
@@ -366,6 +372,15 @@ public class EditUserActivity extends Activity {
                 if (brokerId == -1 && !"admin".equals(role)) {
                     runOnUiThread(() -> showAlert("Please select a broker"));
                     return;
+                }
+
+                // Verifique se outro usuário com papel de "user" já está usando o mesmo broker
+                if ("user".equals(role) && brokerId != -1) {
+                    User conflictingUser = userDao.getUserByBrokerId(brokerId);
+                    if (conflictingUser != null && conflictingUser.UserID != (user != null ? user.UserID : -1)) {
+                        runOnUiThread(() -> showAlert("A user with the same broker already exists!"));
+                        return;
+                    }
                 }
 
                 if (managerUserId == null && "guest".equals(role)) {
@@ -392,6 +407,8 @@ public class EditUserActivity extends Activity {
                             ("admin".equals(role)) ? null : brokerId);
                     userDao.insert(newUser);
                 }
+
+
 
                 runOnUiThread(() -> {
                     showAlert("User saved!");

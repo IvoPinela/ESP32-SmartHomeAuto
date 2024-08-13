@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import android.util.Log;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -30,6 +31,7 @@ public class SignUpActivity extends AppCompatActivity {
         Button buttonBackToLogin = findViewById(R.id.buttonBackToLogin);
 
         db = AppDatabase.getDatabase(this);
+        userDao = db.userDao();
         executorService = Executors.newSingleThreadExecutor();
 
         buttonSignUp.setOnClickListener(v -> {
@@ -66,13 +68,18 @@ public class SignUpActivity extends AppCompatActivity {
 
                     userDao.insert(newUser);
 
+                    int userId = db.userDao().getUserIdByUsername(username); // Ensure this method returns the correct ID
+
+                    // Log user information
+                    Log.d("SignUpActivity", "UserID: " + userId);
+                    Log.d("SignUpActivity", "UserRole: " + newUser.Role);
                     // Pass the user ID to the next activity
                     Intent intent = new Intent(SignUpActivity.this, UserActivity.class);
-                    intent.putExtra("USER_ID", newUser.UserID);
+                    intent.putExtra("USER_ID", userId);
                     intent.putExtra("USER_ROLE", newUser.Role);
                     runOnUiThread(() -> {
                         startActivity(intent);
-                        finish(); // Close the sign-up activity
+                        finish();
                     });
                 }
             });

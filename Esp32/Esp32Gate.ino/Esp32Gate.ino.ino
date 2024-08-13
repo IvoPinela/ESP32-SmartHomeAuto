@@ -4,8 +4,8 @@
 #include <ESP32Servo.h>  // Include the ESP32Servo library for servo control
 
 // WiFi settings
-const char* ssid = "MeoMaster";
-const char* password = "inesleandro6122016";
+const char* ssid = "";
+const char* password = "";
 
 // MQTT broker settings
 const char* mqtt_server = "05e815044648452d9966e9b6701cb998.s1.eu.hivemq.cloud";

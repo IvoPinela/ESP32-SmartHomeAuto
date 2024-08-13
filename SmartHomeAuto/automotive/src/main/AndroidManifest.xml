@@ -8,6 +8,10 @@
         android:name="android.hardware.type.automotive"
         android:required="true" />
 
+    <meta-data
+        android:name="com.example.app.PARKED"
+        android:value="true" />
+
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <application
         android:name=".MyApplication"
